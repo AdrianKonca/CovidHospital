@@ -12,4 +12,15 @@ def fetch_raw_data_if_missing():
     with open(RAW_FILE_PATH, 'wb') as raw_file: 
         raw_file.write(file_request.content)
 
-fetch_raw_data_if_missing()
+def clean_raw_file():
+    """Cleans raw file leaving only selection of needed columns and removes any countries that do not have hospitalization data"""
+
+    INT_COLUMNS = 'total_cases', 'new_cases', 'total_deaths', 'new_deaths', 'icu_patients', 'hosp_patients'
+    NEEDED_COLUMNS = ['iso_code', 'date', *INT_COLUMNS]
+    DISCRIMINATORY_COLUMN = 'hosp_patients'
+
+    raw_data = pd.read_csv(RAW_FILE_PATH)
+
+    processed_data = raw_data[raw_data[DISCRIMINATORY_COLUMN].notnull()][NEEDED_COLUMNS]
+    #processed_data.astype({column : int for column in INT_COLUMNS}, copy=False)
+    processed_data.to_csv("data_preprocessed.csv")
