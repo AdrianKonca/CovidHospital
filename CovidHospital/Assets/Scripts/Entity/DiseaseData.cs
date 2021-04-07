@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Entity
 {
     [Serializable]
-    public class ConditionData : ScriptableObject
+    public class DiseaseData : ScriptableObject
     {
         public int id;
         public float immunityDecrease;

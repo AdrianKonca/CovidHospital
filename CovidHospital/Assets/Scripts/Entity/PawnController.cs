@@ -2,6 +2,7 @@
 
 namespace Entity
 {
+    //nonserializable representation of data, contains sprites and other nonserializable stuff constructed based on PawnData
     public abstract class Pawn : MonoBehaviour
     {
         private PawnData _pawnData;
@@ -9,13 +10,13 @@ namespace Entity
         private Sprite _body;
     }
 
-    public abstract class PatientPawn : Pawn
+    public class PatientPawn : Pawn
     {
-        //etc.
+        private PatientData _patientData;
     }
 
-    public abstract class PersonnelPawn : Pawn
+    public class PersonnelPawn : Pawn
     {
-        //etc.
+        private PersonnelData _personnelData;
     }
 }
