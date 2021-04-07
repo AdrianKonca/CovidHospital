@@ -23,4 +23,4 @@ def clean_raw_file():
 
     processed_data = raw_data[raw_data[DISCRIMINATORY_COLUMN].notnull()][NEEDED_COLUMNS]
     #processed_data.astype({column : int for column in INT_COLUMNS}, copy=False)
-    processed_data.to_csv("data_preprocessed.csv")
+    processed_data.to_csv("data/data_preprocessed.csv")
