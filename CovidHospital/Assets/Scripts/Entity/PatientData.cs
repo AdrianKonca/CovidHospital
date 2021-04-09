@@ -10,7 +10,6 @@ namespace Entity
 
         public float mentalHealth;
         public float comfort;
-
         public float covidProgress;
     }
 }

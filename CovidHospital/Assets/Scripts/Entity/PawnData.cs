@@ -9,7 +9,8 @@ namespace Entity
         public Role role;
         public Sex sex;
         public float age;
-
+        public bool alive;
+        
         public int headId;
         public Color headColor;
         public int bodyId;
