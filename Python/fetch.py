@@ -17,7 +17,7 @@ def clean_raw_file():
 
     INT_COLUMNS = 'total_cases', 'new_cases', 'total_deaths', 'new_deaths', 'icu_patients', 'hosp_patients'
     NEEDED_COLUMNS = ['iso_code', 'date', *INT_COLUMNS]
-    DISCRIMINATORY_COLUMN = 'hosp_patients'
+    DISCRIMINATORY_COLUMN = 'new_cases'
 
     raw_data = pd.read_csv(RAW_FILE_PATH)
 
