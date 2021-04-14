@@ -448,6 +448,7 @@ GameObject:
   - component: {fileID: 574299622}
   - component: {fileID: 574299621}
   - component: {fileID: 574299623}
+  - component: {fileID: 574299624}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -496,6 +497,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Terrain: {fileID: 551736580}
   Walls: {fileID: 551736580}
+--- !u!114 &574299624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574299620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d5f29a9f2b25142a2f7f408dc4e4fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2144483462
 GameObject:
   m_ObjectHideFlags: 0

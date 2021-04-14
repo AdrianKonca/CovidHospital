@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.InputSystem;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Tilemaps;
 
@@ -132,23 +133,26 @@ public class MapController : MonoBehaviour
             return;
         if (!_mapInitialized)
             InitializeMap();
-        //if (Input.GetMouseButton(0))
-        //{
-        //    var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //    var clickedPoint = Vector3Int.FloorToInt(mousePosition);
-        //    TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-        //    wall.wallName = WALL_NAME;
-        //    Walls.SetTile(clickedPoint, wall);
-        //    Walls.RefreshAllTiles();
-        //}
-        //if (Input.GetMouseButton(1))
-        //{
-        //    var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //    var clickedPoint = Vector3Int.FloorToInt(mousePosition);
-        //    TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-        //    wall.wallName = WALL_NAME;
-        //    Walls.SetTile(clickedPoint, null);
-        //    Walls.RefreshAllTiles();
-        //}
+    }
+
+    public Vector3Int GetMousePosition(Vector2 mousePosition)
+    {
+        return Vector3Int.FloorToInt(Camera.main.ScreenToWorldPoint(mousePosition));
+    }
+    public bool BuildWall(Vector3Int coordinates)
+    {
+        TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+        wall.wallName = WALL_NAME;
+        Walls.SetTile(coordinates, wall);
+        Walls.RefreshAllTiles();
+        return true;
+    }
+    public bool DestroyWall(Vector3Int coordinates)
+    {
+        TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+        wall.wallName = WALL_NAME;
+        Walls.SetTile(coordinates, null);
+        Walls.RefreshAllTiles();
+        return true;
     }
 }
