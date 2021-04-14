@@ -4,8 +4,8 @@ namespace Entity
 {
     public abstract class Pawn : MonoBehaviour
     {
-        protected PawnData _pawnData;
-        protected Sprite _head;
-        protected Sprite _body;
+        protected PawnData PawnData;
+        protected Sprite Head;
+        protected Sprite Body;
     }
 }

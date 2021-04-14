@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
  
-public class COnditionDataAsset
+public class ConditionDataAsset
 {
     [MenuItem("Assets/Create/DiseaseData")]
     public static void CreateAsset ()
