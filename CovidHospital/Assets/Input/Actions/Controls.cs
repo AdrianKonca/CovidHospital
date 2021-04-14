@@ -49,6 +49,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveMouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""0eacd302-1d1f-4b01-a9d2-d3e838038102"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -137,6 +145,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1d38aa5-4b0b-4118-b208-07cc4cfcf0d7"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MoveMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -718,6 +737,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_CameraZoom = m_Player.FindAction("CameraZoom", throwIfNotFound: true);
         m_Player_Action = m_Player.FindAction("Action", throwIfNotFound: true);
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
+        m_Player_MoveMouse = m_Player.FindAction("MoveMouse", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -783,6 +803,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_CameraZoom;
     private readonly InputAction m_Player_Action;
     private readonly InputAction m_Player_Cancel;
+    private readonly InputAction m_Player_MoveMouse;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -791,6 +812,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @CameraZoom => m_Wrapper.m_Player_CameraZoom;
         public InputAction @Action => m_Wrapper.m_Player_Action;
         public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
+        public InputAction @MoveMouse => m_Wrapper.m_Player_MoveMouse;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -812,6 +834,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Cancel.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCancel;
+                @MoveMouse.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveMouse;
+                @MoveMouse.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveMouse;
+                @MoveMouse.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveMouse;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -828,6 +853,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
+                @MoveMouse.started += instance.OnMoveMouse;
+                @MoveMouse.performed += instance.OnMoveMouse;
+                @MoveMouse.canceled += instance.OnMoveMouse;
             }
         }
     }
@@ -988,6 +1016,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnCameraZoom(InputAction.CallbackContext context);
         void OnAction(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnMoveMouse(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
