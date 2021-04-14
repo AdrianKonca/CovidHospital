@@ -132,23 +132,23 @@ public class MapController : MonoBehaviour
             return;
         if (!_mapInitialized)
             InitializeMap();
-        if (Input.GetMouseButton(0))
-        {
-            var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var clickedPoint = Vector3Int.FloorToInt(mousePosition);
-            TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-            wall.wallName = WALL_NAME;
-            Walls.SetTile(clickedPoint, wall);
-            Walls.RefreshAllTiles();
-        }
-        if (Input.GetMouseButton(1))
-        {
-            var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var clickedPoint = Vector3Int.FloorToInt(mousePosition);
-            TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-            wall.wallName = WALL_NAME;
-            Walls.SetTile(clickedPoint, null);
-            Walls.RefreshAllTiles();
-        }
+        //if (Input.GetMouseButton(0))
+        //{
+        //    var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    var clickedPoint = Vector3Int.FloorToInt(mousePosition);
+        //    TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+        //    wall.wallName = WALL_NAME;
+        //    Walls.SetTile(clickedPoint, wall);
+        //    Walls.RefreshAllTiles();
+        //}
+        //if (Input.GetMouseButton(1))
+        //{
+        //    var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    var clickedPoint = Vector3Int.FloorToInt(mousePosition);
+        //    TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+        //    wall.wallName = WALL_NAME;
+        //    Walls.SetTile(clickedPoint, null);
+        //    Walls.RefreshAllTiles();
+        //}
     }
 }
