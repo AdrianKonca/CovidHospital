@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEditor;
  
-public class DiseaseDataAsset
+public class COnditionDataAsset
 {
     [MenuItem("Assets/Create/DiseaseData")]
     public static void CreateAsset ()
     {
-        ScriptableObjectUtility.CreateAsset<DiseaseData> ();
+        ScriptableObjectUtility.CreateAsset<ConditionData> ();
     }
 }
