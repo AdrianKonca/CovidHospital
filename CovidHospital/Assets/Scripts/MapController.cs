@@ -87,6 +87,17 @@ public class MapController : MonoBehaviour
             }
         }
     }
+
+    private void SpriteTerrain_Completed(AsyncOperationHandle<Sprite> handle)
+    {
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            Sprite result = handle.Result;
+            Debug.Log(result.name);
+            TerrainSprites[result.name] = result;
+        }
+    }
+
     private void Sprite_Completed(AsyncOperationHandle<Sprite> handle)
     {
         if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -110,6 +121,14 @@ public class MapController : MonoBehaviour
                 SpriteHandle.Completed += Sprite_Completed;
             }
         }
+        
+        //string[] terrainNames = { "Grass", "Dirt" };
+        //foreach (var terrainName in terrainNames)
+        //{
+        //    string terrainAddress = string.Format("Assets/Sprites/Terrain/Terrains.png[{0}]", terrainName);
+        //    AsyncOperationHandle<Sprite> SpriteHandle = Addressables.LoadAssetAsync<Sprite>(terrainAddress);
+        //    SpriteHandle.Completed += SpriteTerrain_Completed;
+        //}
         var atlasAddress = "Assets/Sprites/Terrain/Terrain.spriteatlas";
         AsyncOperationHandle<SpriteAtlas> SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
         SpriteAtlasHandle.Completed += SpriteAtlas_Completed;
@@ -127,7 +146,7 @@ public class MapController : MonoBehaviour
     {
         int MAP_LIMIT = 100;
 
-        var terrain_names = new List<string>{"Green", "Dirt"};
+        var terrain_names = new List<string>{"Grass", "Dirt"};
         var terrain_tiles = new List<Tile>();
         foreach (var name in terrain_names)
         {
@@ -140,6 +159,7 @@ public class MapController : MonoBehaviour
             for (int y = -MAP_LIMIT; y < MAP_LIMIT; y++)
             {
                 Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[Random.Range(0, terrain_tiles.Count)]);
+                //Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[0]);
             }
             yield return null;
         }
@@ -190,6 +210,7 @@ public class MapController : MonoBehaviour
             return;
         if (!_mapInitialized)
             InitializeMap();
+        Debug.Log( Walls.GetComponent<TilemapRenderer>().chunkCullingBounds);
     }
 
     public Vector3Int GetMousePosition(Vector2 mousePosition)
@@ -216,7 +237,7 @@ public class MapController : MonoBehaviour
         Tile wall = ScriptableObject.CreateInstance<Tile>();
         wall.sprite = TerrainSprites[name];
         Terrain.SetTile(coordinates, wall);
-        Terrain.RefreshAllTiles();
+        //Terrain.RefreshAllTiles();
         return true;
     }
 }

@@ -21,11 +21,27 @@ public class BuildingController : MonoBehaviour
         _playerInput.onActionTriggered += onActionTrigered;
     }
 
+    private void Build()
+    {
+        if (BuildTerrain)
+        {
+            if (_build && !_destroy)
+                _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Green");
+        }
+        else
+        {
+            if (_build && !_destroy)
+                _mapController.BuildWall(_mapController.GetMousePosition(_mousePosition));
+            if (_destroy && !_build)
+                _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
+        }
+    }
     private void onActionTrigered(InputAction.CallbackContext action)
     {
         if (action.action.name == _controls.Player.MoveMouse.name && action.performed)
         {
             _mousePosition = action.ReadValue<Vector2>();
+            Build();
         }
         else if (action.action.name == _controls.Player.Action.name)
         {
@@ -45,17 +61,6 @@ public class BuildingController : MonoBehaviour
 
     private void Update()
     {
-        if (BuildTerrain)
-        {
-            if (_build && !_destroy)
-                _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Green");
-        }
-        else
-        {
-            if (_build && !_destroy)
-                _mapController.BuildWall(_mapController.GetMousePosition(_mousePosition));
-            if (_destroy && !_build)
-                _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
-        }
+        Build();
     }
 }

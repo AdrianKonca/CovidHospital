@@ -35,22 +35,22 @@ SpriteAtlas:
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
-      padding: 4
+      padding: 8
       blockOffset: 1
       allowAlphaSplitting: 0
       enableRotation: 1
       enableTightPacking: 1
     variantMultiplier: 1
     packables:
-    - {fileID: 2800000, guid: 0ad3dab8e7f304b46a6b589ca8b67156, type: 3}
-    - {fileID: 2800000, guid: 309bd1afec2c51e428ecc6202b640e32, type: 3}
+    - {fileID: 5724155591313076146, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
+    - {fileID: 9161337635535156104, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: 0ad3dab8e7f304b46a6b589ca8b67156, type: 3}
-  - {fileID: 21300000, guid: 309bd1afec2c51e428ecc6202b640e32, type: 3}
+  - {fileID: 5724155591313076146, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
+  - {fileID: 9161337635535156104, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Green
   - Dirt
+  - Grass
   m_Tag: Terrain
   m_IsVariant: 0
