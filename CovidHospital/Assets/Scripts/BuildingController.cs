@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class BuildingController : MonoBehaviour
 {
+    public bool BuildTerrain = true;
     Controls _controls;
     PlayerInput _playerInput;
     MapController _mapController;
@@ -44,9 +45,17 @@ public class BuildingController : MonoBehaviour
 
     private void Update()
     {
-        if (_build && !_destroy)
-            _mapController.BuildWall(_mapController.GetMousePosition(_mousePosition));
-        if (_destroy && !_build)
-            _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
+        if (BuildTerrain)
+        {
+            if (_build && !_destroy)
+                _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Green");
+        }
+        else
+        {
+            if (_build && !_destroy)
+                _mapController.BuildWall(_mapController.GetMousePosition(_mousePosition));
+            if (_destroy && !_build)
+                _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
+        }
     }
 }
