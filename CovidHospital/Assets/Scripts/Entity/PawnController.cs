@@ -11,7 +11,7 @@ namespace Entity
         public Slider slider;
         private PatientData _patientData;
 
-        public void ChangeCovidProgress(float delta)
+        private void ChangeCovidProgress(float delta)
         {
             //pobrac wszystkie zarazy ich wagi
             float ImmunityDecrease = _patientData.GetSumOfImmunityDecrease();
@@ -22,9 +22,6 @@ namespace Entity
 
             //<1,1.8>
             float ImmunityMultiplayer = (float) Math.Tanh(ImmunityDecrease / 30) + 1f;
-
-            // Debug.Log(AgeMultiplayer);
-            // Debug.Log(ImmunityMultiplayer);
 
             _patientData.covidProgress += delta * AgeMultiplayer * ImmunityMultiplayer;
             slider.value = _patientData.covidProgress;
