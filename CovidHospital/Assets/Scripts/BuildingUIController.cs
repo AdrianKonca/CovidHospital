@@ -6,8 +6,32 @@ using UnityEngine.UI;
 public class BuildingUIController : MonoBehaviour
 {
     public BuildingController buildingController;
-    public Button BuildTerrainButton;
-    public Button BuildWallButton;
 
+    public void OnBuildWallButtonClicked()
+    {
+        buildingController.SetState(
+            BuildingController.State.BuildWall
+        );
+    }
 
+    public void OnDestroyWallButtonClicked()
+    {
+        buildingController.SetState(
+            BuildingController.State.DestroyWall
+        );
+    }
+
+    public void OnBuildTerrainButtonClicked()
+    {
+        buildingController.SetState(
+            BuildingController.State.BuildTerrain
+        );
+    }
+
+    public void OnWallSelected()
+    {
+
+    }
+
+    
 }

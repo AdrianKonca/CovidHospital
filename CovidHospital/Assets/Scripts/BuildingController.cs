@@ -7,13 +7,21 @@ using UnityEngine.InputSystem;
 public class BuildingController : MonoBehaviour
 {
     public bool BuildTerrain = true;
+    public enum State
+    {
+        Inactive,
+        BuildTerrain,
+        BuildWall,
+        DestroyWall
+    }
+
     Controls _controls;
     PlayerInput _playerInput;
     MapController _mapController;
 
     Vector2 _mousePosition = new Vector2();
-    bool _build = false;
-    bool _destroy = false;
+    bool _actionStarted = false;
+    State _state = State.Inactive;
     void Start()
     {
         _playerInput = FindObjectOfType<PlayerInput>();
@@ -24,18 +32,27 @@ public class BuildingController : MonoBehaviour
 
     private void Build()
     {
-        if (BuildTerrain)
+        if (!_actionStarted)
+            return;
+        switch (_state)
         {
-            if (_build && !_destroy)
+            case State.Inactive:
+                return;
+            case State.BuildTerrain:
                 _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Concrete");
-        }
-        else
-        {
-            if (_build && !_destroy)
+                break;
+            case State.BuildWall:
                 _mapController.BuildWall(_mapController.GetMousePosition(_mousePosition));
-            if (_destroy && !_build)
+                break;
+            case State.DestroyWall:
                 _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
+                break;
         }
+    }
+
+    public void SetState(State state)
+    {
+        _state = state;
     }
     private void onActionTrigered(InputAction.CallbackContext action)
     {
@@ -50,16 +67,13 @@ public class BuildingController : MonoBehaviour
             //don't ask why...
             bool isPointerOverUIElement = EventSystem.current.IsPointerOverGameObject();
             if (action.started && !isPointerOverUIElement)
-                _build = true;
+                _actionStarted = true;
             else if (action.canceled)
-                _build = false;
+                _actionStarted = false;
         }
         else if (action.action.name == _controls.Player.Cancel.name)
         {
-            if (action.started)
-                _destroy = true;
-            else if (action.canceled)
-                _destroy = false;
+            _state = State.Inactive;
         }
     }
 
