@@ -239,8 +239,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingController: {fileID: 1584891752}
-  BuildTerrainButton: {fileID: 1632552435}
-  BuildWallButton: {fileID: 1167007693}
 --- !u!114 &289912822
 MonoBehaviour:
   m_ObjectHideFlags: 0

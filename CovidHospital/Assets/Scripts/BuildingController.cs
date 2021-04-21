@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class BuildingController : MonoBehaviour
 {
     public bool BuildTerrain = true;
+    public GameObject preview;
     public enum State
     {
         Inactive,
@@ -60,6 +61,7 @@ public class BuildingController : MonoBehaviour
         if (action.action.name == _controls.Player.MoveMouse.name && action.performed)
         {
             _mousePosition = action.ReadValue<Vector2>();
+            preview.transform.position = _mapController.GetMousePosition(_mousePosition) + new Vector3(0.5f, 0.5f);
             Build();
         }
         else if (action.action.name == _controls.Player.Action.name)
@@ -79,6 +81,10 @@ public class BuildingController : MonoBehaviour
 
     private void Update()
     {
+        var pos = _mapController.GetMousePosition(_mousePosition);
+
+        preview.transform.position = _mapController.GetMousePosition(_mousePosition) + new Vector3(0.5f, 0.5f);
+
         Build();
     }
 }
