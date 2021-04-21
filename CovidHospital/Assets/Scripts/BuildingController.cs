@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class BuildingController : MonoBehaviour
@@ -26,7 +27,7 @@ public class BuildingController : MonoBehaviour
         if (BuildTerrain)
         {
             if (_build && !_destroy)
-                _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Green");
+                _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Concrete");
         }
         else
         {
@@ -38,6 +39,7 @@ public class BuildingController : MonoBehaviour
     }
     private void onActionTrigered(InputAction.CallbackContext action)
     {
+        
         if (action.action.name == _controls.Player.MoveMouse.name && action.performed)
         {
             _mousePosition = action.ReadValue<Vector2>();
@@ -45,7 +47,9 @@ public class BuildingController : MonoBehaviour
         }
         else if (action.action.name == _controls.Player.Action.name)
         {
-            if (action.started)
+            //don't ask why...
+            bool isPointerOverUIElement = EventSystem.current.IsPointerOverGameObject();
+            if (action.started && !isPointerOverUIElement)
                 _build = true;
             else if (action.canceled)
                 _build = false;

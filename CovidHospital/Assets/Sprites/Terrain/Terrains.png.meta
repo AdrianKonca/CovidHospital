@@ -8,6 +8,9 @@ TextureImporter:
   - first:
       213: 5724155591313076146
     second: Dirt
+  - first:
+      213: -1173327991639427112
+    second: Concrete
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -130,6 +133,27 @@ TextureImporter:
       bones: []
       spriteID: 2bf2843be29407f40800000000000000
       internalID: 5724155591313076146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Concrete
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 1952
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d73f4d786087bfe0800000000000000
+      internalID: -1173327991639427112
       vertices: []
       indices: 
       edges: []

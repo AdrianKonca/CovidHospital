@@ -44,12 +44,15 @@ SpriteAtlas:
     packables:
     - {fileID: 5724155591313076146, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
     - {fileID: 9161337635535156104, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
+    - {fileID: -1173327991639427112, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: -1173327991639427112, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
   - {fileID: 5724155591313076146, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
   - {fileID: 9161337635535156104, guid: 6973558ec6b3e90459c7264804ffe1e8, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Concrete
   - Dirt
   - Grass
   m_Tag: Terrain

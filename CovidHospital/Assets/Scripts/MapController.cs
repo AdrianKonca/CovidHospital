@@ -132,8 +132,7 @@ public class MapController : MonoBehaviour
         var atlasAddress = "Assets/Sprites/Terrain/Terrain.spriteatlas";
         AsyncOperationHandle<SpriteAtlas> SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
         SpriteAtlasHandle.Completed += SpriteAtlas_Completed;
-
-        _maxTerrainTiles = 2;
+        _maxTerrainTiles = 3;
         _maxWallTiles = directions.Length * wallNames.Length;
 
     }
@@ -146,7 +145,7 @@ public class MapController : MonoBehaviour
     {
         int MAP_LIMIT = 100;
 
-        var terrain_names = new List<string>{"Grass", "Dirt"};
+        var terrain_names = new List<string>{"Grass", "Dirt", "Concrete"};
         var terrain_tiles = new List<Tile>();
         foreach (var name in terrain_names)
         {
@@ -158,7 +157,10 @@ public class MapController : MonoBehaviour
         {
             for (int y = -MAP_LIMIT; y < MAP_LIMIT; y++)
             {
-                Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[Random.Range(0, terrain_tiles.Count)]);
+                float noise = Mathf.PerlinNoise(x / 10f + MAP_LIMIT, y / 10f + MAP_LIMIT);
+                int index = noise < 0.6f ? 0 : 1;
+
+                Terrain.SetTile(new Vector3Int(x, y, -2), terrain_tiles[index]);
                 //Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[0]);
             }
             yield return null;
@@ -202,6 +204,7 @@ public class MapController : MonoBehaviour
                 Walls.SetTile(new Vector3Int(x, y, -2), wall);
 
             }
+
         StartCoroutine("LoadTerrain");
     }
     private void Update()
@@ -234,6 +237,7 @@ public class MapController : MonoBehaviour
 
     public bool BuildTerrain(Vector3Int coordinates, string name)
     {
+        Debug.Log(coordinates);
         Tile wall = ScriptableObject.CreateInstance<Tile>();
         wall.sprite = TerrainSprites[name];
         Terrain.SetTile(coordinates, wall);
