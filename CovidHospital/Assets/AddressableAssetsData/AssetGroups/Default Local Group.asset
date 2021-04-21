@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: a1e6a6ec1f5115e4a8f651976df00ca2
+    m_Address: Assets/Sprites/Pawns/Body.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ca75e5e80a474de4697c3d237986db88, type: 2}
   m_SchemaSet:
