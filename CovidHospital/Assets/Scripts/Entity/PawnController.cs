@@ -44,7 +44,7 @@ namespace Entity
             //todo: randomize covid progress
             _patientData.covidProgress = 50;
 
-            Debug.Log("Wiek " + PawnData.age);
+            // Debug.Log("Wiek " + PawnData.age);
 
             ChangeCovidProgress(0);
         }
