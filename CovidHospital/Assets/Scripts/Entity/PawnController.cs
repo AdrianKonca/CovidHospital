@@ -11,7 +11,7 @@ namespace Entity
         public Slider slider;
         private PatientData _patientData;
 
-        private void ChangeCovidProgress(float delta)
+        private void CovidProgress(float delta)
         {
             //pobrac wszystkie zarazy ich wagi
             float ImmunityDecrease = _patientData.GetSumOfImmunityDecrease();
@@ -23,7 +23,14 @@ namespace Entity
             //<1,1.8>
             float ImmunityMultiplayer = (float) Math.Tanh(ImmunityDecrease / 30) + 1f;
 
-            _patientData.covidProgress += delta * AgeMultiplayer * ImmunityMultiplayer;
+            var ProgressToAdd = delta * AgeMultiplayer * ImmunityMultiplayer;
+            
+            AddCovidProgress(ProgressToAdd);
+        }
+
+        private void AddCovidProgress(float ProgressToAdd)
+        {
+            _patientData.covidProgress += ProgressToAdd;
             slider.value = _patientData.covidProgress;
         }
 
@@ -46,12 +53,12 @@ namespace Entity
 
             // Debug.Log("Wiek " + PawnData.age);
 
-            ChangeCovidProgress(0);
+            AddCovidProgress(0);
         }
 
         private void Update()
         {
-            ChangeCovidProgress(0.02f);
+            CovidProgress(0.02f);
         }
     }
 }
