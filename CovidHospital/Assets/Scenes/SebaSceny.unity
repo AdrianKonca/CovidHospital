@@ -1007,6 +1007,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c547b91cb0c40a08a58616ed3653aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dayCount: 0
+  isDay: 0
+  hours: 0
+  minutes: 0
+  debugLight: 0
   Light: {fileID: 215315358}
 --- !u!4 &1508466923
 Transform:
