@@ -46,11 +46,15 @@ public class TimeController : MonoBehaviour
 
     private void CalculateHour()
     {
+        var OldHours = hours;
+        var OldMinutes = minutes;
         hours = (int) (24f * _currentTime);
         minutes = (int) (24f * _currentTime % 1 * 60);
 
-        OnHourIncrease?.Invoke(hours);
-        OnMinuteIncrease?.Invoke(minutes);
+        if (OldHours != hours)
+            OnHourIncrease?.Invoke(hours);
+        if (OldMinutes != minutes)
+            OnMinuteIncrease?.Invoke(minutes);
     }
 
     private void CheckForNextDay()

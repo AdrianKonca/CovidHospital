@@ -56,12 +56,18 @@ namespace Entity
             Debug.Log("Age " + PawnData.age);
             timeController.OnDayIncrease += TimeControllerOnOnDayIncrease;
             timeController.OnHourIncrease += TimeControllerOnOnHourIncrease;
+            timeController.OnMinuteIncrease += TimeControllerOnOnMinuteIncrease;
+        }
+
+        private void TimeControllerOnOnMinuteIncrease(int m)
+        {
+            // Debug.Log("minuty wywołane z eventu :" + m);
         }
 
         private void TimeControllerOnOnHourIncrease(int h)
         {
-            CovidRegress(-0.05f);
-            CovidProgress(0.05f);
+            CovidRegress(-0.7f);
+            CovidProgress(0.7f);
         }
 
         private void TimeControllerOnOnDayIncrease(long d)
