@@ -1011,7 +1011,7 @@ MonoBehaviour:
   isDay: 0
   hours: 0
   minutes: 0
-  debugLight: 0
+  dayLength: 15
   Light: {fileID: 215315358}
 --- !u!4 &1508466923
 Transform:
@@ -1071,7 +1071,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ba591c1ae44e8408bcfa5bb2bb970c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PawnData: {fileID: 0}
+  Head: {fileID: 0}
+  Body: {fileID: 0}
+  timeController: {fileID: 1508466922}
   slider: {fileID: 825175299}
+  patientData: {fileID: 0}
+  covidRegressMultiplier: 1
+  covidProgressMultiplier: 1
 --- !u!1 &1981731218
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 7
   immunityDecrease: 2
-  diseaseName: alcohol addiction
+  conditionName: Alcoholism

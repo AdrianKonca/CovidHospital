@@ -25,7 +25,7 @@ public class TimeController : MonoBehaviour
     public int hours;
     public int minutes;
 
-    private const float DayLength = 30f;
+    public float dayLength = 15f;
     private float _currentTime;
 
     public GameObject Light;
@@ -36,9 +36,9 @@ public class TimeController : MonoBehaviour
         _light2D = Light.GetComponent<Light2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        _currentTime += Time.deltaTime / DayLength;
+        _currentTime += Time.deltaTime / dayLength;
         CheckForNextDay();
         CalculateHour();
         _light2D.intensity = GetLightIntensity();
