@@ -16,7 +16,6 @@ public class TileWall : Tile
     }
     private void SelectNewSprite(Vector3Int position, ITilemap tilemap, bool continueToNeighbors)
     {
-
         string spriteName = wallName + "_";
         string[] directions = { "N", "E", "S", "W" };
         Dictionary<string, Vector3Int> neighobrs = new Dictionary<string, Vector3Int>
@@ -51,6 +50,7 @@ public class TileWall : Tile
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
         tileData.sprite = sprite;
+        tileData.colliderType = ColliderType.Grid;
     }
 
     private bool IsNeighbour(Vector3Int position, ITilemap tilemap)
@@ -165,6 +165,7 @@ public class MapController : MonoBehaviour
             }
             yield return null;
         }
+        //AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
     }
     private void InitializeMap()
     {
@@ -213,7 +214,6 @@ public class MapController : MonoBehaviour
             return;
         if (!_mapInitialized)
             InitializeMap();
-        Debug.Log( Walls.GetComponent<TilemapRenderer>().chunkCullingBounds);
     }
 
     public Vector3Int GetMousePosition(Vector2 mousePosition)
@@ -222,6 +222,7 @@ public class MapController : MonoBehaviour
     }
     public bool BuildWall(Vector3Int coordinates)
     {
+        //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
@@ -230,6 +231,7 @@ public class MapController : MonoBehaviour
     }
     public bool DestroyWall(Vector3Int coordinates)
     {
+        //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         Walls.SetTile(coordinates, null);
         //Walls.RefreshAllTiles();
         return true;
@@ -237,11 +239,11 @@ public class MapController : MonoBehaviour
 
     public bool BuildTerrain(Vector3Int coordinates, string name)
     {
-        Debug.Log(coordinates);
         Tile wall = ScriptableObject.CreateInstance<Tile>();
         wall.sprite = TerrainSprites[name];
         Terrain.SetTile(coordinates, wall);
         //Terrain.RefreshAllTiles();
         return true;
     }
+
 }
