@@ -10,20 +10,22 @@ using UnityEngine.U2D;
 public class TileWall : Tile
 {
     public string wallName { get; set; }
+
     public override void RefreshTile(Vector3Int position, ITilemap tilemap)
     {
         SelectNewSprite(position, tilemap, true);
     }
+
     private void SelectNewSprite(Vector3Int position, ITilemap tilemap, bool continueToNeighbors)
     {
         string spriteName = wallName + "_";
-        string[] directions = { "N", "E", "S", "W" };
+        string[] directions = {"N", "E", "S", "W"};
         Dictionary<string, Vector3Int> neighobrs = new Dictionary<string, Vector3Int>
         {
-            { "N", new Vector3Int(position.x, position.y + 1, position.z) },
-            { "E", new Vector3Int(position.x + 1, position.y, position.z) },
-            { "S", new Vector3Int(position.x, position.y - 1, position.z) },
-            { "W", new Vector3Int(position.x - 1, position.y, position.z) },
+            {"N", new Vector3Int(position.x, position.y + 1, position.z)},
+            {"E", new Vector3Int(position.x + 1, position.y, position.z)},
+            {"S", new Vector3Int(position.x, position.y - 1, position.z)},
+            {"W", new Vector3Int(position.x - 1, position.y, position.z)},
         };
         foreach (var direction in directions)
         {
@@ -44,6 +46,7 @@ public class TileWall : Tile
         {
             sprite = MapController.WallSprites[spriteName];
         }
+
         base.RefreshTile(position, tilemap);
     }
 
@@ -58,18 +61,18 @@ public class TileWall : Tile
         TileBase tile = tilemap.GetTile(position);
         return (tile != null);
     }
-
-
 }
 
 public class MapController : MonoBehaviour
 {
+    public AstarPath AstarPath;
     public Tilemap Terrain;
     public Tilemap Walls;
     static public Dictionary<string, Sprite> WallSprites = new Dictionary<string, Sprite>();
     static public Dictionary<string, Sprite> TerrainSprites = new Dictionary<string, Sprite>();
     private int _maxWallTiles = 0;
     private int _maxTerrainTiles = 0;
+
     private string TERRAIN_AFTER_WALL_DECON = "Concrete";
     // Start is called before the first frame update
 
@@ -106,13 +109,13 @@ public class MapController : MonoBehaviour
             Sprite result = handle.Result;
             WallSprites[result.name] = result;
         }
-
     }
 
     void Start()
     {
-        string[] directions = { "", "E", "ES", "ESW", "EW", "N", "NE", "NES", "NESW", "NEW", "NS", "NSW", "NW", "S", "SW", "W" };
-        string[] wallNames = { "ConcreteWall" };
+        string[] directions =
+            {"", "E", "ES", "ESW", "EW", "N", "NE", "NES", "NESW", "NEW", "NS", "NSW", "NW", "S", "SW", "W"};
+        string[] wallNames = {"ConcreteWall"};
         foreach (var wallName in wallNames)
         {
             foreach (var direction in directions)
@@ -122,7 +125,7 @@ public class MapController : MonoBehaviour
                 SpriteHandle.Completed += Sprite_Completed;
             }
         }
-        
+
         //string[] terrainNames = { "Grass", "Dirt" };
         //foreach (var terrainName in terrainNames)
         //{
@@ -135,7 +138,6 @@ public class MapController : MonoBehaviour
         SpriteAtlasHandle.Completed += SpriteAtlas_Completed;
         _maxTerrainTiles = 3;
         _maxWallTiles = directions.Length * wallNames.Length;
-
     }
 
     private bool _mapInitialized = false;
@@ -146,7 +148,7 @@ public class MapController : MonoBehaviour
     {
         int MAP_LIMIT = 100;
 
-        var terrain_names = new List<string>{"Grass", "Dirt", "Concrete"};
+        var terrain_names = new List<string> {"Grass", "Dirt", "Concrete"};
         var terrain_tiles = new List<Tile>();
         foreach (var name in terrain_names)
         {
@@ -154,6 +156,7 @@ public class MapController : MonoBehaviour
             terrain.sprite = TerrainSprites[name];
             terrain_tiles.Add(terrain);
         }
+
         for (int x = -MAP_LIMIT; x < MAP_LIMIT; x++)
         {
             for (int y = -MAP_LIMIT; y < MAP_LIMIT; y++)
@@ -164,13 +167,15 @@ public class MapController : MonoBehaviour
                 Terrain.SetTile(new Vector3Int(x, y, -2), terrain_tiles[index]);
                 //Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[0]);
             }
+
             yield return null;
         }
-        //AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
+
+        AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
     }
+
     private void InitializeMap()
     {
-        
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
         Debug.Log("All walls loaded.");
@@ -187,6 +192,7 @@ public class MapController : MonoBehaviour
             Walls.SetTile(new Vector3Int(x, 0, -2), wallTop);
             Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, -2), wallBottom);
         }
+
         for (int y = 0; y < ROOM_LIMIT; y++)
         {
             TileWall wallLeft = ScriptableObject.CreateInstance<TileWall>();
@@ -198,17 +204,18 @@ public class MapController : MonoBehaviour
             Walls.SetTile(new Vector3Int(0, y, -2), wallLeft);
             Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, -2), wallRight);
         }
-        for (int x = 30; x < ROOM_LIMIT + 30; x++)
-            for (int y = 0; y < ROOM_LIMIT; y++)
-            {
-                TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-                wall.wallName = WALL_NAME;
-                Walls.SetTile(new Vector3Int(x, y, -2), wall);
 
-            }
+        for (int x = 30; x < ROOM_LIMIT + 30; x++)
+        for (int y = 0; y < ROOM_LIMIT; y++)
+        {
+            TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+            wall.wallName = WALL_NAME;
+            Walls.SetTile(new Vector3Int(x, y, -2), wall);
+        }
 
         StartCoroutine("LoadTerrain");
     }
+
     private void Update()
     {
         if (WallSprites.Count != _maxWallTiles || TerrainSprites.Count != _maxTerrainTiles)
@@ -221,22 +228,24 @@ public class MapController : MonoBehaviour
     {
         return Vector3Int.FloorToInt(Camera.main.ScreenToWorldPoint(mousePosition));
     }
+
     public bool BuildWall(Vector3Int coordinates)
     {
         if (Walls.HasTile(coordinates))
             return false;
-        //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
+        AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
         //Walls.RefreshAllTiles();
         return true;
     }
+
     public bool DestroyWall(Vector3Int coordinates)
     {
         if (!Walls.HasTile(coordinates))
             return false;
-        //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
+        AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         Walls.SetTile(coordinates, null);
         BuildTerrain(coordinates, TERRAIN_AFTER_WALL_DECON);
         //Walls.RefreshAllTiles();
@@ -253,5 +262,4 @@ public class MapController : MonoBehaviour
         //Terrain.RefreshAllTiles();
         return true;
     }
-
 }
