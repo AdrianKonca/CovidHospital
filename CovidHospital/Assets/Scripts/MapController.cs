@@ -70,6 +70,7 @@ public class MapController : MonoBehaviour
     static public Dictionary<string, Sprite> TerrainSprites = new Dictionary<string, Sprite>();
     private int _maxWallTiles = 0;
     private int _maxTerrainTiles = 0;
+    private string TERRAIN_AFTER_WALL_DECON = "Concrete";
     // Start is called before the first frame update
 
     private void SpriteAtlas_Completed(AsyncOperationHandle<SpriteAtlas> handle)
@@ -222,6 +223,8 @@ public class MapController : MonoBehaviour
     }
     public bool BuildWall(Vector3Int coordinates)
     {
+        if (Walls.HasTile(coordinates))
+            return false;
         //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
@@ -231,8 +234,11 @@ public class MapController : MonoBehaviour
     }
     public bool DestroyWall(Vector3Int coordinates)
     {
+        if (!Walls.HasTile(coordinates))
+            return false;
         //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         Walls.SetTile(coordinates, null);
+        BuildTerrain(coordinates, TERRAIN_AFTER_WALL_DECON);
         //Walls.RefreshAllTiles();
         return true;
     }
