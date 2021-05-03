@@ -245,6 +245,8 @@ public class MapController : MonoBehaviour
 
     public bool BuildTerrain(Vector3Int coordinates, string name)
     {
+        if (Walls.HasTile(coordinates))
+            return false;
         Tile wall = ScriptableObject.CreateInstance<Tile>();
         wall.sprite = TerrainSprites[name];
         Terrain.SetTile(coordinates, wall);
