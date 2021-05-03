@@ -60,3 +60,6 @@ crashlytics-build.properties
 
 # Python
 /Python/__pycache__
+
+#Rider
+.idea
