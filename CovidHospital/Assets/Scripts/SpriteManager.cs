@@ -112,9 +112,9 @@ public class SpriteManager : MonoBehaviour
 
     static public Sprite GetFurnitureSpriteByName(string name, string direction)
     {
-        if (FurnitureSprites.ContainsKey(name))
-            return FurnitureSprites[name];
-        Debug.LogWarning(string.Format("Furniture sprite not found: {0}[{1}]", name, direction));
+        if (FurnitureSprites.ContainsKey(name + "_" + direction))
+            return FurnitureSprites[name + "_" + direction];
+        Debug.LogWarning(string.Format("Furniture sprite not found: {0}_{1}", name, direction));
         return null;
     }
 }

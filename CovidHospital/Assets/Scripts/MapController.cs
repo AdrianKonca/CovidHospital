@@ -171,15 +171,16 @@ public class MapController : MonoBehaviour
         Terrain.SetTile(coordinates, wall);
         return true;
     }
-    //public bool BuildFurniture(Vector3Int coordinates, string name)
-    //{
-    //    if (Walls.HasTile(coordinates))
-    //        return false;
-    //    Tile wall = ScriptableObject.CreateInstance<Tile>();
-    //    wall.sprite = TerrainSprites[name];
-    //    Terrain.SetTile(coordinates, wall);
-    //    //Terrain.RefreshAllTiles();
-    //    return true;
-    //}
+    public bool BuildFurniture(Vector3Int coordinates, string name, string rotation)
+    {
+        Debug.Log(string.Format("Building furniture: {0}_{1}", name, rotation));
+        //if (Walls.HasTile(coordinates))
+        //    return false;
+
+        //wall.sprite = SpriteManager.FurnitureSprites[name + "_" + rotation];
+        //Terrain.SetTile(coordinates, wall);
+        //Terrain.RefreshAllTiles();
+        return true;
+    }
 
 }

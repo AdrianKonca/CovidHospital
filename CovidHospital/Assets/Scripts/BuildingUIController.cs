@@ -13,7 +13,9 @@ public class BuildingUIController : MonoBehaviour
     public BuildingController buildingController;
     public Sprite defaultSprite;
     public Sprite deconstructionSprite;
+    public Dropdown FurnitureSelection;
     private SpriteRenderer _previewSpriteRenderer;
+
     void Awake()
     {
         _previewSpriteRenderer = buildingController.preview.GetComponent<SpriteRenderer>();
@@ -37,14 +39,38 @@ public class BuildingUIController : MonoBehaviour
 
     public void OnBuildTerrainButtonClicked()
     {
-        
+
         _previewSpriteRenderer.sprite = SpriteManager.GetTerrainSpriteByName("Concrete");
         buildingController.SetState(
             BuildingController.State.BuildTerrain
         );
+    }
+    public void OnBuildFurnitureButtonClicked()
+    {
+        string furnitureName = FurnitureSelection.options[FurnitureSelection.value].text;
+        UpdateFurnitureSprite(furnitureName, "N");
+        buildingController.CurrentObjectName = furnitureName;
+        buildingController.SetState(
+            BuildingController.State.BuildFurniture
+        );
+        
+    }
+    public void UpdateFurnitureSprite(string name, string rotation)
+    {
+        _previewSpriteRenderer.sprite = SpriteManager.GetFurnitureSpriteByName(name, rotation);
+    }
+    public void OnDestroyFurnitureButtonClicked()
+    {
+
+        SetSelectionSprite(SelectionType.Deconstruction);
+        buildingController.SetState(
+            BuildingController.State.DestroyFurniture
+        );
 
     }
 
+
+    
     public void SetSelectionSprite(SelectionType type)
     {
         switch (type)
