@@ -87,9 +87,7 @@ public class MapController : MonoBehaviour
             {
                 float noise = Mathf.PerlinNoise(x / 10f + MAP_LIMIT, y / 10f + MAP_LIMIT);
                 int index = noise < 0.6f ? 0 : 1;
-
                 Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[index]);
-                //Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[0]);
             }
             yield return null;
         }
@@ -100,8 +98,6 @@ public class MapController : MonoBehaviour
         
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
-        Debug.Log("All walls loaded.");
-        Debug.Log("All terrains loaded.");
         Walls.ClearAllEditorPreviewTiles();
         for (int x = 0; x < ROOM_LIMIT; x++)
         {

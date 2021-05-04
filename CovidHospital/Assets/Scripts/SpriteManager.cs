@@ -12,7 +12,8 @@ public class SpriteManager : MonoBehaviour
     static public Dictionary<string, Sprite> WallSprites = new Dictionary<string, Sprite>();
     static public Dictionary<string, Sprite> TerrainSprites = new Dictionary<string, Sprite>();
     static public Dictionary<string, Sprite> FurnitureSprites = new Dictionary<string, Sprite>();
-    static private bool terrainTilesLoaded = false;
+    static private bool _terrainTilesLoaded = false;
+    static private bool _furnitureTilesLoaded = false;
     static private int _maxWallTiles = 0;
 
     private void TerrainSpriteAtlas_Completed(AsyncOperationHandle<SpriteAtlas> handle)
@@ -29,7 +30,26 @@ public class SpriteManager : MonoBehaviour
                 TerrainSprites[sprite.name] = sprite;
             }
         }
-        terrainTilesLoaded = true;
+        Debug.Log("All terrain sprites loaded");
+        _terrainTilesLoaded = true;
+    }
+
+    private void FurnitureSpriteAtlas_Completed(AsyncOperationHandle<SpriteAtlas> handle)
+    {
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            SpriteAtlas result = handle.Result;
+            var sprites = new Sprite[result.spriteCount];
+            result.GetSprites(sprites);
+            foreach (var sprite in sprites)
+            {
+                //TODO: Investigate why sprites are initialized with (Clone) postfix;
+                sprite.name = sprite.name.Replace("(Clone)", "");
+                FurnitureSprites[sprite.name] = sprite;
+            }
+        }
+        Debug.Log("All furniture sprites loaded");
+        _furnitureTilesLoaded = true;
     }
 
     private void WallSprite_Completed(AsyncOperationHandle<Sprite> handle)
@@ -54,20 +74,15 @@ public class SpriteManager : MonoBehaviour
                 SpriteHandle.Completed += WallSprite_Completed;
             }
         }
-
-        //string[] terrainNames = { "Grass", "Dirt" };
-        //foreach (var terrainName in terrainNames)
-        //{
-        //    string terrainAddress = string.Format("Assets/Sprites/Terrain/Terrains.png[{0}]", terrainName);
-        //    AsyncOperationHandle<Sprite> SpriteHandle = Addressables.LoadAssetAsync<Sprite>(terrainAddress);
-        //    SpriteHandle.Completed += SpriteTerrain_Completed;
-        //}
+        _maxWallTiles = directions.Length * wallNames.Length;
 
         var atlasAddress = "Assets/Sprites/Terrain/Terrain.spriteatlas";
         AsyncOperationHandle<SpriteAtlas> SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
         SpriteAtlasHandle.Completed += TerrainSpriteAtlas_Completed;
 
-        _maxWallTiles = directions.Length * wallNames.Length;
+        atlasAddress = "Assets/Sprites/Objects/Furniture.spriteatlas";
+        SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
+        SpriteAtlasHandle.Completed += FurnitureSpriteAtlas_Completed;
 
     }
 
@@ -76,7 +91,7 @@ public class SpriteManager : MonoBehaviour
     {
         if (AllSpritesLoaded)
             return;
-        if (terrainTilesLoaded && _maxWallTiles == WallSprites.Count)
+        if (_terrainTilesLoaded && _furnitureTilesLoaded && _maxWallTiles == WallSprites.Count)
             AllSpritesLoaded = true;
     }
 
