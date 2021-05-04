@@ -19,6 +19,7 @@ public class BuildingController : MonoBehaviour
     Controls _controls;
     PlayerInput _playerInput;
     MapController _mapController;
+    BuildingUIController _uiController;
 
     Vector2 _mousePosition = new Vector2();
     bool _actionStarted = false;
@@ -75,6 +76,7 @@ public class BuildingController : MonoBehaviour
         }
         else if (action.action.name == _controls.Player.Cancel.name)
         {
+            _uiController.SetSelectionSprite(BuildingUIController.SelectionType.Default);
             _state = State.Inactive;
         }
     }
@@ -86,5 +88,9 @@ public class BuildingController : MonoBehaviour
         preview.transform.position = _mapController.GetMousePosition(_mousePosition) + new Vector3(0.5f, 0.5f);
 
         Build();
+    }
+    public void SetBuildingUIController(BuildingUIController controller)
+    {
+        _uiController = controller;
     }
 }

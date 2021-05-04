@@ -58,8 +58,6 @@ public class TileWall : Tile
         TileBase tile = tilemap.GetTile(position);
         return (tile != null);
     }
-
-
 }
 
 public class MapController : MonoBehaviour
@@ -89,16 +87,6 @@ public class MapController : MonoBehaviour
         }
     }
 
-    private void SpriteTerrain_Completed(AsyncOperationHandle<Sprite> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            Sprite result = handle.Result;
-            Debug.Log(result.name);
-            TerrainSprites[result.name] = result;
-        }
-    }
-
     private void Sprite_Completed(AsyncOperationHandle<Sprite> handle)
     {
         if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -122,7 +110,7 @@ public class MapController : MonoBehaviour
                 SpriteHandle.Completed += Sprite_Completed;
             }
         }
-        
+
         //string[] terrainNames = { "Grass", "Dirt" };
         //foreach (var terrainName in terrainNames)
         //{
@@ -132,6 +120,7 @@ public class MapController : MonoBehaviour
         //}
         var atlasAddress = "Assets/Sprites/Terrain/Terrain.spriteatlas";
         AsyncOperationHandle<SpriteAtlas> SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
+
         SpriteAtlasHandle.Completed += SpriteAtlas_Completed;
         _maxTerrainTiles = 3;
         _maxWallTiles = directions.Length * wallNames.Length;
@@ -204,9 +193,7 @@ public class MapController : MonoBehaviour
                 TileWall wall = ScriptableObject.CreateInstance<TileWall>();
                 wall.wallName = WALL_NAME;
                 Walls.SetTile(new Vector3Int(x, y, -2), wall);
-
             }
-
         StartCoroutine("LoadTerrain");
     }
     private void Update()
@@ -253,5 +240,28 @@ public class MapController : MonoBehaviour
         //Terrain.RefreshAllTiles();
         return true;
     }
-
+    //public bool BuildFurniture(Vector3Int coordinates, string name)
+    //{
+    //    if (Walls.HasTile(coordinates))
+    //        return false;
+    //    Tile wall = ScriptableObject.CreateInstance<Tile>();
+    //    wall.sprite = TerrainSprites[name];
+    //    Terrain.SetTile(coordinates, wall);
+    //    //Terrain.RefreshAllTiles();
+    //    return true;
+    //}
+    static public Sprite GetWallSpriteByName(string name)
+    {
+        if (WallSprites.ContainsKey(name + "_"))
+            return WallSprites[name + "_"];
+        Debug.Log("Wall Sprite not found: " + name + "_");
+        return null;
+    }
+    static public Sprite GetTerrainSpriteByName(string name)
+    {
+        if (TerrainSprites.ContainsKey(name))
+            return TerrainSprites[name];
+        Debug.Log("Terrain Sprite not found: " + name);
+        return null;
+    }
 }
