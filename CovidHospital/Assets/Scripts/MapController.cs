@@ -185,18 +185,5 @@ public class MapController : MonoBehaviour
     //    //Terrain.RefreshAllTiles();
     //    return true;
     //}
-    static public Sprite GetWallSpriteByName(string name)
-    {
-        if (SpriteManager.WallSprites.ContainsKey(name + "_"))
-            return SpriteManager.WallSprites[name + "_"];
-        Debug.Log("Wall Sprite not found: " + name + "_");
-        return null;
-    }
-    static public Sprite GetTerrainSpriteByName(string name)
-    {
-        if (SpriteManager.TerrainSprites.ContainsKey(name))
-            return SpriteManager.TerrainSprites[name];
-        Debug.Log("Terrain Sprite not found: " + name);
-        return null;
-    }
+
 }

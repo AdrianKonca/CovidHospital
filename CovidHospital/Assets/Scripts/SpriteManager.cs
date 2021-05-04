@@ -11,6 +11,7 @@ public class SpriteManager : MonoBehaviour
 
     static public Dictionary<string, Sprite> WallSprites = new Dictionary<string, Sprite>();
     static public Dictionary<string, Sprite> TerrainSprites = new Dictionary<string, Sprite>();
+    static public Dictionary<string, Sprite> FurnitureSprites = new Dictionary<string, Sprite>();
     static private bool terrainTilesLoaded = false;
     static private int _maxWallTiles = 0;
 
@@ -77,5 +78,28 @@ public class SpriteManager : MonoBehaviour
             return;
         if (terrainTilesLoaded && _maxWallTiles == WallSprites.Count)
             AllSpritesLoaded = true;
+    }
+
+    static public Sprite GetWallSpriteByName(string name)
+    {
+        if (WallSprites.ContainsKey(name + "_"))
+            return WallSprites[name + "_"];
+        Debug.LogWarning("Wall sprite not found: " + name + "_");
+        return null;
+    }
+    static public Sprite GetTerrainSpriteByName(string name)
+    {
+        if (TerrainSprites.ContainsKey(name))
+            return TerrainSprites[name];
+        Debug.LogWarning("Terrain sprite not found: " + name);
+        return null;
+    }
+
+    static public Sprite GetFurnitureSpriteByName(string name, string direction)
+    {
+        if (FurnitureSprites.ContainsKey(name))
+            return FurnitureSprites[name];
+        Debug.LogWarning(string.Format("Furniture sprite not found: {0}[{1}]", name, direction));
+        return null;
     }
 }

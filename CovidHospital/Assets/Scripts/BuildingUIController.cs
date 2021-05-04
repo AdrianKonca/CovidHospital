@@ -21,7 +21,7 @@ public class BuildingUIController : MonoBehaviour
     }
     public void OnBuildWallButtonClicked()
     {
-        _previewSpriteRenderer.sprite = MapController.GetWallSpriteByName("ConcreteWall");
+        _previewSpriteRenderer.sprite = SpriteManager.GetWallSpriteByName("ConcreteWall");
         buildingController.SetState(
             BuildingController.State.BuildWall
         );
@@ -38,7 +38,7 @@ public class BuildingUIController : MonoBehaviour
     public void OnBuildTerrainButtonClicked()
     {
         
-        _previewSpriteRenderer.sprite = MapController.GetTerrainSpriteByName("Concrete");
+        _previewSpriteRenderer.sprite = SpriteManager.GetTerrainSpriteByName("Concrete");
         buildingController.SetState(
             BuildingController.State.BuildTerrain
         );
