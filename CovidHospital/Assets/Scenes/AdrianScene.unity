@@ -364,13 +364,31 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2789354753894790164}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1081956694 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2455220904322201068, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2455220903014527627}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1081956695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081956694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5abe4f6254209245bd97129f503e105, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1584891752 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2455220904322201059, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
     type: 3}
   m_PrefabInstance: {fileID: 2455220903014527627}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1081956694}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07d5f29a9f2b25142a2f7f408dc4e4fc, type: 3}
@@ -575,9 +593,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2742087090480291049, guid: 7ab1b83e6c23058428210f06cdf87485,
         type: 3}
+      propertyPath: defaultSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6e340fa2960f9ea42b724613d86b64a2,
+        type: 3}
+    - target: {fileID: 2742087090480291049, guid: 7ab1b83e6c23058428210f06cdf87485,
+        type: 3}
       propertyPath: buildingController
       value: 
       objectReference: {fileID: 1584891752}
+    - target: {fileID: 2742087090480291049, guid: 7ab1b83e6c23058428210f06cdf87485,
+        type: 3}
+      propertyPath: deconstructionSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2fe26664cd7ab9a4aa1707ed989bea55,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ab1b83e6c23058428210f06cdf87485, type: 3}
 --- !u!1001 &2789354753894790164

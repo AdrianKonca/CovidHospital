@@ -38,11 +38,11 @@ public class TileWall : Tile
         if (!continueToNeighbors)
         {
             TileWall me = tilemap.GetTile<TileWall>(position);
-            me.sprite = MapController.WallSprites[spriteName];
+            me.sprite = SpriteManager.WallSprites[spriteName];
         }
         else
         {
-            sprite = MapController.WallSprites[spriteName];
+            sprite = SpriteManager.WallSprites[spriteName];
         }
         base.RefreshTile(position, tilemap);
     }
@@ -64,72 +64,10 @@ public class MapController : MonoBehaviour
 {
     public Tilemap Terrain;
     public Tilemap Walls;
-    static public Dictionary<string, Sprite> WallSprites = new Dictionary<string, Sprite>();
-    static public Dictionary<string, Sprite> TerrainSprites = new Dictionary<string, Sprite>();
-    private int _maxWallTiles = 0;
-    private int _maxTerrainTiles = 0;
-    private string TERRAIN_AFTER_WALL_DECON = "Concrete";
-    // Start is called before the first frame update
-
-    private void SpriteAtlas_Completed(AsyncOperationHandle<SpriteAtlas> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            SpriteAtlas result = handle.Result;
-            var sprites = new Sprite[result.spriteCount];
-            result.GetSprites(sprites);
-            foreach (var sprite in sprites)
-            {
-                //TODO: Investigate why sprites are initialized with (Clone) postfix;
-                sprite.name = sprite.name.Replace("(Clone)", "");
-                TerrainSprites[sprite.name] = sprite;
-            }
-        }
-    }
-
-    private void Sprite_Completed(AsyncOperationHandle<Sprite> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            Sprite result = handle.Result;
-            WallSprites[result.name] = result;
-        }
-
-    }
-
-    void Start()
-    {
-        string[] directions = { "", "E", "ES", "ESW", "EW", "N", "NE", "NES", "NESW", "NEW", "NS", "NSW", "NW", "S", "SW", "W" };
-        string[] wallNames = { "ConcreteWall" };
-        foreach (var wallName in wallNames)
-        {
-            foreach (var direction in directions)
-            {
-                string address = string.Format("Assets/Sprites/Walls/{0}.png[{0}_{1}]", wallName, direction);
-                AsyncOperationHandle<Sprite> SpriteHandle = Addressables.LoadAssetAsync<Sprite>(address);
-                SpriteHandle.Completed += Sprite_Completed;
-            }
-        }
-
-        //string[] terrainNames = { "Grass", "Dirt" };
-        //foreach (var terrainName in terrainNames)
-        //{
-        //    string terrainAddress = string.Format("Assets/Sprites/Terrain/Terrains.png[{0}]", terrainName);
-        //    AsyncOperationHandle<Sprite> SpriteHandle = Addressables.LoadAssetAsync<Sprite>(terrainAddress);
-        //    SpriteHandle.Completed += SpriteTerrain_Completed;
-        //}
-        var atlasAddress = "Assets/Sprites/Terrain/Terrain.spriteatlas";
-        AsyncOperationHandle<SpriteAtlas> SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
-
-        SpriteAtlasHandle.Completed += SpriteAtlas_Completed;
-        _maxTerrainTiles = 3;
-        _maxWallTiles = directions.Length * wallNames.Length;
-
-    }
-
     private bool _mapInitialized = false;
-
-    string WALL_NAME = "ConcreteWall";
+    private string WALL_NAME = "ConcreteWall";
+    private string TERRAIN_AFTER_WALL_DECON = "Concrete";
+    private int DEFAULT_HEIGHT_Z = -2;
 
     private IEnumerator LoadTerrain()
     {
@@ -140,7 +78,7 @@ public class MapController : MonoBehaviour
         foreach (var name in terrain_names)
         {
             var terrain = ScriptableObject.CreateInstance<Tile>();
-            terrain.sprite = TerrainSprites[name];
+            terrain.sprite = SpriteManager.TerrainSprites[name];
             terrain_tiles.Add(terrain);
         }
         for (int x = -MAP_LIMIT; x < MAP_LIMIT; x++)
@@ -150,7 +88,7 @@ public class MapController : MonoBehaviour
                 float noise = Mathf.PerlinNoise(x / 10f + MAP_LIMIT, y / 10f + MAP_LIMIT);
                 int index = noise < 0.6f ? 0 : 1;
 
-                Terrain.SetTile(new Vector3Int(x, y, -2), terrain_tiles[index]);
+                Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[index]);
                 //Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[0]);
             }
             yield return null;
@@ -173,8 +111,8 @@ public class MapController : MonoBehaviour
             wallTop.wallName = WALL_NAME;
             wallBottom.wallName = WALL_NAME;
 
-            Walls.SetTile(new Vector3Int(x, 0, -2), wallTop);
-            Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, -2), wallBottom);
+            Walls.SetTile(new Vector3Int(x, 0, DEFAULT_HEIGHT_Z), wallTop);
+            Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, DEFAULT_HEIGHT_Z), wallBottom);
         }
         for (int y = 0; y < ROOM_LIMIT; y++)
         {
@@ -184,21 +122,21 @@ public class MapController : MonoBehaviour
             wallLeft.wallName = WALL_NAME;
             wallRight.wallName = WALL_NAME;
 
-            Walls.SetTile(new Vector3Int(0, y, -2), wallLeft);
-            Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, -2), wallRight);
+            Walls.SetTile(new Vector3Int(0, y, DEFAULT_HEIGHT_Z), wallLeft);
+            Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, DEFAULT_HEIGHT_Z), wallRight);
         }
         for (int x = 30; x < ROOM_LIMIT + 30; x++)
             for (int y = 0; y < ROOM_LIMIT; y++)
             {
                 TileWall wall = ScriptableObject.CreateInstance<TileWall>();
                 wall.wallName = WALL_NAME;
-                Walls.SetTile(new Vector3Int(x, y, -2), wall);
+                Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
             }
         StartCoroutine("LoadTerrain");
     }
     private void Update()
     {
-        if (WallSprites.Count != _maxWallTiles || TerrainSprites.Count != _maxTerrainTiles)
+        if (!SpriteManager.AllSpritesLoaded)
             return;
         if (!_mapInitialized)
             InitializeMap();
@@ -216,7 +154,6 @@ public class MapController : MonoBehaviour
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
-        //Walls.RefreshAllTiles();
         return true;
     }
     public bool DestroyWall(Vector3Int coordinates)
@@ -226,7 +163,6 @@ public class MapController : MonoBehaviour
         //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         Walls.SetTile(coordinates, null);
         BuildTerrain(coordinates, TERRAIN_AFTER_WALL_DECON);
-        //Walls.RefreshAllTiles();
         return true;
     }
 
@@ -235,9 +171,8 @@ public class MapController : MonoBehaviour
         if (Walls.HasTile(coordinates))
             return false;
         Tile wall = ScriptableObject.CreateInstance<Tile>();
-        wall.sprite = TerrainSprites[name];
+        wall.sprite = SpriteManager.TerrainSprites[name];
         Terrain.SetTile(coordinates, wall);
-        //Terrain.RefreshAllTiles();
         return true;
     }
     //public bool BuildFurniture(Vector3Int coordinates, string name)
@@ -252,15 +187,15 @@ public class MapController : MonoBehaviour
     //}
     static public Sprite GetWallSpriteByName(string name)
     {
-        if (WallSprites.ContainsKey(name + "_"))
-            return WallSprites[name + "_"];
+        if (SpriteManager.WallSprites.ContainsKey(name + "_"))
+            return SpriteManager.WallSprites[name + "_"];
         Debug.Log("Wall Sprite not found: " + name + "_");
         return null;
     }
     static public Sprite GetTerrainSpriteByName(string name)
     {
-        if (TerrainSprites.ContainsKey(name))
-            return TerrainSprites[name];
+        if (SpriteManager.TerrainSprites.ContainsKey(name))
+            return SpriteManager.TerrainSprites[name];
         Debug.Log("Terrain Sprite not found: " + name);
         return null;
     }
