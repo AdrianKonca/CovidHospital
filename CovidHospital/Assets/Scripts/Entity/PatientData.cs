@@ -21,6 +21,11 @@ namespace Entity
         public float hygiene;
         public float toilet;
 
+        public event EventHandler OnLowComfort;
+        public event EventHandler OnLowHunger;
+        public event EventHandler OnLowHygiene;
+        public event EventHandler OnLowToilet;
+
         public PatientData()
         {
             covidProgress = 50;
@@ -111,25 +116,70 @@ namespace Entity
         public void AddComfort(float delta)
         {
             var NewComfort = comfort + delta;
-            comfort = Mathf.Clamp(NewComfort, 0, 1);
+            comfort = Mathf.Clamp(NewComfort, 0, MaxNeedsValue);
+
+            if (comfort < MaxNeedsValue / 2f)
+            {
+                OnLowComfort?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void AddHunger(float delta)
         {
-            var NewHunger = comfort + delta;
-            hunger = Mathf.Clamp(NewHunger, 0, 1);
+            var NewHunger = hunger + delta;
+            hunger = Mathf.Clamp(NewHunger, 0, MaxNeedsValue);
+
+            if (hunger < MaxNeedsValue / 2f)
+            {
+                OnLowHunger?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void AddHygiene(float delta)
         {
-            var NewHygiene = comfort + delta;
-            hygiene = Mathf.Clamp(NewHygiene, 0, 1);
+            var NewHygiene = hygiene + delta;
+            hygiene = Mathf.Clamp(NewHygiene, 0, MaxNeedsValue);
+
+            if (hygiene < MaxNeedsValue / 2f)
+            {
+                OnLowHygiene?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void AddToilet(float delta)
         {
-            var NewToilet = comfort + delta;
-            toilet = Mathf.Clamp(NewToilet, 0, 1);
+            var NewToilet = toilet + delta;
+            toilet = Mathf.Clamp(NewToilet, 0, MaxNeedsValue);
+
+            if (toilet < MaxNeedsValue / 2f)
+            {
+                OnLowToilet?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void ResetToilet()
+        {
+            toilet = MaxNeedsValue;
+        }
+
+        public void ResetHygiene()
+        {
+            hygiene = MaxNeedsValue;
+        }
+
+        public void ResetHunger()
+        {
+            hunger = MaxNeedsValue;
+        }
+
+        public void ResetComfort()
+        {
+            comfort = MaxNeedsValue;
+        }
+
+        public void SetComfortNormalized(float scale)
+        {
+            comfort = MaxNeedsValue * scale;
         }
     }
 }

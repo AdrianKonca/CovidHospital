@@ -1,4 +1,5 @@
 ﻿using System;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -14,6 +15,13 @@ namespace Entity
         public float covidRegressMultiplier = 1;
         public float covidProgressMultiplier = 1;
 
+        public GameObject toilet;
+        public GameObject bed;
+        public GameObject canteen;
+        public GameObject shower;
+
+        private AIDestinationSetter _aiDestinationSetter;
+
         private void CovidRegress(float delta)
         {
             float AgeOffSet = 50f;
@@ -26,7 +34,6 @@ namespace Entity
             patientData.AddCovidProgress(ProgressToSubtract * covidRegressMultiplier);
             slider.value = patientData.covidProgress;
         }
-
 
         private void CovidProgress(float delta)
         {
@@ -53,21 +60,49 @@ namespace Entity
         {
             PawnData = ScriptableObject.CreateInstance<PawnData>();
             patientData = ScriptableObject.CreateInstance<PatientData>();
-            Debug.Log("Age " + PawnData.age);
+
             timeController.OnDayIncrease += TimeControllerOnOnDayIncrease;
             timeController.OnHourIncrease += TimeControllerOnOnHourIncrease;
-            timeController.OnMinuteIncrease += TimeControllerOnOnMinuteIncrease;
+
+            patientData.OnLowComfort += PatientDataOnLowComfort;
+            patientData.OnLowHunger += PatientDataOnLowHunger;
+            patientData.OnLowHygiene += PatientDataOnLowHygiene;
+            patientData.OnLowToilet += PatientDataOnLowToilet;
+
+            _aiDestinationSetter = GetComponent<AIDestinationSetter>();
+            _aiDestinationSetter.target = bed.transform;
         }
 
-        private void TimeControllerOnOnMinuteIncrease(int m)
+        public void ReturnToBed()
         {
-            // Debug.Log("minuty wywołane z eventu :" + m);
+            _aiDestinationSetter.target = bed.transform;
+        }
+
+        private void PatientDataOnLowHygiene(object sender, EventArgs e)
+        {
+            _aiDestinationSetter.target = shower.transform;
+        }
+
+        private void PatientDataOnLowHunger(object sender, EventArgs e)
+        {
+            _aiDestinationSetter.target = canteen.transform;
+        }
+
+        private void PatientDataOnLowComfort(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PatientDataOnLowToilet(object sender, EventArgs e)
+        {
+            _aiDestinationSetter.target = toilet.transform;
         }
 
         private void TimeControllerOnOnHourIncrease(int h)
         {
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
+            patientData.AddToilet(-4f);
         }
 
         private void TimeControllerOnOnDayIncrease(long d)
