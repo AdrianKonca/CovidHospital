@@ -23,6 +23,24 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: d478002966fd451468546a9ca6649089
+    m_Address: Assets/Sprites/Walls/BrickWall.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4a2fd1bfd6eee734aaa2ec0dcd45b046
+    m_Address: Assets/Sprites/Walls/BrickWallLowRez.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: db9a86e98b8ce6b40aca577c9c3dd183
+    m_Address: Assets/Sprites/Walls/wallsE.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ca75e5e80a474de4697c3d237986db88, type: 2}
   m_SchemaSet:

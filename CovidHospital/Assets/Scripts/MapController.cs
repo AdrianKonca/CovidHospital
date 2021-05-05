@@ -81,7 +81,7 @@ public class MapController : MonoBehaviour
     void Start()
     {
         string[] directions = { "", "E", "ES", "ESW", "EW", "N", "NE", "NES", "NESW", "NEW", "NS", "NSW", "NW", "S", "SW", "W"};
-        string[] wallNames = { "ConcreteWall" };
+        string[] wallNames = { "wallsE" };
         foreach (var wallName in wallNames)
         {
             foreach (var direction in directions)
@@ -96,7 +96,7 @@ public class MapController : MonoBehaviour
 
     private bool _mapInitialized = false;
 
-    string WALL_NAME = "ConcreteWall";
+    string WALL_NAME = "wallsE";
     private void InitializeMap()
     {
         _mapInitialized = true;
