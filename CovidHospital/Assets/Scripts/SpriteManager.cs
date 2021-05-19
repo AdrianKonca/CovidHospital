@@ -5,8 +5,57 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.U2D;
 
+
 public class SpriteManager : MonoBehaviour
 {
+    //Roksana's part
+
+    public string[] spriteAtlasAddress = new string[] {
+        "Assets/Sprites/Pawns/Hair.spriteatlas",
+        "Assets/Sprites/Pawns/Head.spriteatlas",
+        "Assets/Sprites/Pawns/Body.spriteatlas",
+    };
+
+    private Dictionary<string, BodyPart> _bodyPartMap = new Dictionary<string, BodyPart>() {
+        {"hair", BodyPart.Hair },
+        {"head", BodyPart.Head },
+        {"body", BodyPart.Body },
+
+    };
+
+    private Dictionary<string, Direction> _directionMap = new Dictionary<string, Direction>() {
+        {"front", Direction.Front },
+        {"back", Direction.Back },
+        {"right", Direction.Right },
+        {"left", Direction.Left }
+    };
+
+    private void SpriteAtlasLoaded(AsyncOperationHandle<SpriteAtlas> obj) //get spirites 
+    {
+        string[] fileParts;
+        Sprite[] tmpSprites = new Sprite[obj.Result.spriteCount];
+        obj.Result.GetSprites(tmpSprites);
+        foreach (var sprite in tmpSprites)
+        {
+            sprite.name = sprite.name.Replace("(Clone)", "");
+            fileParts = sprite.name.Split("_".ToCharArray());
+
+            var bodyPartId = int.Parse(fileParts[0]);
+            var bodyPart = _bodyPartMap[fileParts[1]];
+
+            AppearanceGenerator.BodyPartId[bodyPart].Add(bodyPartId);
+            AppearanceGenerator.spritesGlobal.Add((
+                bodyPartId,
+                bodyPart,
+                _directionMap[fileParts[2]]
+            ), sprite);
+        }
+        pawnAtlasesLoaded--;
+    }
+    //mixed
+    static private int pawnAtlasesLoaded = 3;
+
+    //Adrian's part
     static public bool AllSpritesLoaded { get; private set; }
 
     static public Dictionary<string, Sprite> WallSprites = new Dictionary<string, Sprite>();
@@ -84,6 +133,11 @@ public class SpriteManager : MonoBehaviour
         SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
         SpriteAtlasHandle.Completed += FurnitureSpriteAtlas_Completed;
 
+        foreach (var adress in spriteAtlasAddress)
+        {
+            string atlasedSpriteAddress = adress;
+            Addressables.LoadAssetAsync<SpriteAtlas>(atlasedSpriteAddress).Completed += SpriteAtlasLoaded;
+        }
     }
 
     // Update is called once per frame
@@ -91,7 +145,7 @@ public class SpriteManager : MonoBehaviour
     {
         if (AllSpritesLoaded)
             return;
-        if (_terrainTilesLoaded && _furnitureTilesLoaded && _maxWallTiles == WallSprites.Count)
+        if (_terrainTilesLoaded && _furnitureTilesLoaded && _maxWallTiles == WallSprites.Count && pawnAtlasesLoaded == 0)
             AllSpritesLoaded = true;
     }
 
