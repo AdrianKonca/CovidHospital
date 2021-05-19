@@ -5,23 +5,28 @@ using UnityEngine;
 
 public class NurseManager : MonoBehaviour
 {
-    public Queue<Pawn> _patientQueue;
+    public Queue<Pawn> patientQueue;
     public event EventHandler OnEnqueue;
 
-    public NurseManager()
+    public void Awake()
     {
-        _patientQueue = new Queue<Pawn>();
+        patientQueue = new Queue<Pawn>();
     }
 
     public void AddPawnToQue(Pawn pawn)
     {
-        _patientQueue.Enqueue(pawn);
+        if (patientQueue.Contains(pawn))
+            return; 
+
+        patientQueue.Enqueue(pawn);
         OnEnqueue?.Invoke(this, EventArgs.Empty);
     }
 
     public Pawn RemovePawnFromQue()
     {
-        
-        return _patientQueue.Dequeue();
+        if (patientQueue.Count > 0)
+            return patientQueue.Dequeue();
+
+        return null;
     }
 }
