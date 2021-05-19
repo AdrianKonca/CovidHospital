@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 3
   immunityDecrease: 2
-  diseaseName: obesity
+  conditionName: Obesity

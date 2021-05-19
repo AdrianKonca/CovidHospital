@@ -1,60 +1,130 @@
 ﻿using System;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
+using static UnityEngine.Random;
 
 namespace Entity
 {
     //nonserializable representation of data, contains sprites and other nonserializable stuff constructed based on PawnData
     public class PawnController : Pawn
     {
+        public TimeController timeController;
         public Slider slider;
-        private PatientData _patientData;
+        public PatientData patientData;
+        public float covidRegressMultiplier = 1;
+        public float covidProgressMultiplier = 1;
+        public float covidUnableToMoveAfter = 50;
 
-        public void ChangeCovidProgress(float delta)
+        public NurseManager nurseManager;
+
+        public GameObject toilet;
+        public GameObject bed;
+        public GameObject canteen;
+        public GameObject shower;
+
+        private AIDestinationSetter _aiDestinationSetter;
+
+        public PawnController(PawnData data) : base(data) { }
+        private void CovidRegress(float delta)
         {
-            //pobrac wszystkie zarazy ich wagi
-            float ImmunityDecrease = _patientData.GetSumOfImmunityDecrease();
+            float AgeOffSet = 50f;
+
+            float AgeMultiplier = (float) Math.Tanh((PawnData.age - AgeOffSet) / 80) * -1 + 1; //<0.4,1.4>
+            float NeedsMultiplier = (float) Math.Max(patientData.GetNormalizedAverageNeeds(), 0.2);
+
+            var ProgressToSubtract = delta * AgeMultiplier * NeedsMultiplier;
+
+            patientData.AddCovidProgress(ProgressToSubtract * covidRegressMultiplier);
+            slider.value = patientData.covidProgress;
+        }
+
+        private void CovidProgress(float delta)
+        {
+            float ImmunityDecrease = patientData.GetSumOfImmunityDecrease();
             float AgeOffSet = 40f;
 
-            //<0.6,1.8>
-            float AgeMultiplayer = (float) Math.Tanh((PawnData.age - AgeOffSet) / 50) + 1f;
+            float AgeMultiplier = (float) Math.Tanh((PawnData.age - AgeOffSet) / 50) + 1f; //<0.6,1.8>
 
-            //<1,1.8>
-            float ImmunityMultiplayer = (float) Math.Tanh(ImmunityDecrease / 30) + 1f;
+            float ImmunityMultiplier = (float) Math.Tanh(ImmunityDecrease / 30) + 1f; //<1,1.8>
+            if (ImmunityDecrease > 100)
+            {
+                ImmunityMultiplier *= 2;
+            }
 
-            // Debug.Log(AgeMultiplayer);
-            // Debug.Log(ImmunityMultiplayer);
+            float NeedsMultiplier = Math.Min(1 / patientData.GetNormalizedAverageNeeds() / 2 + 0.5f, 2f); //<1,2>
 
-            _patientData.covidProgress += delta * AgeMultiplayer * ImmunityMultiplayer;
-            slider.value = _patientData.covidProgress;
+            var ProgressToAdd = delta * AgeMultiplier * ImmunityMultiplier * NeedsMultiplier;
+
+            patientData.AddCovidProgress(ProgressToAdd * covidProgressMultiplier);
+            slider.value = patientData.covidProgress;
         }
 
         private void Awake()
         {
             PawnData = ScriptableObject.CreateInstance<PawnData>();
-            PawnData.role = Role.Patient;
-            PawnData.sex = (Sex) Random.Range(0, 1);
+            patientData = ScriptableObject.CreateInstance<PatientData>();
 
-            //Todo : add Normal distr to age generation
-            PawnData.age = Random.Range(18, 100);
-            PawnData.alive = true;
+            timeController.OnDayIncrease += TimeControllerOnOnDayIncrease;
+            timeController.OnHourIncrease += TimeControllerOnOnHourIncrease;
 
-            _patientData = ScriptableObject.CreateInstance<PatientData>();
+            patientData.OnLowComfort += PatientDataOnLowComfort;
+            patientData.OnLowHunger += PatientDataOnLowHunger;
+            patientData.OnLowHygiene += PatientDataOnLowHygiene;
+            patientData.OnLowToilet += PatientDataOnLowToilet;
 
-            _patientData.comfort = 100;
-
-            //todo: randomize covid progress
-            _patientData.covidProgress = 50;
-
-            Debug.Log("Wiek " + PawnData.age);
-
-            ChangeCovidProgress(0);
+            _aiDestinationSetter = GetComponent<AIDestinationSetter>();
+            _aiDestinationSetter.target = bed.transform;
         }
 
-        private void Update()
+        public void ReturnToBed()
         {
-            ChangeCovidProgress(0.02f);
+            _aiDestinationSetter.target = bed.transform;
+        }
+
+        private void PatientDataOnLowHygiene(object sender, EventArgs e)
+        {
+            if (patientData.covidProgress < covidUnableToMoveAfter)
+                _aiDestinationSetter.target = shower.transform;
+            else
+                nurseManager.AddPawnToQue(this);
+        }
+
+        private void PatientDataOnLowHunger(object sender, EventArgs e)
+        {
+            if (patientData.covidProgress < covidUnableToMoveAfter)
+                _aiDestinationSetter.target = canteen.transform;
+            else
+                nurseManager.AddPawnToQue(this);
+        }
+
+        private void PatientDataOnLowToilet(object sender, EventArgs e)
+        {
+            if (patientData.covidProgress < covidUnableToMoveAfter)
+                _aiDestinationSetter.target = toilet.transform;
+            else
+                nurseManager.AddPawnToQue(this);
+        }
+
+        private void PatientDataOnLowComfort(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+        
+
+        private void TimeControllerOnOnHourIncrease(int h)
+        {
+            //todo poprawic potrzeby
+            
+            CovidRegress(-0.7f);
+            CovidProgress(0.7f);
+            patientData.AddToilet(Range(-5f,-1f));
+            patientData.AddHygiene(Range(-5f, -1f));
+        }
+
+        private void TimeControllerOnOnDayIncrease(long d)
+        {
+            covidRegressMultiplier += 0.025f;
         }
     }
 }

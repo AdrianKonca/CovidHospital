@@ -506,6 +506,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641326bca591bcf40b3e63412766ef1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AstarPath: {fileID: 0}
+  FurnituresPrefabs: []
   Terrain: {fileID: 2455220903664920279}
   Walls: {fileID: 2455220902664327293}
 --- !u!114 &2455220904322201059
@@ -520,5 +522,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d5f29a9f2b25142a2f7f408dc4e4fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildTerrain: 0
   preview: {fileID: 0}
+  CurrentObjectName: 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,37 +8,9 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.U2D;
 
-
-public class PawnData : ScriptableObject 
-{
-    public int HairId;
-    public int HeadId;
-    public int BodyId;
-
-}
-
 public enum BodyPart { Hair, Head, Body}
 public enum Direction { Front, Back, Right, Left }
 
-
-//actual object in the game
-public class Pawn : MonoBehaviour
-{
-    //Dictionary<Direction, Sprite> UpperBodySprites;
-    public Sprite Hair;
-    public Sprite Head;
-    public Sprite Body;
-    
-    public Pawn(PawnData data)
-    {
-        Hair = AppearanceGenerator.spritesGlobal[(data.HairId, BodyPart.Hair, Direction.Front)];
-        Head = AppearanceGenerator.spritesGlobal[(data.HeadId, BodyPart.Head, Direction.Front)];
-        Body = AppearanceGenerator.spritesGlobal[(data.BodyId, BodyPart.Body, Direction.Front)];
-
-    }
-
-    
-}
 
 public class AppearanceGenerator : MonoBehaviour
 {

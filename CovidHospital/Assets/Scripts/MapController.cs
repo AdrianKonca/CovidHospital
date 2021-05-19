@@ -10,20 +10,22 @@ using UnityEngine.U2D;
 public class TileWall : Tile
 {
     public string wallName { get; set; }
+
     public override void RefreshTile(Vector3Int position, ITilemap tilemap)
     {
         SelectNewSprite(position, tilemap, true);
     }
+
     private void SelectNewSprite(Vector3Int position, ITilemap tilemap, bool continueToNeighbors)
     {
         string spriteName = wallName + "_";
-        string[] directions = { "N", "E", "S", "W" };
+        string[] directions = {"N", "E", "S", "W"};
         Dictionary<string, Vector3Int> neighobrs = new Dictionary<string, Vector3Int>
         {
-            { "N", new Vector3Int(position.x, position.y + 1, position.z) },
-            { "E", new Vector3Int(position.x + 1, position.y, position.z) },
-            { "S", new Vector3Int(position.x, position.y - 1, position.z) },
-            { "W", new Vector3Int(position.x - 1, position.y, position.z) },
+            {"N", new Vector3Int(position.x, position.y + 1, position.z)},
+            {"E", new Vector3Int(position.x + 1, position.y, position.z)},
+            {"S", new Vector3Int(position.x, position.y - 1, position.z)},
+            {"W", new Vector3Int(position.x - 1, position.y, position.z)},
         };
         foreach (var direction in directions)
         {
@@ -44,6 +46,7 @@ public class TileWall : Tile
         {
             sprite = SpriteManager.WallSprites[spriteName];
         }
+
         base.RefreshTile(position, tilemap);
     }
 
@@ -62,6 +65,7 @@ public class TileWall : Tile
 
 public class MapController : MonoBehaviour
 {
+    public AstarPath AstarPath;
     public List<GameObject> FurnituresPrefabs;
     public Dictionary<string, GameObject> NameToFurniture = new Dictionary<string, GameObject>();
     //used for building colission detection
@@ -70,6 +74,7 @@ public class MapController : MonoBehaviour
     public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
     public Tilemap Terrain;
     public Tilemap Walls;
+
     private bool _mapInitialized = false;
     private string WALL_NAME = "ConcreteWall";
     private string TERRAIN_AFTER_WALL_DECON = "Concrete";
@@ -80,7 +85,7 @@ public class MapController : MonoBehaviour
     {
         int MAP_LIMIT = 100;
 
-        var terrain_names = new List<string> { "Grass", "Dirt", "Concrete" };
+        var terrain_names = new List<string> {"Grass", "Dirt", "Concrete"};
         var terrain_tiles = new List<Tile>();
         foreach (var name in terrain_names)
         {
@@ -88,6 +93,7 @@ public class MapController : MonoBehaviour
             terrain.sprite = SpriteManager.TerrainSprites[name];
             terrain_tiles.Add(terrain);
         }
+
         for (int x = -MAP_LIMIT; x < MAP_LIMIT; x++)
         {
             for (int y = -MAP_LIMIT; y < MAP_LIMIT; y++)
@@ -96,13 +102,15 @@ public class MapController : MonoBehaviour
                 int index = noise < 0.6f ? 0 : 1;
                 Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[index]);
             }
+
             yield return null;
         }
-        //AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
+
+        AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
     }
+
     private void InitializeMap()
     {
-
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
         Walls.ClearAllEditorPreviewTiles();
@@ -117,6 +125,7 @@ public class MapController : MonoBehaviour
             Walls.SetTile(new Vector3Int(x, 0, DEFAULT_HEIGHT_Z), wallTop);
             Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, DEFAULT_HEIGHT_Z), wallBottom);
         }
+
         for (int y = 0; y < ROOM_LIMIT; y++)
         {
             TileWall wallLeft = ScriptableObject.CreateInstance<TileWall>();
@@ -145,6 +154,7 @@ public class MapController : MonoBehaviour
         }
 
     }
+
     private void Update()
     {
         if (!SpriteManager.AllSpritesLoaded)
@@ -157,21 +167,23 @@ public class MapController : MonoBehaviour
     {
         return Vector3Int.FloorToInt(Camera.main.ScreenToWorldPoint(mousePosition));
     }
+
     public bool BuildWall(Vector3Int coordinates)
     {
         if (Walls.HasTile(coordinates))
             return false;
-        //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
+        AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
         return true;
     }
+
     public bool DestroyWall(Vector3Int coordinates)
     {
         if (!Walls.HasTile(coordinates))
             return false;
-        //AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
+        AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         Walls.SetTile(coordinates, null);
         BuildTerrain(coordinates, TERRAIN_AFTER_WALL_DECON);
         return true;

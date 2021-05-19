@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 4
   immunityDecrease: 10
-  diseaseName: lung cancer
+  conditionName: Lung Cancer
