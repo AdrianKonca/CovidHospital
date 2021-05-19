@@ -99,6 +99,7 @@ namespace Entity
 
         private void TimeControllerOnOnHourIncrease(int h)
         {
+            //todo poprawic potrzeby
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
             patientData.AddToilet(-4f);
