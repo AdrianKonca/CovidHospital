@@ -103,6 +103,7 @@ namespace Entity
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
             patientData.AddToilet(-4f);
+            patientData.AddHygiene(-5f);
         }
 
         private void TimeControllerOnOnDayIncrease(long d)
