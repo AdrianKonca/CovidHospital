@@ -31,35 +31,17 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 5852135935505538600, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-    - {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-    - {fileID: 711061946136450388, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-    - {fileID: -1818099164645460120, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
     - {fileID: -3062193336436783412, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-    - {fileID: 691292305700305925, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-    - {fileID: 8416179097877672357, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-    - {fileID: 487064586880143811, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-    - {fileID: 1702620050945347869, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
+    - {fileID: 711061946136450388, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 487064586880143811, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-  - {fileID: 1702620050945347869, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-  - {fileID: 8416179097877672357, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-  - {fileID: 691292305700305925, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-  - {fileID: -3062193336436783412, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-  - {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-  - {fileID: 5852135935505538600, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
   - {fileID: 711061946136450388, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
-  - {fileID: -1818099164645460120, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
+  - {fileID: -3062193336436783412, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
+  - {fileID: 5852135935505538600, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Sofa_S
-  - Sofa_W
-  - Sofa_N
-  - Sofa_E
+  - Bed
   - Chair
-  - Bed_N
-  - Bed_E
-  - Bed_S
-  - Bed_W
+  - Sofa
   m_Tag: Furniture
   m_IsVariant: 0

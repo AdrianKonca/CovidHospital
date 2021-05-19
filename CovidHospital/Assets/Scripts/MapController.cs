@@ -62,18 +62,25 @@ public class TileWall : Tile
 
 public class MapController : MonoBehaviour
 {
+    public List<GameObject> FurnituresPrefabs;
+    public Dictionary<string, GameObject> NameToFurniture = new Dictionary<string, GameObject>();
+    //used for building colission detection
+    public Dictionary<Vector3Int, GameObject> Furnitures = new Dictionary<Vector3Int, GameObject>();
+    //used for pathfinding
+    public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
     public Tilemap Terrain;
     public Tilemap Walls;
     private bool _mapInitialized = false;
     private string WALL_NAME = "ConcreteWall";
     private string TERRAIN_AFTER_WALL_DECON = "Concrete";
     private int DEFAULT_HEIGHT_Z = -2;
+    private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
 
     private IEnumerator LoadTerrain()
     {
         int MAP_LIMIT = 100;
 
-        var terrain_names = new List<string>{"Grass", "Dirt", "Concrete"};
+        var terrain_names = new List<string> { "Grass", "Dirt", "Concrete" };
         var terrain_tiles = new List<Tile>();
         foreach (var name in terrain_names)
         {
@@ -95,7 +102,7 @@ public class MapController : MonoBehaviour
     }
     private void InitializeMap()
     {
-        
+
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
         Walls.ClearAllEditorPreviewTiles();
@@ -129,6 +136,14 @@ public class MapController : MonoBehaviour
                 Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
             }
         StartCoroutine("LoadTerrain");
+
+        //move to other function
+        foreach (var furniture in FurnituresPrefabs)
+        {
+            Debug.Log(furniture.name);
+            NameToFurniture[furniture.name] = furniture;
+        }
+
     }
     private void Update()
     {
@@ -171,16 +186,72 @@ public class MapController : MonoBehaviour
         Terrain.SetTile(coordinates, wall);
         return true;
     }
-    public bool BuildFurniture(Vector3Int coordinates, string name, string rotation)
-    {
-        Debug.Log(string.Format("Building furniture: {0}_{1}", name, rotation));
-        //if (Walls.HasTile(coordinates))
-        //    return false;
 
-        //wall.sprite = SpriteManager.FurnitureSprites[name + "_" + rotation];
-        //Terrain.SetTile(coordinates, wall);
-        //Terrain.RefreshAllTiles();
-        return true;
+    List<Vector3Int> GetFurnitePositions(FurnitureController furnitureController, Vector3Int coordinates, string rotation) {
+        var points = new List<Vector3Int>();
+        switch (rotation)
+        {
+            case "N":
+                for (int x = 0; x < furnitureController.size.x; x++)
+                    for (int y = 0; y < furnitureController.size.y; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
+                break;
+            case "S":
+                for (int x = -furnitureController.size.x + 1; x <= 0; x++)
+                    for (int y = 0; y < furnitureController.size.y; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
+                break;
+            case "W":
+                for (int x = 0; x < furnitureController.size.y; x++)
+                    for (int y = 0; y < furnitureController.size.x; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
+                break;
+            case "E":
+                for (int x = -furnitureController.size.y + 1; x <= 0; x++)
+                    for (int y = 0; y < furnitureController.size.x; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
+                break;
+        }
+        return points;
     }
+    public (bool, string) BuildFurniture(Vector3Int coordinates, string name, string rotation)
+    {
+        var rotations = new Dictionary<string, int>{
+            { "N", 0 },
+            { "E", -90 },
+            { "S", -180 },
+            { "W", -270 },
+        };
 
+        Debug.Log(string.Format("Building furniture: {0} with rotation {1}", name, rotation));
+
+        var furniture = Instantiate(NameToFurniture[name]);
+        var furnitureController = furniture.GetComponent<FurnitureController>();
+
+        var points = GetFurnitePositions(furnitureController, coordinates, rotation);
+
+        foreach (var point in points)
+        {
+            if (Walls.HasTile(point))
+            {
+                Destroy(furniture);
+                return (false, "There is a wall here.");
+            }
+            if (Furnitures.ContainsKey(point))
+            {
+                Destroy(furniture);
+                return (false, "There is another furniture here.");
+            }
+        }
+        foreach (var point in points)
+        {
+            Furnitures[point] = furniture;
+        }
+        FurnituresUnique[coordinates] = furniture;
+
+        furniture.transform.rotation = Quaternion.Euler(0, 0, rotations[rotation]);
+        furniture.transform.position = coordinates + FURNITURE_OFFSET;
+
+        return (true, string.Empty);
+    }
 }

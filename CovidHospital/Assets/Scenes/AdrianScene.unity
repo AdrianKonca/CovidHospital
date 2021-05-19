@@ -663,6 +663,9 @@ MonoBehaviour:
     - m_Text: Bed
       m_Image: {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014,
         type: 3}
+    - m_Text: Chair
+      m_Image: {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014,
+        type: 3}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1964,6 +1967,52 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: Furnitures.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: Furnitures.Array.data[0]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 9a2205668f7f9064bba1cd2836e2fdd7,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: Furnitures.Array.data[1]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: ca5e244ad02a4834495a038f485d9846,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: Furnitures.Array.data[2]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 9a3691be1d5104c45b54c2240f02d4af,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: ca5e244ad02a4834495a038f485d9846,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 9a3691be1d5104c45b54c2240f02d4af,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 9a2205668f7f9064bba1cd2836e2fdd7,
+        type: 3}
     - target: {fileID: 2455220904322201059, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
       propertyPath: preview

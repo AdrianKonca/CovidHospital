@@ -60,9 +60,7 @@ public class BuildingController : MonoBehaviour
                 _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
                 break;
             case State.BuildFurniture:
-                //_mapController.BuildFurniture(_mapController.GetMousePosition(_mousePosition), CurrentObjectName, rotations[_rotation]);
-                Debug.Log("Building furniture: " + CurrentObjectName);
-                Debug.Log("With rotation: " + rotations[_rotation]);
+                _mapController.BuildFurniture(_mapController.GetMousePosition(_mousePosition), CurrentObjectName, rotations[_rotation]);
                 _actionStarted = false;
                 break;
             case State.DestroyFurniture:
@@ -101,10 +99,8 @@ public class BuildingController : MonoBehaviour
         }
         else if (action.action.name == _controls.Player.Rotate.name && action.performed)
         {
-            Debug.Log(action.action.name);
             _rotation = (_rotation + 1) % 4;
             _uiController.UpdateFurnitureSprite(CurrentObjectName, rotations[_rotation]);
-            Debug.Log(_rotation);
         }
     }
 

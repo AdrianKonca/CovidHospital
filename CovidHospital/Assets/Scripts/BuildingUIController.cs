@@ -57,7 +57,14 @@ public class BuildingUIController : MonoBehaviour
     }
     public void UpdateFurnitureSprite(string name, string rotation)
     {
-        _previewSpriteRenderer.sprite = SpriteManager.GetFurnitureSpriteByName(name, rotation);
+        var rotations = new Dictionary<string, int>{
+            { "N", 0 },
+            { "E", -90 },
+            { "S", -180 },
+            { "W", -270 },
+        };
+        _previewSpriteRenderer.sprite = SpriteManager.GetFurnitureSpriteByName(name);
+        _previewSpriteRenderer.transform.rotation = Quaternion.Euler(0, 0, rotations[rotation]);
     }
     public void OnDestroyFurnitureButtonClicked()
     {
