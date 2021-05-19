@@ -2,6 +2,7 @@
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Random;
 
 namespace Entity
 {
@@ -13,6 +14,7 @@ namespace Entity
         public PatientData patientData;
         public float covidRegressMultiplier = 1;
         public float covidProgressMultiplier = 1;
+        //public static int Range(float minInclusive, float maxExclusive);
 
         public GameObject toilet;
         public GameObject bed;
@@ -96,14 +98,16 @@ namespace Entity
         {
             _aiDestinationSetter.target = toilet.transform;
         }
+        
 
         private void TimeControllerOnOnHourIncrease(int h)
         {
             //todo poprawic potrzeby
+            
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
-            patientData.AddToilet(-4f);
-            patientData.AddHygiene(-5f);
+            patientData.AddToilet(Range(-5f,-1f));
+            patientData.AddHygiene(Range(-5f, -1f));
         }
 
         private void TimeControllerOnOnDayIncrease(long d)
