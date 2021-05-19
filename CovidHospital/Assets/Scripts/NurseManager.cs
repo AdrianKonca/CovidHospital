@@ -15,14 +15,12 @@ public class NurseManager : MonoBehaviour
 
     public void AddPawnToQue(Pawn pawn)
     {
-        if (patientQueue.Contains(pawn))
-        {
-            Debug.Log("JUZ JEWSTESMMMM");
-            return;
-        }
+        // if (patientQueue.Contains(pawn))
+        // {
+        //     return;
+        // }
 
         patientQueue.Enqueue(pawn);
-        Debug.Log(patientQueue.Count);
         OnEnqueue?.Invoke(this, EventArgs.Empty);
     }
 
