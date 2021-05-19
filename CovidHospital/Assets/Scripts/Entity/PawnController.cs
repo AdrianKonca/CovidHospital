@@ -13,6 +13,9 @@ namespace Entity
         public PatientData patientData;
         public float covidRegressMultiplier = 1;
         public float covidProgressMultiplier = 1;
+        public float covidUnableToMoveAfter = 50;
+
+        public NurseManager nurseManager;
 
         public GameObject toilet;
         public GameObject bed;
@@ -79,22 +82,31 @@ namespace Entity
 
         private void PatientDataOnLowHygiene(object sender, EventArgs e)
         {
-            _aiDestinationSetter.target = shower.transform;
+            if (patientData.covidProgress < covidUnableToMoveAfter)
+                _aiDestinationSetter.target = shower.transform;
+            else
+                nurseManager.AddPawnToQue(this);
         }
 
         private void PatientDataOnLowHunger(object sender, EventArgs e)
         {
-            _aiDestinationSetter.target = canteen.transform;
+            if (patientData.covidProgress < covidUnableToMoveAfter)
+                _aiDestinationSetter.target = canteen.transform;
+            else
+                nurseManager.AddPawnToQue(this);
+        }
+
+        private void PatientDataOnLowToilet(object sender, EventArgs e)
+        {
+            if (patientData.covidProgress < covidUnableToMoveAfter)
+                _aiDestinationSetter.target = toilet.transform;
+            else
+                nurseManager.AddPawnToQue(this);
         }
 
         private void PatientDataOnLowComfort(object sender, EventArgs e)
         {
             throw new NotImplementedException();
-        }
-
-        private void PatientDataOnLowToilet(object sender, EventArgs e)
-        {
-            _aiDestinationSetter.target = toilet.transform;
         }
 
         private void TimeControllerOnOnHourIncrease(int h)
