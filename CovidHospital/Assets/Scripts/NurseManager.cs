@@ -16,16 +16,23 @@ public class NurseManager : MonoBehaviour
     public void AddPawnToQue(Pawn pawn)
     {
         if (patientQueue.Contains(pawn))
-            return; 
+        {
+            Debug.Log("JUZ JEWSTESMMMM");
+            return;
+        }
 
         patientQueue.Enqueue(pawn);
+        Debug.Log(patientQueue.Count);
         OnEnqueue?.Invoke(this, EventArgs.Empty);
     }
 
     public Pawn RemovePawnFromQue()
     {
         if (patientQueue.Count > 0)
-            return patientQueue.Dequeue();
+        {
+            Pawn p = patientQueue.Dequeue();
+            return p;
+        }
 
         return null;
     }

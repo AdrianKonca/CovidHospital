@@ -22,37 +22,27 @@ public class NurseController : MonoBehaviour
     {
         if (bussy)
             return;
-        bussy = true;
 
-        getPawnFromQueAndSetAsATarget();
-    }
-
-    private bool getPawnFromQueAndSetAsATarget()
-    {
-        Pawn pawn = nurseManager.RemovePawnFromQue();
-
-        if (pawn)
+        Pawn p = nurseManager.RemovePawnFromQue();
+        Debug.Log(p);
+        if (p)
         {
-            _aiDestinationSetter.target = pawn.transform;
-            return true;
+            Debug.Log(p + transform.name);
+            _aiDestinationSetter.target = p.transform;
+            bussy = true;
         }
-
-        return false;
     }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Pacjent załatwiony");
             collision.gameObject.GetComponent<PawnController>().patientData.ResetToilet();
             collision.gameObject.GetComponent<PawnController>().patientData.ResetHygiene();
             collision.gameObject.GetComponent<PawnController>().patientData.ResetHunger();
-
-            if (!getPawnFromQueAndSetAsATarget())
-            {
-                _aiDestinationSetter.target = restRoom.transform;
-                bussy = false;
-            }
+            collision.gameObject.GetComponent<PawnController>().requestForPepeSend = false;
+            _aiDestinationSetter.target = restRoom.transform;
+            bussy = false;
         }
     }
 }
