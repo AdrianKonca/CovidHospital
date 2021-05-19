@@ -2,10 +2,20 @@
 
 namespace Entity
 {
-    public abstract class Pawn : MonoBehaviour
+    public class Pawn : MonoBehaviour
     {
-        protected PawnData PawnData;
-        protected Sprite Head;
-        protected Sprite Body;
+        public PawnData PawnData;
+        public Sprite Hair;
+        public Sprite Head;
+        public Sprite Body;
+
+        public Pawn(PawnData data)
+        {
+            Hair = AppearanceGenerator.spritesGlobal[(data.HairId, BodyPart.Hair, Direction.Front)];
+            Head = AppearanceGenerator.spritesGlobal[(data.HeadId, BodyPart.Head, Direction.Front)];
+            Body = AppearanceGenerator.spritesGlobal[(data.BodyId, BodyPart.Body, Direction.Front)];
+
+        }
+
     }
 }

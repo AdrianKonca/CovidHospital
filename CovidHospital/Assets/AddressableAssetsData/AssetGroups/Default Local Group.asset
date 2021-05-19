@@ -23,6 +23,36 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: 3460587a76eb36f47b2fcdb52055ad4b
+    m_Address: Assets/Sprites/Pawns/Hair.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b999ca05b032ec84494d0314955700fa
+    m_Address: Assets/Sprites/Pawns/Head.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8b1a4496d7667fb458f23b71188021c6
+    m_Address: Assets/Sprites/Pawns/Body.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a34db9e9bf2a7e64d9e00a955cc6a5ed
+    m_Address: Assets/Sprites/Objects/Furniture.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6eacbd7e14abe724786971e24e6d9c47
+    m_Address: Assets/Sprites/Terrain/Terrain.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ca75e5e80a474de4697c3d237986db88, type: 2}
   m_SchemaSet:

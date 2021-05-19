@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 6
   immunityDecrease: 2
-  diseaseName: nicotine addiction
+  conditionName: Smokes Cigs
