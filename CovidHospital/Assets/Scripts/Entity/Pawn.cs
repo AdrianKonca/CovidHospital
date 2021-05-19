@@ -11,10 +11,9 @@ namespace Entity
 
         public Pawn(PawnData data)
         {
-            Hair = AppearanceGenerator.spritesGlobal[(data.HairId, BodyPart.Hair, Direction.Front)];
-            Head = AppearanceGenerator.spritesGlobal[(data.HeadId, BodyPart.Head, Direction.Front)];
-            Body = AppearanceGenerator.spritesGlobal[(data.BodyId, BodyPart.Body, Direction.Front)];
-
+            Hair = SpriteManager.GetPawnSprite(data.HairId, BodyPart.Hair, Direction.Front);
+            Head = SpriteManager.GetPawnSprite(data.HeadId, BodyPart.Head, Direction.Front);
+            Body = SpriteManager.GetPawnSprite(data.BodyId, BodyPart.Body, Direction.Front); 
         }
 
     }

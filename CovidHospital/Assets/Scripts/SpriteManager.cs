@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -8,7 +9,16 @@ using UnityEngine.U2D;
 
 public class SpriteManager : MonoBehaviour
 {
-    //Roksana's part
+    #region PawnsSprites
+    static public Dictionary<(int, BodyPart, Direction), Sprite> PawnBodyPartSprites = new Dictionary<(int, BodyPart, Direction), Sprite>();
+    static public Dictionary<BodyPart, HashSet<int>> BodyPartToId = new Dictionary<BodyPart, HashSet<int>>
+    {
+        {  BodyPart.Hair, new HashSet<int>() },
+        {  BodyPart.Head, new HashSet<int>() },
+        {  BodyPart.Body, new HashSet<int>() },
+
+    };
+    static private int _pawnAtlasesToLoad = 3;
 
     public string[] spriteAtlasAddress = new string[] {
         "Assets/Sprites/Pawns/Hair.spriteatlas",
@@ -43,21 +53,19 @@ public class SpriteManager : MonoBehaviour
             var bodyPartId = int.Parse(fileParts[0]);
             var bodyPart = _bodyPartMap[fileParts[1]];
 
-            AppearanceGenerator.BodyPartId[bodyPart].Add(bodyPartId);
-            AppearanceGenerator.spritesGlobal.Add((
+            BodyPartToId[bodyPart].Add(bodyPartId);
+            PawnBodyPartSprites.Add((
                 bodyPartId,
                 bodyPart,
                 _directionMap[fileParts[2]]
             ), sprite);
         }
-        pawnAtlasesLoaded--;
+        _pawnAtlasesToLoad--;
     }
-    //mixed
-    static private int pawnAtlasesLoaded = 3;
+    #endregion
 
-    //Adrian's part
     static public bool AllSpritesLoaded { get; private set; }
-
+    public List<string> WallNames = new List<string>();
     static public Dictionary<string, Sprite> WallSprites = new Dictionary<string, Sprite>();
     static public Dictionary<string, Sprite> TerrainSprites = new Dictionary<string, Sprite>();
     static public Dictionary<string, Sprite> FurnitureSprites = new Dictionary<string, Sprite>();
@@ -113,8 +121,7 @@ public class SpriteManager : MonoBehaviour
     void Start()
     {
         string[] directions = { "", "E", "ES", "ESW", "EW", "N", "NE", "NES", "NESW", "NEW", "NS", "NSW", "NW", "S", "SW", "W" };
-        string[] wallNames = { "ConcreteWall" };
-        foreach (var wallName in wallNames)
+        foreach (var wallName in WallNames)
         {
             foreach (var direction in directions)
             {
@@ -123,7 +130,7 @@ public class SpriteManager : MonoBehaviour
                 SpriteHandle.Completed += WallSprite_Completed;
             }
         }
-        _maxWallTiles = directions.Length * wallNames.Length;
+        _maxWallTiles = directions.Length * WallNames.Count;
 
         var atlasAddress = "Assets/Sprites/Terrain/Terrain.spriteatlas";
         AsyncOperationHandle<SpriteAtlas> SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
@@ -145,7 +152,7 @@ public class SpriteManager : MonoBehaviour
     {
         if (AllSpritesLoaded)
             return;
-        if (_terrainTilesLoaded && _furnitureTilesLoaded && _maxWallTiles == WallSprites.Count && pawnAtlasesLoaded == 0)
+        if (_terrainTilesLoaded && _furnitureTilesLoaded && _maxWallTiles == WallSprites.Count && _pawnAtlasesToLoad == 0)
             AllSpritesLoaded = true;
     }
 
@@ -171,4 +178,19 @@ public class SpriteManager : MonoBehaviour
         Debug.LogWarning(string.Format("Furniture sprite not found: " + name));
         return null;
     }
+
+    static public Sprite GetPawnSprite(int index, BodyPart bodyPart, Direction direction)
+    {
+        var key = (index, bodyPart, direction);
+        if (PawnBodyPartSprites.ContainsKey(key))
+            return PawnBodyPartSprites[key];
+        Debug.LogWarning(string.Format("Pawn sprite not found {0}-{1}-{2}: ", index, bodyPart.ToString(), direction.ToString()));
+        return null;
+    }
+    static public int GetRandomBodyPartId(BodyPart bodyPart)
+    {
+        var randomBodyPartId = UnityEngine.Random.Range(0, BodyPartToId[bodyPart].Count);
+        return BodyPartToId[bodyPart].ElementAt(randomBodyPartId);
+    }
+
 }
