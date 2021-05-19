@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NurseManager : MonoBehaviour
 {
-    private Queue<Pawn> _patientQueue;
+    public Queue<Pawn> _patientQueue;
     public event EventHandler OnEnqueue;
 
     public NurseManager()
