@@ -2,6 +2,7 @@
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Random;
 
 namespace Entity
 {
@@ -108,14 +109,16 @@ namespace Entity
         {
             throw new NotImplementedException();
         }
+        
 
         private void TimeControllerOnOnHourIncrease(int h)
         {
             //todo poprawic potrzeby
+            
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
-            patientData.AddToilet(-4f);
-            patientData.AddHygiene(-5f);
+            patientData.AddToilet(Range(-5f,-1f));
+            patientData.AddHygiene(Range(-5f, -1f));
         }
 
         private void TimeControllerOnOnDayIncrease(long d)
