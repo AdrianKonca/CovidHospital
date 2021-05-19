@@ -13,25 +13,23 @@ public class SpriteManager //wczytuje wszystkie sprites do dictionary spritesGlo
 {
 
     public string []spriteAtlasAddress = new string[] {
-        "Assets/Sprites/Pawns/Face.spriteatlas",
         "Assets/Sprites/Pawns/Hair.spriteatlas",
         "Assets/Sprites/Pawns/Head.spriteatlas",
-        "Assets/Sprites/Pawns/LowerBody.spriteatlas",
-        "Assets/Sprites/Pawns/UpperBody.spriteatlas"
+        "Assets/Sprites/Pawns/Body.spriteatlas",
     };
 
     private Dictionary<string, BodyPart> _bodyPartMap = new Dictionary<string, BodyPart>() {
-        {"upperBody", BodyPart.UpperBody },
-        {"lowerBody", BodyPart.LowerBody },
-        {"face", BodyPart.Face },
-        {"head", BodyPart.Head },
         {"hair", BodyPart.Hair },
+        {"head", BodyPart.Head },
+        {"body", BodyPart.Body },
+
     };
 
     private Dictionary<string, Direction> _directiontMap = new Dictionary<string, Direction>() {
         {"front", Direction.Front },
-       {"back", Direction.Back }
-
+       {"back", Direction.Back },
+        {"right", Direction.Right },
+       {"left", Direction.Left }
     };
     public void Start()
     {
@@ -66,37 +64,32 @@ public class SpriteManager //wczytuje wszystkie sprites do dictionary spritesGlo
     }
 
 }
-public class PawnData : ScriptableObject // trzyma id pojedyńczych części ciała
+public class PawnData : ScriptableObject 
 {
-    public int UpperBodyId;
-    public int LowerBodyId;
-    public int FaceId;
-    public int HeadId;
     public int HairId;
+    public int HeadId;
+    public int BodyId;
+
 }
 
-public enum BodyPart { Head, Hair, Face, LowerBody, UpperBody }
-public enum Direction { Front, Back }
+public enum BodyPart { Hair, Head, Body}
+public enum Direction { Front, Back, Right, Left }
 
 
 //actual object in the game
 public class Pawn : MonoBehaviour
 {
     //Dictionary<Direction, Sprite> UpperBodySprites;
-    public Sprite UpperBody;
-    public Sprite LowerBody;
-    public Sprite Face;
-    public Sprite Head;
     public Sprite Hair;
+    public Sprite Head;
+    public Sprite Body;
     
     public Pawn(PawnData data)
     {
-
-        UpperBody = AppearanceGenerator.spritesGlobal[(data.UpperBodyId, BodyPart.UpperBody, Direction.Front)];
-        LowerBody = AppearanceGenerator.spritesGlobal[(data.LowerBodyId, BodyPart.LowerBody, Direction.Front)];
-        Face = AppearanceGenerator.spritesGlobal[(data.FaceId, BodyPart.Face, Direction.Front)];
-        Head = AppearanceGenerator.spritesGlobal[(data.HeadId, BodyPart.Head, Direction.Front)];
         Hair = AppearanceGenerator.spritesGlobal[(data.HairId, BodyPart.Hair, Direction.Front)];
+        Head = AppearanceGenerator.spritesGlobal[(data.HeadId, BodyPart.Head, Direction.Front)];
+        Body = AppearanceGenerator.spritesGlobal[(data.BodyId, BodyPart.Body, Direction.Front)];
+
     }
 
     
@@ -107,11 +100,10 @@ public class AppearanceGenerator : MonoBehaviour
     public static Dictionary<(int, BodyPart, Direction), Sprite> spritesGlobal = new Dictionary<(int, BodyPart, Direction), Sprite>();
     public static Dictionary<BodyPart, HashSet<int>> BodyPartId = new Dictionary<BodyPart, HashSet<int>>
     {
-        {  BodyPart.UpperBody, new HashSet<int>() },
-        {  BodyPart.LowerBody, new HashSet<int>() },
-        {  BodyPart.Face, new HashSet<int>() },
-        {  BodyPart.Head, new HashSet<int>() },
         {  BodyPart.Hair, new HashSet<int>() },
+        {  BodyPart.Head, new HashSet<int>() },
+        {  BodyPart.Body, new HashSet<int>() },
+
     };
 
 
@@ -124,12 +116,10 @@ public class AppearanceGenerator : MonoBehaviour
     public PawnData GeneratePawnData(){
         
         PawnData data = new PawnData();
-
-        data.UpperBodyId = GetRandomBodyPartId(BodyPart.UpperBody);
-        data.LowerBodyId = GetRandomBodyPartId(BodyPart.LowerBody);
-        data.FaceId = GetRandomBodyPartId(BodyPart.Face);
         data.HeadId = GetRandomBodyPartId(BodyPart.Head);
         data.HairId = GetRandomBodyPartId(BodyPart.Hair);
+        data.BodyId = GetRandomBodyPartId(BodyPart.Body);
+
 
         return data;
     }
@@ -143,28 +133,37 @@ public class AppearanceGenerator : MonoBehaviour
         obj.AddComponent<SpriteRenderer>();
         var spriteRenderer = obj.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;
-        if (bodyPart == BodyPart.Face || bodyPart == BodyPart.Hair)
+        if (bodyPart == BodyPart.Hair)
             spriteRenderer.sortingOrder = 1;
         return obj;
     }
 
 
-    public Pawn GeneratePawnGameObject(PawnData data){
+    public GameObject GeneratePawnGameObject(PawnData data){
         GameObject parent = new GameObject();
         parent.name = "Pawn";
         SpriteRenderer spriteRenderer = new SpriteRenderer();
 
         Pawn pawn = new Pawn(data);
 
-
-        GenerateBodyPart(pawn.LowerBody, BodyPart.LowerBody, parent);
-        GenerateBodyPart(pawn.UpperBody, BodyPart.UpperBody, parent);
-        GenerateBodyPart(pawn.Face, BodyPart.Face, parent);
-        GenerateBodyPart(pawn.Head, BodyPart.Head, parent);
         GenerateBodyPart(pawn.Hair, BodyPart.Hair, parent);
+        GenerateBodyPart(pawn.Head, BodyPart.Head, parent);
+        GenerateBodyPart(pawn.Body, BodyPart.Body, parent);
 
-        return pawn;
+
+        return parent;
     }
+
+    private void Turn(GameObject pawn, PawnData data, Direction direction)
+    {
+        pawn.transform.Find(BodyPart.Hair.ToString()).GetComponent<SpriteRenderer>().sprite = spritesGlobal[(data.HairId, BodyPart.Hair, direction)];
+        pawn.transform.Find(BodyPart.Head.ToString()).GetComponent<SpriteRenderer>().sprite = spritesGlobal[(data.HeadId, BodyPart.Head, direction)];
+        pawn.transform.Find(BodyPart.Body.ToString()).GetComponent<SpriteRenderer>().sprite = spritesGlobal[(data.BodyId, BodyPart.Body, direction)];
+
+
+
+    }
+
 
     SpriteManager spriteManager = new SpriteManager();
     // Start is called before the first frame update
@@ -174,16 +173,25 @@ public class AppearanceGenerator : MonoBehaviour
 
     // Update is called once per frame
 
-    private float _waitForLoading = 5f;
+    private float _waitForLoading = 1f;
     private bool _loaded = false;
+    GameObject pawn = null;
+    PawnData data = null;
     void Update()
     {
+
         _waitForLoading -= Time.deltaTime;
         if (_waitForLoading < 0 && !_loaded)
         {
             _loaded = true;
-            PawnData data = GeneratePawnData();
-            Pawn pawn = GeneratePawnGameObject(data);
+            data = GeneratePawnData();
+            pawn = GeneratePawnGameObject(data);
+            _waitForLoading = 2f;
+        }
+
+        if (_loaded && _waitForLoading < 0)
+        {
+            Turn(pawn, data, Direction.Back);
         }
 
     }
