@@ -120,8 +120,19 @@ namespace Entity
         {
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
-            patientData.AddToilet(Range(-5f, -1f));
-            patientData.AddHygiene(Range(-5f, -1f));
+            if(timeController.isDay)
+            {
+                patientData.AddHunger(Range(-3f, -1f));
+                patientData.AddToilet(Range(-5f, -1f));
+                patientData.AddHygiene(Range(-5f, -1f));
+            }
+            else
+            {
+                patientData.AddToilet(Range(-2f, -1f));
+                patientData.AddHygiene(Range(-2f, -1f));
+                patientData.AddHunger(Range(-2f, -1f));
+            }
+            
         }
 
         private void TimeControllerOnOnDayIncrease(long d)
