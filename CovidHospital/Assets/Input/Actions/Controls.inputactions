@@ -38,6 +38,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "94450f55-dfdd-4cb7-bcac-152ec2c7be3a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "MoveMouse",
                     "type": "Value",
                     "id": "0eacd302-1d1f-4b01-a9d2-d3e838038102",
@@ -143,6 +151,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "MoveMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b187cd2f-546d-4511-a0fa-2fc1ece807eb",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

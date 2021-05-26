@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
@@ -40,11 +41,11 @@ public class TileWall : Tile
         if (!continueToNeighbors)
         {
             TileWall me = tilemap.GetTile<TileWall>(position);
-            me.sprite = MapController.WallSprites[spriteName];
+            me.sprite = SpriteManager.WallSprites[spriteName];
         }
         else
         {
-            sprite = MapController.WallSprites[spriteName];
+            sprite = SpriteManager.WallSprites[spriteName];
         }
 
         base.RefreshTile(position, tilemap);
@@ -66,83 +67,21 @@ public class TileWall : Tile
 public class MapController : MonoBehaviour
 {
     public AstarPath AstarPath;
+    public List<GameObject> FurnituresPrefabs;
+    public Dictionary<string, GameObject> NameToFurniture = new Dictionary<string, GameObject>();
+    //used for building colission detection
+    public Dictionary<Vector3Int, GameObject> FurnituresMap = new Dictionary<Vector3Int, GameObject>();
+    //used for pathfinding
+    public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
+    public Dictionary<string, List<GameObject>> Furnitures = new Dictionary<string, List<GameObject>>();
     public Tilemap Terrain;
     public Tilemap Walls;
-    static public Dictionary<string, Sprite> WallSprites = new Dictionary<string, Sprite>();
-    static public Dictionary<string, Sprite> TerrainSprites = new Dictionary<string, Sprite>();
-    private int _maxWallTiles = 0;
-    private int _maxTerrainTiles = 0;
-
-    private string TERRAIN_AFTER_WALL_DECON = "Concrete";
-    // Start is called before the first frame update
-
-    private void SpriteAtlas_Completed(AsyncOperationHandle<SpriteAtlas> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            SpriteAtlas result = handle.Result;
-            var sprites = new Sprite[result.spriteCount];
-            result.GetSprites(sprites);
-            foreach (var sprite in sprites)
-            {
-                //TODO: Investigate why sprites are initialized with (Clone) postfix;
-                sprite.name = sprite.name.Replace("(Clone)", "");
-                TerrainSprites[sprite.name] = sprite;
-            }
-        }
-    }
-
-    private void SpriteTerrain_Completed(AsyncOperationHandle<Sprite> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            Sprite result = handle.Result;
-            Debug.Log(result.name);
-            TerrainSprites[result.name] = result;
-        }
-    }
-
-    private void Sprite_Completed(AsyncOperationHandle<Sprite> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            Sprite result = handle.Result;
-            WallSprites[result.name] = result;
-        }
-    }
-
-    void Start()
-    {
-        string[] directions =
-            {"", "E", "ES", "ESW", "EW", "N", "NE", "NES", "NESW", "NEW", "NS", "NSW", "NW", "S", "SW", "W"};
-        string[] wallNames = {"ConcreteWall"};
-        foreach (var wallName in wallNames)
-        {
-            foreach (var direction in directions)
-            {
-                string address = string.Format("Assets/Sprites/Walls/{0}.png[{0}_{1}]", wallName, direction);
-                AsyncOperationHandle<Sprite> SpriteHandle = Addressables.LoadAssetAsync<Sprite>(address);
-                SpriteHandle.Completed += Sprite_Completed;
-            }
-        }
-
-        //string[] terrainNames = { "Grass", "Dirt" };
-        //foreach (var terrainName in terrainNames)
-        //{
-        //    string terrainAddress = string.Format("Assets/Sprites/Terrain/Terrains.png[{0}]", terrainName);
-        //    AsyncOperationHandle<Sprite> SpriteHandle = Addressables.LoadAssetAsync<Sprite>(terrainAddress);
-        //    SpriteHandle.Completed += SpriteTerrain_Completed;
-        //}
-        var atlasAddress = "Assets/Sprites/Terrain/Terrain.spriteatlas";
-        AsyncOperationHandle<SpriteAtlas> SpriteAtlasHandle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasAddress);
-        SpriteAtlasHandle.Completed += SpriteAtlas_Completed;
-        _maxTerrainTiles = 3;
-        _maxWallTiles = directions.Length * wallNames.Length;
-    }
 
     private bool _mapInitialized = false;
-
-    string WALL_NAME = "ConcreteWall";
+    private string WALL_NAME = "ConcreteWall";
+    private string TERRAIN_AFTER_WALL_DECON = "Concrete";
+    private int DEFAULT_HEIGHT_Z = -2;
+    private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
 
     private IEnumerator LoadTerrain()
     {
@@ -153,7 +92,7 @@ public class MapController : MonoBehaviour
         foreach (var name in terrain_names)
         {
             var terrain = ScriptableObject.CreateInstance<Tile>();
-            terrain.sprite = TerrainSprites[name];
+            terrain.sprite = SpriteManager.TerrainSprites[name];
             terrain_tiles.Add(terrain);
         }
 
@@ -163,9 +102,7 @@ public class MapController : MonoBehaviour
             {
                 float noise = Mathf.PerlinNoise(x / 10f + MAP_LIMIT, y / 10f + MAP_LIMIT);
                 int index = noise < 0.6f ? 0 : 1;
-
-                Terrain.SetTile(new Vector3Int(x, y, -2), terrain_tiles[index]);
-                //Walls.SetTile(new Vector3Int(x, y, 0), terrain_tiles[0]);
+                Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[index]);
             }
 
             yield return null;
@@ -178,8 +115,6 @@ public class MapController : MonoBehaviour
     {
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
-        Debug.Log("All walls loaded.");
-        Debug.Log("All terrains loaded.");
         Walls.ClearAllEditorPreviewTiles();
         for (int x = 0; x < ROOM_LIMIT; x++)
         {
@@ -189,8 +124,8 @@ public class MapController : MonoBehaviour
             wallTop.wallName = WALL_NAME;
             wallBottom.wallName = WALL_NAME;
 
-            Walls.SetTile(new Vector3Int(x, 0, -2), wallTop);
-            Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, -2), wallBottom);
+            Walls.SetTile(new Vector3Int(x, 0, DEFAULT_HEIGHT_Z), wallTop);
+            Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, DEFAULT_HEIGHT_Z), wallBottom);
         }
 
         for (int y = 0; y < ROOM_LIMIT; y++)
@@ -201,24 +136,31 @@ public class MapController : MonoBehaviour
             wallLeft.wallName = WALL_NAME;
             wallRight.wallName = WALL_NAME;
 
-            Walls.SetTile(new Vector3Int(0, y, -2), wallLeft);
-            Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, -2), wallRight);
+            Walls.SetTile(new Vector3Int(0, y, DEFAULT_HEIGHT_Z), wallLeft);
+            Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, DEFAULT_HEIGHT_Z), wallRight);
         }
-
         for (int x = 30; x < ROOM_LIMIT + 30; x++)
-        for (int y = 0; y < ROOM_LIMIT; y++)
+            for (int y = 0; y < ROOM_LIMIT; y++)
+            {
+                TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+                wall.wallName = WALL_NAME;
+                Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
+            }
+        StartCoroutine("LoadTerrain");
+
+        //move to other function
+        foreach (var furniture in FurnituresPrefabs)
         {
-            TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-            wall.wallName = WALL_NAME;
-            Walls.SetTile(new Vector3Int(x, y, -2), wall);
+            Debug.Log(furniture.name);
+            NameToFurniture[furniture.name] = furniture;
+            Furnitures[furniture.name] = new List<GameObject>();
         }
 
-        StartCoroutine("LoadTerrain");
     }
 
     private void Update()
     {
-        if (WallSprites.Count != _maxWallTiles || TerrainSprites.Count != _maxTerrainTiles)
+        if (!SpriteManager.AllSpritesLoaded)
             return;
         if (!_mapInitialized)
             InitializeMap();
@@ -237,7 +179,6 @@ public class MapController : MonoBehaviour
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
-        //Walls.RefreshAllTiles();
         return true;
     }
 
@@ -248,7 +189,6 @@ public class MapController : MonoBehaviour
         AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         Walls.SetTile(coordinates, null);
         BuildTerrain(coordinates, TERRAIN_AFTER_WALL_DECON);
-        //Walls.RefreshAllTiles();
         return true;
     }
 
@@ -257,9 +197,87 @@ public class MapController : MonoBehaviour
         if (Walls.HasTile(coordinates))
             return false;
         Tile wall = ScriptableObject.CreateInstance<Tile>();
-        wall.sprite = TerrainSprites[name];
+        wall.sprite = SpriteManager.TerrainSprites[name];
         Terrain.SetTile(coordinates, wall);
-        //Terrain.RefreshAllTiles();
         return true;
+    }
+
+    List<Vector3Int> GetFurnitePositions(FurnitureController furnitureController, Vector3Int coordinates, string rotation) {
+        var points = new List<Vector3Int>();
+        switch (rotation)
+        {
+            case "N":
+                for (int x = 0; x < furnitureController.size.x; x++)
+                    for (int y = 0; y < furnitureController.size.y; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
+                break;
+            case "S":
+                for (int x = -furnitureController.size.x + 1; x <= 0; x++)
+                    for (int y = 0; y < furnitureController.size.y; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
+                break;
+            case "W":
+                for (int x = 0; x < furnitureController.size.y; x++)
+                    for (int y = 0; y < furnitureController.size.x; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
+                break;
+            case "E":
+                for (int x = -furnitureController.size.y + 1; x <= 0; x++)
+                    for (int y = 0; y < furnitureController.size.x; y++)
+                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
+                break;
+        }
+        return points;
+    }
+    public (bool, string) BuildFurniture(Vector3Int coordinates, string name, string rotation)
+    {
+        var rotations = new Dictionary<string, int>{
+            { "N", 0 },
+            { "E", -90 },
+            { "S", -180 },
+            { "W", -270 },
+        };
+
+        Debug.Log(string.Format("Building furniture: {0} with rotation {1}", name, rotation));
+
+        var furniture = Instantiate(NameToFurniture[name]);
+        var furnitureController = furniture.GetComponent<FurnitureController>();
+
+        var points = GetFurnitePositions(furnitureController, coordinates, rotation);
+
+        foreach (var point in points)
+        {
+            if (Walls.HasTile(point))
+            {
+                Destroy(furniture);
+                return (false, "There is a wall here.");
+            }
+            if (FurnituresMap.ContainsKey(point))
+            {
+                Destroy(furniture);
+                return (false, "There is another furniture here.");
+            }
+        }
+        foreach (var point in points)
+        {
+            FurnituresMap[point] = furniture;
+        }
+        FurnituresUnique[coordinates] = furniture;
+        Furnitures[name].Add(furniture);
+
+        furniture.transform.rotation = Quaternion.Euler(0, 0, rotations[rotation]);
+        furniture.transform.position = coordinates + FURNITURE_OFFSET;
+
+        return (true, string.Empty);
+    }
+    public List<GameObject> GetFurnitures(string name)
+    {
+        return Furnitures[name];
+    }
+    public GameObject GetClosestFurniture(string name, Vector3 coordinates)
+    {
+        return Furnitures[name]
+            .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
+            .SingleOrDefault();
     }
 }

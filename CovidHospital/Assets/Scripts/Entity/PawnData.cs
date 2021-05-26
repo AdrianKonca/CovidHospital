@@ -17,22 +17,28 @@ namespace Entity
         public int bodyId;
         public Color bodyColor;
 
-        public PawnData()
+        public int HairId;
+        public int HeadId;
+        public int BodyId;
+        public void Initialize(Role role)
         {
-            role = Role.Patient;
-        }
-
-        public PawnData(int role)
-        {
-            this.role = (Role) role;
-        }
-
-        private void OnEnable()
-        {
-            sex = (Sex) Random.Range(0, 1);
-            
-            //Todo : add Normal distr to age generation
-            age = Random.Range(18, 100);
+            HeadId = SpriteManager.GetRandomBodyPartId(BodyPart.Head);
+            HairId = SpriteManager.GetRandomBodyPartId(BodyPart.Hair);
+            BodyId = SpriteManager.GetRandomBodyPartId(BodyPart.Body);
+            sex = (Sex)Random.Range(0, 1);
+            this.role = role;
+            switch (role)
+            {
+                case Role.Doctor:
+                    age = Random.Range(30, 70);
+                    break;
+                case Role.Nurse:
+                    age = Random.Range(24, 70);
+                    break;
+                case Role.Patient:
+                    age = Random.Range(35, 70);
+                    break;
+            }
             alive = true;
         }
     }
