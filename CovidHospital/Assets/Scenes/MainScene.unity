@@ -2891,7 +2891,6 @@ Transform:
   - {fileID: 943683630}
   - {fileID: 525917244}
   - {fileID: 1477530024}
-  - {fileID: 1960325761}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3252,7 +3251,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.00000039736432, y: 0}
@@ -3292,6 +3291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nurseManager: {fileID: 1824579703}
+  restRoom: {fileID: 1477530022}
 --- !u!114 &1851658129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3407,12 +3407,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1960325761 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-    type: 3}
-  m_PrefabInstance: {fileID: 9047849790327550825}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2455220903014527627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3773,102 +3767,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fab7fdb06ec8304bb0a7c89d2d64743, type: 3}
---- !u!1001 &9047849790327550825
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1627099315}
-    m_Modifications:
-    - target: {fileID: 9047849789450404118, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_Name
-      value: Patient
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -10.713979
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -2.9832296
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.7128906
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404328, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9047849789450404331, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: bed
-      value: 
-      objectReference: {fileID: 1477530022}
-    - target: {fileID: 9047849789450404331, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: shower
-      value: 
-      objectReference: {fileID: 943683626}
-    - target: {fileID: 9047849789450404331, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: slider
-      value: 
-      objectReference: {fileID: 825175299}
-    - target: {fileID: 9047849789450404331, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: toilet
-      value: 
-      objectReference: {fileID: 525917242}
-    - target: {fileID: 9047849789450404331, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: nurseManager
-      value: 
-      objectReference: {fileID: 1824579703}
-    - target: {fileID: 9047849789450404331, guid: 58a15c37f3db5bc4698bb87c53e82d16,
-        type: 3}
-      propertyPath: timeController
-      value: 
-      objectReference: {fileID: 1508466922}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 58a15c37f3db5bc4698bb87c53e82d16, type: 3}
