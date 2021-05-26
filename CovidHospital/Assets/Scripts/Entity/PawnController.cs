@@ -19,13 +19,13 @@ namespace Entity
         public NurseManager nurseManager;
 
         public GameObject toilet;
-        public GameObject bed;
+        public GameObject bed { get; set; }
         public GameObject canteen;
         public GameObject shower;
 
         private AIDestinationSetter _aiDestinationSetter;
 
-        public PawnController(PawnData data) : base(data) { }
+        public PawnController(PawnData data) : base() { }
         private void CovidRegress(float delta)
         {
             float AgeOffSet = 50f;
@@ -36,7 +36,8 @@ namespace Entity
             var ProgressToSubtract = delta * AgeMultiplier * NeedsMultiplier;
 
             patientData.AddCovidProgress(ProgressToSubtract * covidRegressMultiplier);
-            slider.value = patientData.covidProgress;
+            //TODO: Make slider a part of pawn GUI element
+            //slider.value = patientData.covidProgress;
         }
 
         private void CovidProgress(float delta)
@@ -57,14 +58,19 @@ namespace Entity
             var ProgressToAdd = delta * AgeMultiplier * ImmunityMultiplier * NeedsMultiplier;
 
             patientData.AddCovidProgress(ProgressToAdd * covidProgressMultiplier);
-            slider.value = patientData.covidProgress;
+            //TODO: Remove
+            //slider.value = patientData.covidProgress;
         }
 
-        private void Awake()
+        public void Initialize(Role role, TimeController timeController, NurseManager nurseManager)
         {
             PawnData = ScriptableObject.CreateInstance<PawnData>();
+            PawnData.Initialize(role);
+            CreateBodyParts();
             patientData = ScriptableObject.CreateInstance<PatientData>();
 
+            this.nurseManager = nurseManager;
+            this.timeController = timeController;
             timeController.OnDayIncrease += TimeControllerOnOnDayIncrease;
             timeController.OnHourIncrease += TimeControllerOnOnHourIncrease;
 
@@ -73,8 +79,8 @@ namespace Entity
             patientData.OnLowHygiene += PatientDataOnLowHygiene;
             patientData.OnLowToilet += PatientDataOnLowToilet;
 
-            _aiDestinationSetter = GetComponent<AIDestinationSetter>();
-            _aiDestinationSetter.target = bed.transform;
+            //_aiDestinationSetter = GetComponent<AIDestinationSetter>();
+            //_aiDestinationSetter.target = bed.transform;
         }
 
         public void ReturnToBed()
