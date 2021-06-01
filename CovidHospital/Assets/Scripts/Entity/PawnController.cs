@@ -23,6 +23,8 @@ namespace Entity
         public GameObject canteen;
         public GameObject shower;
 
+        public bool requestForPepeSend = false;
+
         private AIDestinationSetter _aiDestinationSetter;
 
         public PawnController(PawnData data) : base() { }
@@ -92,40 +94,52 @@ namespace Entity
         {
             if (patientData.covidProgress < covidUnableToMoveAfter)
                 _aiDestinationSetter.target = shower.transform;
-            else
-                nurseManager.AddPawnToQue(this);
+            // else if (requestForPEPESend)
+            //     nurseManager.AddPawnToQue(this);
         }
 
         private void PatientDataOnLowHunger(object sender, EventArgs e)
         {
             if (patientData.covidProgress < covidUnableToMoveAfter)
                 _aiDestinationSetter.target = canteen.transform;
-            else
-                nurseManager.AddPawnToQue(this);
+            // else if (requestForPEPESend)
+            //     nurseManager.AddPawnToQue(this);
         }
 
         private void PatientDataOnLowToilet(object sender, EventArgs e)
         {
             if (patientData.covidProgress < covidUnableToMoveAfter)
                 _aiDestinationSetter.target = toilet.transform;
-            else
+            else if (!requestForPepeSend)
+            {
                 nurseManager.AddPawnToQue(this);
+                requestForPepeSend = true;
+            }
         }
 
         private void PatientDataOnLowComfort(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
-        
+
 
         private void TimeControllerOnOnHourIncrease(int h)
         {
-            //todo poprawic potrzeby
-            
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
-            patientData.AddToilet(Range(-5f,-1f));
-            patientData.AddHygiene(Range(-5f, -1f));
+            if(timeController.isDay)
+            {
+                patientData.AddHunger(Range(-3f, -1f));
+                patientData.AddToilet(Range(-5f, -1f));
+                patientData.AddHygiene(Range(-5f, -1f));
+            }
+            else
+            {
+                patientData.AddToilet(Range(-2f, -1f));
+                patientData.AddHygiene(Range(-2f, -1f));
+                patientData.AddHunger(Range(-2f, -1f));
+            }
+            
         }
 
         private void TimeControllerOnOnDayIncrease(long d)
