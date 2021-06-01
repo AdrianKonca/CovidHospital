@@ -278,6 +278,14 @@ public class MapController : MonoBehaviour
     {
         return Furnitures[name]
             .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
-            .SingleOrDefault();
+            .FirstOrDefault();
+    }
+
+    public GameObject GetClosestFreeFurniture(string name, Vector3 coordinates)
+    {
+        return Furnitures[name]
+            .Where(f=>f.GetComponent<FurnitureController>().owner==null)
+            .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
+            .FirstOrDefault();
     }
 }
