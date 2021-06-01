@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
@@ -69,9 +70,10 @@ public class MapController : MonoBehaviour
     public List<GameObject> FurnituresPrefabs;
     public Dictionary<string, GameObject> NameToFurniture = new Dictionary<string, GameObject>();
     //used for building colission detection
-    public Dictionary<Vector3Int, GameObject> Furnitures = new Dictionary<Vector3Int, GameObject>();
+    public Dictionary<Vector3Int, GameObject> FurnituresMap = new Dictionary<Vector3Int, GameObject>();
     //used for pathfinding
     public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
+    public Dictionary<string, List<GameObject>> Furnitures = new Dictionary<string, List<GameObject>>();
     public Tilemap Terrain;
     public Tilemap Walls;
 
@@ -151,6 +153,7 @@ public class MapController : MonoBehaviour
         {
             Debug.Log(furniture.name);
             NameToFurniture[furniture.name] = furniture;
+            Furnitures[furniture.name] = new List<GameObject>();
         }
 
     }
@@ -249,7 +252,7 @@ public class MapController : MonoBehaviour
                 Destroy(furniture);
                 return (false, "There is a wall here.");
             }
-            if (Furnitures.ContainsKey(point))
+            if (FurnituresMap.ContainsKey(point))
             {
                 Destroy(furniture);
                 return (false, "There is another furniture here.");
@@ -257,13 +260,24 @@ public class MapController : MonoBehaviour
         }
         foreach (var point in points)
         {
-            Furnitures[point] = furniture;
+            FurnituresMap[point] = furniture;
         }
         FurnituresUnique[coordinates] = furniture;
+        Furnitures[name].Add(furniture);
 
         furniture.transform.rotation = Quaternion.Euler(0, 0, rotations[rotation]);
         furniture.transform.position = coordinates + FURNITURE_OFFSET;
 
         return (true, string.Empty);
+    }
+    public List<GameObject> GetFurnitures(string name)
+    {
+        return Furnitures[name];
+    }
+    public GameObject GetClosestFurniture(string name, Vector3 coordinates)
+    {
+        return Furnitures[name]
+            .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
+            .SingleOrDefault();
     }
 }
