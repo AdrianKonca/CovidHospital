@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 594599444298711196}
   - component: {fileID: 594599444298711171}
   - component: {fileID: 594599444298711170}
+  - component: {fileID: 1587978129765410604}
   m_Layer: 0
   m_Name: Nurse
   m_TagString: Player
@@ -112,7 +113,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 594599444298711169}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.713979, y: -2.9832296, z: 1.7128906}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.45, y: 0.45, z: 1}
   m_Children:
   - {fileID: 594599443423181518}
@@ -231,8 +232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459ccef59b7577548bfc09a8bad45d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nurseManager: {fileID: 0}
-  restRoom: {fileID: 0}
 --- !u!50 &594599444298711171
 Rigidbody2D:
   serializedVersion: 4
@@ -267,6 +266,22 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.00000039736432, y: 0}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 2
+--- !u!58 &1587978129765410604
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594599444298711169}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.5
