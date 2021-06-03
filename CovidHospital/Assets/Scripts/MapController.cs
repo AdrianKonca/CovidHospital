@@ -82,7 +82,6 @@ public class MapController : MonoBehaviour
     private string TERRAIN_AFTER_WALL_DECON = "Concrete";
     private int DEFAULT_HEIGHT_Z = -2;
     private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
-
     private IEnumerator LoadTerrain()
     {
         int MAP_LIMIT = 100;

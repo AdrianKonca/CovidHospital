@@ -70,7 +70,7 @@ public class PatientSpawnerManager : MonoBehaviour
         var patientsToSpawn = (int)cases / CasesDenominator;
         for (int i = 0; i < patientsToSpawn; i++)
         {
-            PawnFactory.Pawn(SpawnPoint + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f));
+            PawnFactory.Patient(SpawnPoint + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f));
         }
     }
     public Wave GetWave(string countryIso, int waveNumber, Wave.WaveType waveType)

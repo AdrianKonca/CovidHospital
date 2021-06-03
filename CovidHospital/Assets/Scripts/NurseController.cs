@@ -37,15 +37,14 @@ public class NurseController : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            if (collision.gameObject.GetComponent<PawnController>() != p)
+            var patient = collision.gameObject.GetComponent<PawnController>();
+            if (patient != p || patient == null)
                 return;
 
-
-            PawnController dupa = collision.gameObject.GetComponent<PawnController>();
-            dupa.patientData.ResetToilet();
-            dupa.patientData.ResetHygiene();
-            dupa.patientData.ResetHunger();
-            dupa.requestForPepeSend = false;
+            patient.patientData.ResetToilet();
+            patient.patientData.ResetHygiene();
+            patient.patientData.ResetHunger();
+            patient.requestForPepeSend = false;
             bussy = false;
 
             p = nurseManager.RemovePawnFromQue();
