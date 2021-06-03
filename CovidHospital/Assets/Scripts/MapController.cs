@@ -82,6 +82,12 @@ public class MapController : MonoBehaviour
     private string TERRAIN_AFTER_WALL_DECON = "Concrete";
     private int DEFAULT_HEIGHT_Z = -2;
     private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
+
+    static private MapController _instance = null;
+    static public MapController Instance()
+    {
+        return _instance;
+    }
     private IEnumerator LoadTerrain()
     {
         int MAP_LIMIT = 100;
@@ -163,6 +169,15 @@ public class MapController : MonoBehaviour
             return;
         if (!_mapInitialized)
             InitializeMap();
+    }
+
+    private void Awake()
+    {
+        if (_instance != null)
+        {
+            Debug.LogError("One map controller already exists.");
+        }
+        _instance = this;
     }
 
     public Vector3Int GetMousePosition(Vector2 mousePosition)
