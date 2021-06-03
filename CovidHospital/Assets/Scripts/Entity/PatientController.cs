@@ -7,7 +7,7 @@ using static UnityEngine.Random;
 namespace Entity
 {
     //nonserializable representation of data, contains sprites and other nonserializable stuff constructed based on PawnData
-    public class PawnController : Pawn
+    public class PatientController : Pawn
     {
         public TimeController timeController;
         public Slider slider;
@@ -17,7 +17,6 @@ namespace Entity
         public float covidUnableToMoveAfter = 50;
 
         public NurseManager nurseManager;
-
         public GameObject toilet { get; set; }
         public GameObject bed { get; set; }
         public GameObject canteen { get; set; }
@@ -27,7 +26,7 @@ namespace Entity
 
         private AIDestinationSetter _aiDestinationSetter;
 
-        public PawnController(PawnData data) : base()
+        public PatientController(PawnData data) : base()
         {
         }
 

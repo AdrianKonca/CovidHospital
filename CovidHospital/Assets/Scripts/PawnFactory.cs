@@ -37,7 +37,7 @@ public class PawnFactory : MonoBehaviour
     {
         var patient = Instantiate(PatientPrefab);
         
-        var pc = patient.GetComponent<PawnController>();
+        var pc = patient.GetComponent<PatientController>();
 
         pc.Initialize(Role.Patient, TimeController, NurseManager);
         patient.transform.position = coordinates;

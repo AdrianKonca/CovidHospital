@@ -10,8 +10,8 @@ public class ShowerScript : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<PawnController>().patientData.ResetHygiene();
-            collision.gameObject.GetComponent<PawnController>().ReturnToBed();
+            collision.gameObject.GetComponent<PatientController>().patientData.ResetHygiene();
+            collision.gameObject.GetComponent<PatientController>().ReturnToBed();
         }
     }
 }
