@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class NurseController : MonoBehaviour
 {
-    public NurseManager nurseManager;
-    public GameObject restRoom;
+    private NurseManager nurseManager;
+    private GameObject restRoom;
     private AIDestinationSetter _aiDestinationSetter;
     private bool bussy = false;
     private Pawn p;
 
-    private void Awake()
+    public void Initialize(NurseManager nurseManager, GameObject restRoom)
     {
+        this.nurseManager = nurseManager;
+        this.restRoom = restRoom;
         nurseManager.OnEnqueue += NurseManagerOnEnqueue;
         _aiDestinationSetter = GetComponent<AIDestinationSetter>();
         _aiDestinationSetter.target = restRoom.transform;
@@ -34,7 +36,7 @@ public class NurseController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
-        {   
+        {
             if (collision.gameObject.GetComponent<PawnController>() != p)
                 return;
 

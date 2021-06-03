@@ -15,11 +15,6 @@ public class NurseManager : MonoBehaviour
 
     public void AddPawnToQue(Pawn pawn)
     {
-        // if (patientQueue.Contains(pawn))
-        // {
-        //     return;
-        // }
-
         patientQueue.Enqueue(pawn);
         OnEnqueue?.Invoke(this, EventArgs.Empty);
     }
