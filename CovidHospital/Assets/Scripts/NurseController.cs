@@ -37,7 +37,7 @@ public class NurseController : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            var patient = collision.gameObject.GetComponent<PawnController>();
+            var patient = collision.gameObject.GetComponent<PatientController>();
             if (patient != p || patient == null)
                 return;
 

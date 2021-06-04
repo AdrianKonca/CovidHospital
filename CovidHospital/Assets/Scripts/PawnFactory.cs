@@ -33,29 +33,31 @@ public class PawnFactory : MonoBehaviour
     public TimeController TimeController;
     public NurseManager NurseManager;
 
+    private GameObject _pawns;
+    private GameObject _patients;
+    private GameObject _doctors;
+    private GameObject _nurses;
+
+    public void Awake()
+    {
+        _pawns = new GameObject("Pawns");
+        _patients = new GameObject("Patients");
+        _doctors = new GameObject("Doctors");
+        _nurses = new GameObject("Nurses");
+
+        _patients.transform.parent = _pawns.transform;
+        _doctors.transform.parent = _pawns.transform;
+        _nurses.transform.parent = _pawns.transform;
+    }
     public void Patient(Vector3 coordinates)
     {
         var patient = Instantiate(PatientPrefab);
-        
-        var pc = patient.GetComponent<PawnController>();
+        var pc = patient.GetComponent<PatientController>();
 
         pc.Initialize(Role.Patient, TimeController, NurseManager);
         patient.transform.position = coordinates;
-        pc.bed = MapController.GetClosestFreeFurniture("Bed", transform.position);
-        if (pc.bed != null)
-        {
-            pc.bed.GetComponent<FurnitureController>().owner = pc;
-            pc.ReturnToBed();
-        }
-        
 
-        // todo activate this elements when map building supports misc. items
-
-        //##
-        // pc.toilet = MapController.GetClosestFurniture("Toilet", pc.bed.transform.position);
-        // pc.canteen = MapController.GetClosestFurniture("???", pc.bed.transform.position);
-        // pc.shower = MapController.GetClosestFurniture("Shower", pc.bed.transform.position);
-        //##
+        patient.transform.parent = _patients.transform;
     }
 
     public void Patient() =>
@@ -66,5 +68,6 @@ public class PawnFactory : MonoBehaviour
         var nurse = Instantiate(NursePrefab);
         var nurseController = nurse.GetComponent<NurseController>();
         nurseController.Initialize(NurseManager, MapController.GetClosestFurniture("Sofa", transform.position));
+        nurse.transform.parent = _nurses.transform;
     }
 }

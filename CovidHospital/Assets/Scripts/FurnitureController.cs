@@ -6,5 +6,5 @@ using UnityEngine;
 public class FurnitureController : MonoBehaviour
 {
     public Vector2Int size;
-    public PawnController owner;
+    public PatientController owner;
 }

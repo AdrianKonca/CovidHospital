@@ -16,7 +16,6 @@ public class TileWall : Tile
     {
         SelectNewSprite(position, tilemap, true);
     }
-
     private void SelectNewSprite(Vector3Int position, ITilemap tilemap, bool continueToNeighbors)
     {
         string spriteName = wallName + "_";
@@ -82,6 +81,15 @@ public class MapController : MonoBehaviour
     private string TERRAIN_AFTER_WALL_DECON = "Concrete";
     private int DEFAULT_HEIGHT_Z = -2;
     private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
+
+    public event OnFurnitureBuiltDelegate OnFurnitureBuilt;
+    public delegate void OnFurnitureBuiltDelegate(GameObject furniture);
+
+    static private MapController _instance = null;
+    static public MapController Instance()
+    {
+        return _instance;
+    }
     private IEnumerator LoadTerrain()
     {
         int MAP_LIMIT = 100;
@@ -163,6 +171,18 @@ public class MapController : MonoBehaviour
             return;
         if (!_mapInitialized)
             InitializeMap();
+    }
+
+    private GameObject _furnitures;
+    private void Awake()
+    {
+        if (_instance != null)
+        {
+            Debug.LogError("One map controller already exists.");
+        }
+        _furnitures = new GameObject("Furnitures");
+        _furnitures.transform.parent = transform;
+        _instance = this;
     }
 
     public Vector3Int GetMousePosition(Vector2 mousePosition)
@@ -264,9 +284,11 @@ public class MapController : MonoBehaviour
         FurnituresUnique[coordinates] = furniture;
         Furnitures[name].Add(furniture);
 
+        furniture.name = name;
         furniture.transform.rotation = Quaternion.Euler(0, 0, rotations[rotation]);
         furniture.transform.position = coordinates + FURNITURE_OFFSET;
-
+        furniture.transform.parent = _furnitures.transform;
+        OnFurnitureBuilt?.Invoke(furniture);
         return (true, string.Empty);
     }
     public List<GameObject> GetFurnitures(string name)

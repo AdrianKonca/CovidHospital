@@ -31,8 +31,18 @@ public class TimeController : MonoBehaviour
     public GameObject Light;
     private Light2D _light2D;
 
+    static private TimeController _instance;
+    static public TimeController Instance()
+    {
+        return _instance;
+    }
     private void Awake()
     {
+        if (_instance != null)
+        {
+            Debug.LogError("One time controller already exists.");
+        }
+        _instance = this;
         _light2D = Light.GetComponent<Light2D>();
     }
 

@@ -7,7 +7,7 @@ using static UnityEngine.Random;
 namespace Entity
 {
     //nonserializable representation of data, contains sprites and other nonserializable stuff constructed based on PawnData
-    public class PawnController : Pawn
+    public class PatientController : Pawn
     {
         public TimeController timeController;
         public Slider slider;
@@ -17,7 +17,6 @@ namespace Entity
         public float covidUnableToMoveAfter = 50;
 
         public NurseManager nurseManager;
-
         public GameObject toilet { get; set; }
         public GameObject bed { get; set; }
         public GameObject canteen { get; set; }
@@ -27,7 +26,7 @@ namespace Entity
 
         private AIDestinationSetter _aiDestinationSetter;
 
-        public PawnController(PawnData data) : base()
+        public PatientController(PawnData data) : base()
         {
         }
 
@@ -83,7 +82,47 @@ namespace Entity
             patientData.OnLowHunger += PatientDataOnLowHunger;
             patientData.OnLowHygiene += PatientDataOnLowHygiene;
             patientData.OnLowToilet += PatientDataOnLowToilet;
+            MapController.Instance().OnFurnitureBuilt += OnFurnitureBuilt;
+            TimeController.Instance().OnHourIncrease += OnHourIncrease;
+
             _aiDestinationSetter = GetComponent<AIDestinationSetter>();
+        }
+
+        private void OnHourIncrease(int h)
+        {
+            if (bed == null)
+                SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Bed", transform.position));
+            //if (toilet == null && bed != null)
+            //    SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Toilet", bed.transform.position));
+            //if (shower == null && bed != null)
+            //    SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Shower", bed.transform.position));
+        }
+
+        private void OnFurnitureBuilt(GameObject furniture)
+        {
+            SelectFurniture(furniture);
+        }
+        private void SelectFurniture(GameObject furniture)
+        {
+            if (furniture == null)
+                return;
+            var furnitureOwner = furniture.GetComponent<FurnitureController>().owner;
+            if (furniture.name == "Bed" && bed == null && furnitureOwner == null)
+            {
+                bed = furniture;
+                bed.GetComponent<FurnitureController>().owner = this;
+                ReturnToBed();
+            }
+            //else if (furniture.name == "Toilet" && bed == null && furnitureOwner == null)
+            //{
+            //    toilet = furniture;
+            //    toilet.GetComponent<FurnitureController>().owner = this;
+            //}
+            //else if (furniture.name == "Shower" && bed == null && furnitureOwner == null)
+            //{
+            //    shower = furniture;
+            //    shower.GetComponent<FurnitureController>().owner = this;
+            //}
         }
 
         public void ReturnToBed()
