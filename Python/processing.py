@@ -6,6 +6,10 @@ import json
 
 from _datetime import timedelta
 from dataclasses import dataclass
+from statistics import mean
+
+#Necessary for silencing warning in interpolation
+pd.options.mode.chained_assignment = None
 
 countries = []
 CASE_THRESHOLD = 30
@@ -20,6 +24,7 @@ def rgb_to_hex(color):
 
 class CovidCountry:
     pass
+
 @dataclass
 class Wave:
 
@@ -71,13 +76,15 @@ class Wave:
 
     @staticmethod
     def build_wave_from_dataframe(wave_df, country : CovidCountry, column : str):
+        
+        wave_df[column] = wave_df[column].interpolate()
         wave = Wave(
             dict(zip(wave_df.date, wave_df[column])),
             wave_df.date.min(),
             wave_df.date.max(),
             country.country_name,
             country.country_iso,
-            column
+            column,
         )
 
         return wave
@@ -100,14 +107,16 @@ class Wave:
         plt.savefig(FIGURES_PATH + filename + ".png")
         plt.close()
 
-        with open(OUTPUT_DATA_PATH + filename + '.json', 'w') as outfile:
-            data_jsonable = self.__dict__
-            data_jsonable['cases'] = {str(k): v for k, v in self.cases.items()}
-            data_jsonable['wave_start'] = str(data_jsonable['wave_start'])
-            data_jsonable['wave_end'] = str(data_jsonable['wave_end'])
-            json.dump(self.__dict__, outfile)
+    def to_dict(self, wave_number):
 
-        self.__dict__
+        data_jsonable = self.__dict__
+        data_jsonable['wave_number'] = wave_number
+        data_jsonable['average'] = mean(self.cases.values())
+        data_jsonable['cases'] = {str(k): v for k, v in self.cases.items()}
+        data_jsonable['wave_start'] = str(data_jsonable['wave_start'])
+        data_jsonable['wave_end'] = str(data_jsonable['wave_end'])
+
+        return self.__dict__
 
 @dataclass
 class CovidCountry:
@@ -244,6 +253,7 @@ class CovidCountry:
         # plt.savefig(FIGURES_PATH + country_iso + ".png")
         # plt.close()
         return filtered_waves
+        
 
 def normalize():
     # https://data.worldbank.org/indicator/SP.POP.TOTL
@@ -307,13 +317,25 @@ def process_file(covid_data):
 
         countries.append(country)
 
+    country_dictionaries_cases = []
+    country_dictionaries_admissions = []
     for country in countries:
         if hasattr(country, 'waves_cases'):
+            country.waves_cases.sort(key=lambda w: w.wave_start)
             for i, wave in enumerate(country.waves_cases):
                 wave.plot_wave(i + 1, [0, (max_cases // 100 + 1) * 100])
+                country_dictionaries_cases.append(wave.to_dict(i))
+        
         if hasattr(country, 'waves_admissions'):
+            country.waves_admissions.sort(key=lambda w: w.wave_start)
             for i, wave in enumerate(country.waves_admissions):
                 wave.plot_wave(i + 1, [(min_admissions // 10 + -1) * 10, (max_admissions // 10 + 1) * 10])
+                country_dictionaries_admissions.append(wave.to_dict(i))
+
+    with open(OUTPUT_DATA_PATH + 'cases_data_by_country.json', 'w') as outfile:
+        json.dump(country_dictionaries_cases, outfile, indent=2)
+    with open(OUTPUT_DATA_PATH + 'admissions_data_by_country.json', 'w') as outfile:
+        json.dump(country_dictionaries_admissions, outfile, indent=2)
 
     #plt.legend(countries)
     #plt.gca().set_yscale('log')
