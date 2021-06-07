@@ -10,11 +10,10 @@ namespace Entity
     public class PatientController : Pawn
     {
         public TimeController timeController;
-        public Slider slider;
         public PatientData patientData;
-        public float covidRegressMultiplier = 1;
-        public float covidProgressMultiplier = 1;
-        public float covidUnableToMoveAfter = 50;
+        public float covidRegressMultiplier;
+        public float covidProgressMultiplier;
+        public float covidUnableToMoveAfter;
 
         public NurseManager nurseManager;
         public GameObject toilet { get; set; }
@@ -40,8 +39,6 @@ namespace Entity
             var ProgressToSubtract = delta * AgeMultiplier * NeedsMultiplier;
 
             patientData.AddCovidProgress(ProgressToSubtract * covidRegressMultiplier);
-            //TODO: Make slider a part of pawn GUI element
-            //slider.value = patientData.covidProgress;
         }
 
         private void CovidProgress(float delta)
@@ -62,8 +59,6 @@ namespace Entity
             var ProgressToAdd = delta * AgeMultiplier * ImmunityMultiplier * NeedsMultiplier;
 
             patientData.AddCovidProgress(ProgressToAdd * covidProgressMultiplier);
-            //TODO: Remove
-            //slider.value = patientData.covidProgress;
         }
 
         public void Initialize(Role role, TimeController timeController, NurseManager nurseManager)
@@ -77,6 +72,10 @@ namespace Entity
             this.timeController = timeController;
             timeController.OnDayIncrease += TimeControllerOnOnDayIncrease;
             timeController.OnHourIncrease += TimeControllerOnOnHourIncrease;
+
+            covidRegressMultiplier = 1;
+            covidProgressMultiplier = 1;
+            covidUnableToMoveAfter = 50;
 
             patientData.OnLowComfort += PatientDataOnLowComfort;
             patientData.OnLowHunger += PatientDataOnLowHunger;
@@ -102,6 +101,7 @@ namespace Entity
         {
             SelectFurniture(furniture);
         }
+
         private void SelectFurniture(GameObject furniture)
         {
             if (furniture == null)
