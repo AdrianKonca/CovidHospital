@@ -111,9 +111,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616708310018980065}
-  m_Text: 'test
-
-'
+  m_Text: The floor must be made of concrete!
   m_OffsetZ: 0
   m_CharacterSize: 0.2
   m_LineSpacing: 1
@@ -126,7 +124,7 @@ TextMesh:
   m_Font: {fileID: 0}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190335
 --- !u!95 &1616708310018980093
 Animator:
   serializedVersion: 3

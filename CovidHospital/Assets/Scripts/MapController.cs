@@ -206,15 +206,15 @@ public class MapController : MonoBehaviour
         return Vector3Int.FloorToInt(Camera.main.ScreenToWorldPoint(mousePosition));
     }
 
-    public bool BuildWall(Vector3Int coordinates)
+    public (bool, string) BuildWall(Vector3Int coordinates)
     {
         if (Walls.HasTile(coordinates))
-            return false;
+            return (false, "Wall is already built here!");
         AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
-        return true;
+        return (true, string.Empty);
     }
 
     public bool DestroyWall(Vector3Int coordinates)

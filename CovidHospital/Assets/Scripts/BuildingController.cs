@@ -42,29 +42,48 @@ public class BuildingController : MonoBehaviour
         { 2, "S" },
         { 3, "W" },
     };
+
+    private Dictionary<Vector3Int, float> _recentErrors = new Dictionary<Vector3Int, float>();
     private void Build()
     {
         if (!_actionStarted)
             return;
+        (bool, string) reponse;
+        var position = _mapController.GetMousePosition(_mousePosition);
+
         switch (_state)
         {
             case State.Inactive:
                 return;
             case State.BuildTerrain:
-                _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Concrete");
+                _mapController.BuildTerrain(position, "Concrete");
                 break;
             case State.BuildWall:
-                _mapController.BuildWall(_mapController.GetMousePosition(_mousePosition));
+                reponse = _mapController.BuildWall(position);
+                if (!reponse.Item1 && !_recentErrors.ContainsKey(position))
+                {
+                    _recentErrors[position] = Time.time + 5f;
+                    FloatingTextManager.I().DisplayText(reponse.Item2, position, Color.red);
+                }
+                else
+                    _recentErrors[position] = Time.time + 2f;
                 break;
             case State.DestroyWall:
-                _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
+                _mapController.DestroyWall(position);
                 break;
             case State.BuildFurniture:
-                _mapController.BuildFurniture(_mapController.GetMousePosition(_mousePosition), CurrentObjectName, rotations[_rotation]);
+                reponse = _mapController.BuildFurniture(position, CurrentObjectName, rotations[_rotation]);
+                if (!reponse.Item1 && !_recentErrors.ContainsKey(position))
+                {
+                    _recentErrors[position] = Time.time + 5f;
+                    FloatingTextManager.I().DisplayText(reponse.Item2, position, Color.red);
+                }
+                else
+                    _recentErrors[position] = Time.time + 2f;
                 _actionStarted = false;
                 break;
             case State.DestroyFurniture:
-                var values = _mapController.DestroyFurniture(_mapController.GetMousePosition(_mousePosition));
+                var values = _mapController.DestroyFurniture(position);
                 _actionStarted = false;
                 break;
         }
@@ -112,6 +131,16 @@ public class BuildingController : MonoBehaviour
         preview.transform.position = pos + new Vector3(0.5f, 0.5f);
 
         Build();
+        var keysToRemove = new List<Vector3Int>();
+        foreach (var key in _recentErrors.Keys)
+        {
+            if (_recentErrors[key] < Time.time)
+                keysToRemove.Add(key);
+        }
+        foreach (var key in keysToRemove)
+        {
+            _recentErrors.Remove(key);
+        }
     }
     public void SetBuildingUIController(BuildingUIController controller)
     {
