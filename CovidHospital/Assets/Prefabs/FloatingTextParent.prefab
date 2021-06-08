@@ -102,7 +102,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 32001
 --- !u!102 &1616708310018980064
 TextMesh:
   serializedVersion: 3
@@ -111,7 +111,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616708310018980065}
-  m_Text: You can't build walls over furnitures!
+  m_Text: Wall is already built here!
   m_OffsetZ: 0
   m_CharacterSize: 0.2
   m_LineSpacing: 1

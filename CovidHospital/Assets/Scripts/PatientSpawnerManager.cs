@@ -49,6 +49,10 @@ public class PatientSpawnerManager : MonoBehaviour
     public float spawnedPatients;
     public float deadPatients;
     public float curedPatients;
+    public GameObject StartWaveButton;
+
+    private long _startDay;
+    private bool _wasWaveStarted = false;
 
     public void Awake()
     {
@@ -64,7 +68,13 @@ public class PatientSpawnerManager : MonoBehaviour
 
     public void DailySpawnPatients(long d)
     {
-        var currentPandemicDay = _currentWave.Start + new TimeSpan((int) d, 0, 0, 0);
+        
+        if (!_wasWaveStarted)
+        {
+            _startDay = d;
+            return;
+        }
+        var currentPandemicDay = _currentWave.Start + new TimeSpan((int) (d - _startDay), 0, 0, 0);
         if (currentPandemicDay > _currentWave.Stop)
         {
             OnPandemicEnd?.Invoke();
@@ -112,5 +122,10 @@ public class PatientSpawnerManager : MonoBehaviour
         }
 
         return null;
+    }
+    public void StartWave()
+    {
+        _wasWaveStarted = true;
+        Destroy(StartWaveButton);
     }
 }

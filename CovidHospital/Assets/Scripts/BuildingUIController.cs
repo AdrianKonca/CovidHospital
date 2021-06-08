@@ -106,9 +106,10 @@ public class BuildingUIController : MonoBehaviour
         FormatControlName(currentObjectName);
         foreach (var option in FurnitureSelection.options)
         {
-            if (Regex.IsMatch(option.text, $"^{currentObjectName}[ 0-9]*"))
+            var match = Regex.Match(option.text, "([A-Za-z]*)");
+            Debug.Log(match.Groups[0].Value);
+            if (match.Success && match.Groups[0].Value == currentObjectName)
             {
-
                 FurnitureSelection.captionText.text = FormatControlName(currentObjectName);
                 option.text = FormatControlName(currentObjectName);
             }
