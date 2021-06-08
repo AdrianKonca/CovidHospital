@@ -46,9 +46,9 @@ public class PatientSpawnerManager : MonoBehaviour
 
     public delegate void OnPandemicEndDelegate();
 
-    public int spawnedPatients;
-    public int deadPatients;
-    public int curedPatients;
+    public float spawnedPatients;
+    public float deadPatients;
+    public float curedPatients;
 
     public void Awake()
     {
@@ -91,7 +91,7 @@ public class PatientSpawnerManager : MonoBehaviour
 
         if (deadPatients / spawnedPatients >= 0.8)
         {
-            
+            //Lose scene here
         }
     }
 
