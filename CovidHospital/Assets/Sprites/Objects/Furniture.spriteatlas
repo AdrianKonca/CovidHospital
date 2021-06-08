@@ -46,6 +46,7 @@ SpriteAtlas:
   - {fileID: 6580706180292963874, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
   - {fileID: -6327107731223078017, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
   - {fileID: -5819481625698966781, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
+  - {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
   - {fileID: 8416179097877672357, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
   - {fileID: 691292305700305925, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
   - {fileID: -2233355497130287607, guid: 3648a538e3402fb4b9693b0388a08014, type: 3}
@@ -55,6 +56,7 @@ SpriteAtlas:
   - Fotel
   - Bed
   - Toilet
+  - Chair
   - BedRespirator
   - Shower
   - BedOxygen

@@ -73,6 +73,13 @@ public class MapController : MonoBehaviour
     //used for pathfinding
     public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
     public Dictionary<string, List<GameObject>> Furnitures = new Dictionary<string, List<GameObject>>();
+    public Dictionary<string, (int, int)> FurnituresLimit = new Dictionary<string, (int, int)>{
+        { "BedOxygen", (0, 10) },
+        { "BedRespirator", (0, 5) },
+    };
+    public List<string> FurnituresNames = new List<string>{
+        "Bed", "BedOxygen", "BedRespirator", "Chair", "Fotel", "Shower", "Sofa", "Toilet"
+    };
     public Tilemap Terrain;
     public Tilemap Walls;
 
@@ -86,6 +93,7 @@ public class MapController : MonoBehaviour
     public delegate void OnFurnitureBuiltDelegate(GameObject furniture);
 
     static private MapController _instance = null;
+    
     static public MapController Instance()
     {
         return _instance;

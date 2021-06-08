@@ -1988,16 +1988,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: Sofa
-      m_Image: {fileID: 8416179097877672357, guid: 3648a538e3402fb4b9693b0388a08014,
-        type: 3}
-    - m_Text: Bed
-      m_Image: {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014,
-        type: 3}
-    - m_Text: Chair
-      m_Image: {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014,
-        type: 3}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2888,10 +2879,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -3275,6 +3266,7 @@ MonoBehaviour:
   MapController: {fileID: 1081956696}
   TimeController: {fileID: 388353422}
   NurseManager: {fileID: 1824579703}
+  PatientSpawnerManager: {fileID: 0}
 --- !u!4 &1269259200
 Transform:
   m_ObjectHideFlags: 0
@@ -4295,6 +4287,9 @@ MonoBehaviour:
   SpawnPoint: {x: 5, y: 5, z: 0}
   CasesDenominator: 50
   AdmissionsDenominator: 5
+  spawnedPatients: 0
+  deadPatients: 0
+  curedPatients: 0
 --- !u!4 &1576010379
 Transform:
   m_ObjectHideFlags: 0
@@ -4641,7 +4636,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Sofa
+  m_Text: 
 --- !u!222 &1694457961
 CanvasRenderer:
   m_ObjectHideFlags: 0
