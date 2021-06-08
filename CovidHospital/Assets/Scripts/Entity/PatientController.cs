@@ -23,6 +23,7 @@ namespace Entity
         public bool requestForPepeSend = false;
 
         private AIDestinationSetter _aiDestinationSetter;
+        public PatientSpawnerManager PatientSpawnerManager;
 
         public PatientController(PawnData data) : base()
         {
@@ -60,7 +61,8 @@ namespace Entity
             patientData.AddCovidProgress(ProgressToAdd * covidProgressMultiplier);
         }
 
-        public void Initialize(Role role, TimeController timeController, NurseManager nurseManager)
+        public void Initialize(Role role, TimeController timeController, NurseManager nurseManager,
+            PatientSpawnerManager patientSpawnerManager)
         {
             PawnData = ScriptableObject.CreateInstance<PawnData>();
             PawnData.Initialize(role);
@@ -84,6 +86,7 @@ namespace Entity
             MapController.Instance().OnFurnitureBuilt += OnFurnitureBuilt;
 
             _aiDestinationSetter = GetComponent<AIDestinationSetter>();
+            this.PatientSpawnerManager = patientSpawnerManager;
         }
 
         private void OnHourIncrease(int h)
@@ -127,20 +130,27 @@ namespace Entity
         {
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
+            
             if (patientData.covidProgress >= 100)
             {
-                Debug.Log("Umarło mi sie");
+                PatientSpawnerManager.deadPatients++;
+                KILL();
+            }
 
-                PawnData.alive = false;
-
-                if (bed != null)
-                    bed.GetComponent<FurnitureController>().owner = null;
+            if (patientData.covidProgress <= 0)
+            {
+                PatientSpawnerManager.curedPatients++;
                 KILL();
             }
         }
 
         private void KILL()
         {
+            PawnData.alive = false;
+
+            if (bed != null)
+                bed.GetComponent<FurnitureController>().owner = null;
+
             timeController.OnDayIncrease -= OnDayIncrease;
             timeController.OnHourIncrease -= OnHourIncrease;
 

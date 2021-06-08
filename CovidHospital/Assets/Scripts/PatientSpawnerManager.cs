@@ -9,23 +9,21 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Wave
 {
-    public enum WaveType { Admissions, Cases };
+    public enum WaveType
+    {
+        Admissions,
+        Cases
+    };
+
     //[JsonProperty("eighty_min_score")]
     public WaveType Type;
-    [JsonProperty("country_name")]
-    public string CountryName;
-    [JsonProperty("country_iso")]
-    public string CountryIso;
-    [JsonProperty("wave_start")]
-    public DateTime Start;
-    [JsonProperty("wave_end")]
-    public DateTime Stop;
-    [JsonProperty("cases")]
-    public Dictionary<DateTime, double> Data;
-    [JsonProperty("wave_number")]
-    public int WaveNumber;
-    [JsonProperty("average")]
-    public float Average;
+    [JsonProperty("country_name")] public string CountryName;
+    [JsonProperty("country_iso")] public string CountryIso;
+    [JsonProperty("wave_start")] public DateTime Start;
+    [JsonProperty("wave_end")] public DateTime Stop;
+    [JsonProperty("cases")] public Dictionary<DateTime, double> Data;
+    [JsonProperty("wave_number")] public int WaveNumber;
+    [JsonProperty("average")] public float Average;
 }
 
 public class PatientSpawnerManager : MonoBehaviour
@@ -45,7 +43,12 @@ public class PatientSpawnerManager : MonoBehaviour
     public int CasesDenominator = 50;
     public int AdmissionsDenominator = 5;
     public event OnPandemicEndDelegate OnPandemicEnd;
+
     public delegate void OnPandemicEndDelegate();
+
+    public int spawnedPatients;
+    public int deadPatients;
+    public int curedPatients;
 
     public void Awake()
     {
@@ -61,23 +64,41 @@ public class PatientSpawnerManager : MonoBehaviour
 
     public void DailySpawnPatients(long d)
     {
-        var currentPandemicDay = _currentWave.Start + new TimeSpan((int)d, 0, 0, 0);
+        var currentPandemicDay = _currentWave.Start + new TimeSpan((int) d, 0, 0, 0);
         if (currentPandemicDay > _currentWave.Stop)
         {
             OnPandemicEnd?.Invoke();
         }
+
         var cases = _currentWave.Data[currentPandemicDay];
-        var patientsToSpawn = (int)cases / CasesDenominator;
+        var patientsToSpawn = (int) cases / CasesDenominator;
         for (int i = 0; i < patientsToSpawn; i++)
         {
             PawnFactory.Patient(SpawnPoint + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f));
         }
+
+        spawnedPatients += patientsToSpawn;
+
+        CheckStatistics();
     }
+
+    private void CheckStatistics()
+    {
+        if (spawnedPatients < 100)
+        {
+            return;
+        }
+
+        if (deadPatients / spawnedPatients >= 0.8)
+        {
+            
+        }
+    }
+
     public Wave GetWave(string countryIso, int waveNumber, Wave.WaveType waveType)
     {
         return GetWavesByType(waveType)
-            .Where(w => w.CountryIso == countryIso && w.WaveNumber == waveNumber)
-            .SingleOrDefault();
+            .SingleOrDefault(w => w.CountryIso == countryIso && w.WaveNumber == waveNumber);
     }
 
     public List<Wave> GetWavesByType(Wave.WaveType waveType)
@@ -89,7 +110,7 @@ public class PatientSpawnerManager : MonoBehaviour
             case Wave.WaveType.Cases:
                 return CasesWaves;
         }
+
         return null;
     }
-
 }
