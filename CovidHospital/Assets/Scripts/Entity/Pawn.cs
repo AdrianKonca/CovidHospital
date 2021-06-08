@@ -23,8 +23,11 @@ namespace Entity
             obj.AddComponent<SpriteRenderer>();
             var spriteRenderer = obj.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = sprite;
-            if (bodyPart == BodyPart.Hair)
-                spriteRenderer.sortingOrder = 1;
+            obj.AddComponent<SpriteSorting>();
+            obj.GetComponent<SpriteSorting>();
+            //spriteRenderer.sortingOrder = 100;
+            //if (bodyPart == BodyPart.Hair)
+            //    spriteRenderer.sortingOrder = 200;
             return obj;
         }
 
