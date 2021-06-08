@@ -20,13 +20,14 @@ public class SpriteSorting : MonoBehaviour
     }
     private void LateUpdate()
     {
+        
         if (BodyPart == BodyPart.Hair)
         {
-            SpriteRenderer.sortingOrder = Mathf.RoundToInt((transform.position.y + yOffset) * yMult) + 2;
+            SpriteRenderer.sortingOrder = 29000 - Mathf.RoundToInt((transform.position.y + yOffset) * yMult) + 2;
         }
         else
         {
-            SpriteRenderer.sortingOrder = Mathf.RoundToInt((transform.position.y + yOffset) * yMult) + 1;
+            SpriteRenderer.sortingOrder = 29000 - Mathf.RoundToInt((transform.position.y + yOffset) * yMult) + 1;
         }
     }
 
