@@ -3275,6 +3275,7 @@ MonoBehaviour:
   MapController: {fileID: 1081956696}
   TimeController: {fileID: 388353422}
   NurseManager: {fileID: 1824579703}
+  PatientSpawnerManager: {fileID: 1576010378}
 --- !u!4 &1269259200
 Transform:
   m_ObjectHideFlags: 0
@@ -4269,7 +4270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1576010378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4295,6 +4296,9 @@ MonoBehaviour:
   SpawnPoint: {x: 5, y: 5, z: 0}
   CasesDenominator: 50
   AdmissionsDenominator: 5
+  spawnedPatients: 0
+  deadPatients: 0
+  curedPatients: 0
 --- !u!4 &1576010379
 Transform:
   m_ObjectHideFlags: 0
