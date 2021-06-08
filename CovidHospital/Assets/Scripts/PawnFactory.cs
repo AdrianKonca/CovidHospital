@@ -56,9 +56,8 @@ public class PawnFactory : MonoBehaviour
         var patient = Instantiate(PatientPrefab);
         var pc = patient.GetComponent<PatientController>();
 
-        pc.Initialize(Role.Patient, TimeController, NurseManager,PatientSpawnerManager);
+        pc.Initialize(Role.Patient, TimeController, NurseManager, PatientSpawnerManager);
         patient.transform.position = coordinates;
-
         patient.transform.parent = _patients.transform;
     }
 
@@ -69,7 +68,7 @@ public class PawnFactory : MonoBehaviour
     {
         var nurse = Instantiate(NursePrefab);
         var nurseController = nurse.GetComponent<NurseController>();
-        nurseController.Initialize(NurseManager, MapController.GetClosestFurniture("Sofa", transform.position));
+        nurseController.Initialize(NurseManager, TimeController);
         nurse.transform.parent = _nurses.transform;
     }
 }

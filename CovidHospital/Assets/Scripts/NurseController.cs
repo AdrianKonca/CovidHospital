@@ -2,23 +2,79 @@
 using Entity;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class NurseController : Pawn
 {
     private NurseManager nurseManager;
-    private GameObject restRoom;
+    private GameObject sofa;
     private AIDestinationSetter _aiDestinationSetter;
-    private bool bussy = false;
-    private Pawn p;
+    public bool bussy = false;
+    private Pawn _pawn;
+    private TimeController _timeController;
 
-    public void Initialize(NurseManager nurseManager, GameObject restRoom)
+    public PatientController patient;
+
+    public void Initialize(NurseManager nurseManager, TimeController timeController)
     {
         Initialize(Role.Nurse);
         this.nurseManager = nurseManager;
-        this.restRoom = restRoom;
         nurseManager.OnEnqueue += NurseManagerOnEnqueue;
+        _timeController = timeController;
+
+        _timeController.OnHourIncrease += OnHourIncrease;
+        _timeController.OnMinuteIncrease += OnMinuteIncrease;
+        MapController.Instance().OnFurnitureBuilt += OnFurnitureBuilt;
         _aiDestinationSetter = GetComponent<AIDestinationSetter>();
-        _aiDestinationSetter.target = restRoom.transform;
+    }
+
+    private void OnMinuteIncrease(int m)
+    {
+        if (bussy)
+            return;
+
+        _pawn = nurseManager.RemovePawnFromQue();
+        if (_pawn)
+        {
+            _aiDestinationSetter.target = _pawn.transform;
+            bussy = true;
+        }
+    }
+
+    private void OnFurnitureBuilt(GameObject furniture)
+    {
+        if (furniture == null)
+            return;
+
+        if (sofa == null)
+            SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Sofa", transform.position));
+    }
+
+    private void OnHourIncrease(int h)
+    {
+        if (sofa == null)
+            SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Sofa", transform.position));
+
+        if (bussy)
+            return;
+
+        _pawn = nurseManager.RemovePawnFromQue();
+        if (_pawn)
+        {
+            _aiDestinationSetter.target = _pawn.transform;
+            bussy = true;
+        }
+    }
+
+    private void SelectFurniture(GameObject furniture)
+    {
+        if (furniture == null)
+            return;
+
+        if (furniture.name == "Sofa" && sofa == null)
+        {
+            sofa = furniture;
+        }
     }
 
     private void NurseManagerOnEnqueue(object sender, EventArgs e)
@@ -26,10 +82,10 @@ public class NurseController : Pawn
         if (bussy)
             return;
 
-        p = nurseManager.RemovePawnFromQue();
-        if (p)
+        _pawn = nurseManager.RemovePawnFromQue();
+        if (_pawn)
         {
-            _aiDestinationSetter.target = p.transform;
+            _aiDestinationSetter.target = _pawn.transform;
             bussy = true;
         }
     }
@@ -38,8 +94,8 @@ public class NurseController : Pawn
     {
         if (collision.CompareTag("Player"))
         {
-            var patient = collision.gameObject.GetComponent<PatientController>();
-            if (patient != p || patient == null)
+            patient = collision.gameObject.GetComponent<PatientController>();
+            if (patient != _pawn || patient == null)
                 return;
 
             patient.patientData.ResetToilet();
@@ -48,17 +104,16 @@ public class NurseController : Pawn
             patient.requestForPepeSend = false;
             bussy = false;
 
-            p = nurseManager.RemovePawnFromQue();
-            if (p)
-            {
-                _aiDestinationSetter.target = p.transform;
-                bussy = true;
-            }
-            else
-            {
-                _aiDestinationSetter.target = restRoom.transform;
-                bussy = false;
-            }
+            if (sofa)
+                _aiDestinationSetter.target = sofa.transform;
+        }
+    }
+
+    private void Update()
+    {
+        if (transform == _aiDestinationSetter.target)
+        {
+            Debug.Log("XD");
         }
     }
 }

@@ -1,0 +1,488 @@
+fileFormatVersion: 2
+guid: 4a2fd1bfd6eee734aaa2ec0dcd45b046
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7515321393698798569
+    second: BrickWallLowRez_SW
+  - first:
+      213: 525910172978783026
+    second: BrickWallLowRez_ES
+  - first:
+      213: -149081435668712892
+    second: BrickWallLowRez_NW
+  - first:
+      213: -8097366949908042302
+    second: BrickWallLowRez_ESW
+  - first:
+      213: 790139196492650592
+    second: BrickWallLowRez_NES
+  - first:
+      213: 8126061888312256631
+    second: BrickWallLowRez_N
+  - first:
+      213: -5756894034996215190
+    second: BrickWallLowRez_NS
+  - first:
+      213: 7155086332416761132
+    second: BrickWallLowRez_NE
+  - first:
+      213: 8502175413397919348
+    second: BrickWallLowRez_EW
+  - first:
+      213: -1818633327857002132
+    second: BrickWallLowRez_NESW
+  - first:
+      213: -5798201593489150503
+    second: BrickWallLowRez_S
+  - first:
+      213: -6951221616403753804
+    second: BrickWallLowRez_
+  - first:
+      213: -7257170931460749110
+    second: BrickWallLowRez_NSW
+  - first:
+      213: 3434629544224469244
+    second: BrickWallLowRez_E
+  - first:
+      213: -6917406330780413749
+    second: BrickWallLowRez_NEW
+  - first:
+      213: -8734549614580484206
+    second: BrickWallLowRez_W
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 256
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BrickWallLowRez_SW
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 919
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eb7f4c5df8cb4860800000000000000
+      internalID: 7515321393698798569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_ES
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 919
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2332a2414886c4700800000000000000
+      internalID: 525910172978783026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_NW
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 919
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4427c50693b5eedf0800000000000000
+      internalID: -149081435668712892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_ESW
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 919
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cd2eb629af50af80800000000000000
+      internalID: -8097366949908042302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_NES
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 920
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0689e02b96327fa00800000000000000
+      internalID: 790139196492650592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_N
+      rect:
+        serializedVersion: 2
+        x: 1431
+        y: 919
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77821b3db3295c070800000000000000
+      internalID: 8126061888312256631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_NS
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 638
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a624c7260676b10b0800000000000000
+      internalID: -5756894034996215190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_NE
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 638
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2d14fc2c19fb4360800000000000000
+      internalID: 7155086332416761132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_EW
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 638
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47694a5fd7bcdf570800000000000000
+      internalID: 8502175413397919348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_NESW
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 638
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c699564bf9ae2c6e0800000000000000
+      internalID: -1818633327857002132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_S
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 638
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dda9f3fe56a88fa0800000000000000
+      internalID: -5798201593489150503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 638
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b4dc3fd4cc488f90800000000000000
+      internalID: -6951221616403753804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_NSW
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 357
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac8cdfbec79594b90800000000000000
+      internalID: -7257170931460749110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_E
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 357
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf0bf8e7f514aaf20800000000000000
+      internalID: 3434629544224469244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_NEW
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 357
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc09bc6979f6000a0800000000000000
+      internalID: -6917406330780413749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BrickWallLowRez_W
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 357
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 297b7e53765a8c680800000000000000
+      internalID: -8734549614580484206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

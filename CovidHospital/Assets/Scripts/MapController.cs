@@ -16,6 +16,7 @@ public class TileWall : Tile
     {
         SelectNewSprite(position, tilemap, true);
     }
+
     private void SelectNewSprite(Vector3Int position, ITilemap tilemap, bool continueToNeighbors)
     {
         string spriteName = wallName + "_";
@@ -67,19 +68,27 @@ public class MapController : MonoBehaviour
 {
     public AstarPath AstarPath;
     public List<GameObject> FurnituresPrefabs;
+
     public Dictionary<string, GameObject> NameToFurniture = new Dictionary<string, GameObject>();
+
     //used for building colission detection
     public Dictionary<Vector3Int, GameObject> FurnituresMap = new Dictionary<Vector3Int, GameObject>();
+
     //used for pathfinding
     public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
     public Dictionary<string, List<GameObject>> Furnitures = new Dictionary<string, List<GameObject>>();
-    public Dictionary<string, (int, int)> FurnituresLimit = new Dictionary<string, (int, int)>{
-        { "BedOxygen", (0, 10) },
-        { "BedRespirator", (0, 5) },
+
+    public Dictionary<string, (int, int)> FurnituresLimit = new Dictionary<string, (int, int)>
+    {
+        {"BedOxygen", (0, 10)},
+        {"BedRespirator", (0, 5)},
     };
-    public List<string> FurnituresNames = new List<string>{
+
+    public List<string> FurnituresNames = new List<string>
+    {
         "Bed", "BedOxygen", "BedRespirator", "Chair", "Fotel", "Shower", "Sofa", "Toilet"
     };
+
     public Tilemap Terrain;
     public Tilemap Walls;
 
@@ -90,14 +99,16 @@ public class MapController : MonoBehaviour
     private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
 
     public event OnFurnitureBuiltDelegate OnFurnitureBuilt;
+
     public delegate void OnFurnitureBuiltDelegate(GameObject furniture);
 
     static private MapController _instance = null;
-    
+
     static public MapController Instance()
     {
         return _instance;
     }
+
     private IEnumerator LoadTerrain()
     {
         int MAP_LIMIT = 100;
@@ -139,6 +150,7 @@ public class MapController : MonoBehaviour
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
         Walls.ClearAllEditorPreviewTiles();
+
         //for (int x = 0; x < ROOM_LIMIT; x++)
         //{
         //    TileWall wallTop = ScriptableObject.CreateInstance<TileWall>();
@@ -169,6 +181,7 @@ public class MapController : MonoBehaviour
         //        wall.wallName = WALL_NAME;
         //        Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
         //    }
+
         StartCoroutine("LoadTerrain");
 
         //move to other function
@@ -178,7 +191,6 @@ public class MapController : MonoBehaviour
             NameToFurniture[furniture.name] = furniture;
             Furnitures[furniture.name] = new List<GameObject>();
         }
-
     }
 
     private void Update()
@@ -190,12 +202,14 @@ public class MapController : MonoBehaviour
     }
 
     private GameObject _furnitures;
+
     private void Awake()
     {
         if (_instance != null)
         {
             Debug.LogError("One map controller already exists.");
         }
+
         _furnitures = new GameObject("Furnitures");
         _furnitures.transform.parent = transform;
         _instance = this;
@@ -240,40 +254,45 @@ public class MapController : MonoBehaviour
         return true;
     }
 
-    List<Vector3Int> GetFurnitePositions(FurnitureController furnitureController, Vector3Int coordinates, string rotation) {
+    List<Vector3Int> GetFurnitePositions(FurnitureController furnitureController, Vector3Int coordinates,
+        string rotation)
+    {
         var points = new List<Vector3Int>();
         switch (rotation)
         {
             case "N":
                 for (int x = 0; x < furnitureController.size.x; x++)
-                    for (int y = 0; y < furnitureController.size.y; y++)
-                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
+                for (int y = 0; y < furnitureController.size.y; y++)
+                    points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
                 break;
             case "S":
                 for (int x = -furnitureController.size.x + 1; x <= 0; x++)
-                    for (int y = 0; y < furnitureController.size.y; y++)
-                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
+                for (int y = 0; y < furnitureController.size.y; y++)
+                    points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
                 break;
             case "W":
                 for (int x = 0; x < furnitureController.size.y; x++)
-                    for (int y = 0; y < furnitureController.size.x; y++)
-                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
+                for (int y = 0; y < furnitureController.size.x; y++)
+                    points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
                 break;
             case "E":
                 for (int x = -furnitureController.size.y + 1; x <= 0; x++)
-                    for (int y = 0; y < furnitureController.size.x; y++)
-                        points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
+                for (int y = 0; y < furnitureController.size.x; y++)
+                    points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
                 break;
         }
+
         return points;
     }
+
     public (bool, string) BuildFurniture(Vector3Int coordinates, string name, string rotation)
     {
-        var rotations = new Dictionary<string, int>{
-            { "N", 0 },
-            { "E", -90 },
-            { "S", -180 },
-            { "W", -270 },
+        var rotations = new Dictionary<string, int>
+        {
+            {"N", 0},
+            {"E", -90},
+            {"S", -180},
+            {"W", -270},
         };
 
         var furniture = Instantiate(NameToFurniture[name]);
@@ -288,6 +307,7 @@ public class MapController : MonoBehaviour
                 Destroy(furniture);
                 return (false, "There is a wall here.");
             }
+
             if (FurnituresMap.ContainsKey(point))
             {
                 Destroy(furniture);
@@ -299,6 +319,7 @@ public class MapController : MonoBehaviour
                 return (false, "The floor must be made of concrete!");
             }
         }
+
         if (FurnituresLimit.ContainsKey(name))
         {
             if (FurnituresLimit[name].Item1 == FurnituresLimit[name].Item2)
@@ -313,6 +334,7 @@ public class MapController : MonoBehaviour
         {
             FurnituresMap[point] = furniture;
         }
+
         FurnituresUnique[coordinates] = furniture;
         Furnitures[name].Add(furniture);
 
@@ -324,6 +346,7 @@ public class MapController : MonoBehaviour
         OnFurnitureBuilt?.Invoke(furniture);
         return (true, string.Empty);
     }
+
     public (bool, string) DestroyFurniture(Vector3Int coordinates)
     {
         if (!FurnituresMap.ContainsKey(coordinates))
@@ -340,10 +363,12 @@ public class MapController : MonoBehaviour
         //TOOD: Add handling for furniture owners.
         return (true, string.Empty);
     }
+
     public List<GameObject> GetFurnitures(string name)
     {
         return Furnitures[name];
     }
+
     public GameObject GetClosestFurniture(string name, Vector3 coordinates)
     {
         return Furnitures[name]
@@ -354,7 +379,19 @@ public class MapController : MonoBehaviour
     public GameObject GetClosestFreeFurniture(string name, Vector3 coordinates)
     {
         return Furnitures[name]
-            .Where(f=>f.GetComponent<FurnitureController>().owner==null)
+            .Where(f => f.GetComponent<FurnitureController>().owner == null)
+            .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
+            .FirstOrDefault();
+    }
+
+    public GameObject GetClosestFreeBed(Vector3 coordinates)
+    {
+        var beds = Furnitures["Bed"].Where(f => f.GetComponent<FurnitureController>().owner == null).ToList();
+        var oBeds = Furnitures["BedOxygen"].Where(f => f.GetComponent<FurnitureController>().owner == null).ToList();
+        var rBeds = Furnitures["BedRespirator"].Where(f => f.GetComponent<FurnitureController>().owner == null).ToList();
+        beds.AddRange(oBeds);
+        beds.AddRange(rBeds);
+        return beds
             .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
             .FirstOrDefault();
     }

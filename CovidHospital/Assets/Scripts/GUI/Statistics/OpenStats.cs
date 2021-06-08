@@ -27,7 +27,7 @@ public class OpenStats : MonoBehaviour
             SetValue(2, hunger);
             SetValue(5, hygiene);
             SetValue(6, toilet);
-            SetValue(3, covid);
+            SetValue(3, covid, true);
             SetValue(4, comfort);
         }
         
@@ -50,21 +50,28 @@ public class OpenStats : MonoBehaviour
     {
         if (!stats.activeSelf)
             stats.SetActive(true);
-
+        
         txt = stats.transform.GetChild(1).GetComponent<Text>();
 
         string name = hit.transform.name;
         ctrl = hit.transform.gameObject.GetComponent<PatientController>();
-        var age = ctrl.PawnData.age;
-        txt.text = name + " (" + age + ")";
-
+        
+        if (ctrl.PawnData.role == Role.Patient)
+        {
+            var age = ctrl.PawnData.age;
+            txt.text = name + " (" + age + ")"; 
+        }
     }
 
-    private void SetValue(int slider, float value)
+    private void SetValue(int slider, float value, bool sw = false)
     {
+
         stats.transform.GetChild(slider).GetChild(1).GetComponent<Slider>().maxValue = 100;
         stats.transform.GetChild(slider).GetChild(1).GetComponent<Slider>().value = value;
-        stats.transform.GetChild(slider).GetChild(1).GetChild(1).GetChild(0).GetComponent<Image>().color = Color.Lerp(Color.red, Color.green, value/100);
+        if (sw)
+            stats.transform.GetChild(slider).GetChild(1).GetChild(1).GetChild(0).GetComponent<Image>().color = Color.Lerp(Color.green, Color.red, value / 100);
+        else 
+            stats.transform.GetChild(slider).GetChild(1).GetChild(1).GetChild(0).GetComponent<Image>().color = Color.Lerp(Color.red, Color.green, value/100);
         stats.transform.GetChild(slider).GetChild(1).GetChild(2).GetComponent<Text>().text = ((int)value).ToString() + " %";
     }
 
