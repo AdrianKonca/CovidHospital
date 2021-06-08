@@ -50,14 +50,17 @@ public class OpenStats : MonoBehaviour
     {
         if (!stats.activeSelf)
             stats.SetActive(true);
-
+        
         txt = stats.transform.GetChild(1).GetComponent<Text>();
 
         string name = hit.transform.name;
         ctrl = hit.transform.gameObject.GetComponent<PatientController>();
-        var age = ctrl.PawnData.age;
-        txt.text = name + " (" + age + ")";
-
+        
+        if (ctrl.PawnData.role == Role.Patient)
+        {
+            var age = ctrl.PawnData.age;
+            txt.text = name + " (" + age + ")"; 
+        }
     }
 
     private void SetValue(int slider, float value, bool sw = false)
