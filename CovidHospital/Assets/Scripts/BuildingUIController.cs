@@ -48,6 +48,7 @@ public class BuildingUIController : MonoBehaviour
     public void OnBuildFurnitureButtonClicked()
     {
         string furnitureName = FurnitureSelection.options[FurnitureSelection.value].text;
+        furnitureName = furnitureName.Replace(" ", "");
         UpdateFurnitureSprite(furnitureName, "N");
         buildingController.CurrentObjectName = furnitureName;
         buildingController.SetState(
