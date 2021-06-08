@@ -10,6 +10,7 @@ namespace Entity
         {
             PawnData = ScriptableObject.CreateInstance<PawnData>();
             PawnData.Initialize(role);
+            transform.name = PawnData.Name;
             CreateBodyParts();
         }
         
