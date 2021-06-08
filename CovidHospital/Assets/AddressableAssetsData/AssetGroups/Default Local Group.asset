@@ -23,20 +23,32 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
-  - m_GUID: d478002966fd451468546a9ca6649089
-    m_Address: Assets/Sprites/Walls/BrickWall.png
+  - m_GUID: 3460587a76eb36f47b2fcdb52055ad4b
+    m_Address: Assets/Sprites/Pawns/Hair.spriteatlas
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
-  - m_GUID: 4a2fd1bfd6eee734aaa2ec0dcd45b046
-    m_Address: Assets/Sprites/Walls/BrickWallLowRez.png
+  - m_GUID: b999ca05b032ec84494d0314955700fa
+    m_Address: Assets/Sprites/Pawns/Head.spriteatlas
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
-  - m_GUID: db9a86e98b8ce6b40aca577c9c3dd183
-    m_Address: Assets/Sprites/Walls/wallsE.png
+  - m_GUID: 8b1a4496d7667fb458f23b71188021c6
+    m_Address: Assets/Sprites/Pawns/Body.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a34db9e9bf2a7e64d9e00a955cc6a5ed
+    m_Address: Assets/Sprites/Objects/Furniture.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6eacbd7e14abe724786971e24e6d9c47
+    m_Address: Assets/Sprites/Terrain/Terrain.spriteatlas
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
