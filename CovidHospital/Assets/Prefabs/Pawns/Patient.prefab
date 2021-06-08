@@ -51,7 +51,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PawnData: {fileID: 0}
   timeController: {fileID: 0}
-  slider: {fileID: 0}
   patientData: {fileID: 0}
   covidRegressMultiplier: 0
   covidProgressMultiplier: 0
@@ -189,7 +188,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.00000039736432, y: 0}

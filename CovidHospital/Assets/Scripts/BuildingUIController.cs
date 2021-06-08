@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,11 +16,27 @@ public class BuildingUIController : MonoBehaviour
     public Sprite deconstructionSprite;
     public Dropdown FurnitureSelection;
     private SpriteRenderer _previewSpriteRenderer;
-
-    void Awake()
+    void Start()
     {
         _previewSpriteRenderer = buildingController.preview.GetComponent<SpriteRenderer>();
         buildingController.SetBuildingUIController(this);
+        var options = new List<Dropdown.OptionData>();
+        var mc = MapController.Instance();
+        foreach (var name in mc.FurnituresNames)
+        {
+            var option = new Dropdown.OptionData();
+            string optionName;
+            if (mc.FurnituresLimit.ContainsKey(name))
+            {
+                var limit = mc.FurnituresLimit[name];
+                optionName = $"{name} {limit.Item1}/{limit.Item2}";
+            }
+            else
+                optionName = name;
+            option.text = optionName;
+            options.Add(option);
+        }
+        FurnitureSelection.options = options;
     }
     public void OnBuildWallButtonClicked()
     {
@@ -39,7 +56,6 @@ public class BuildingUIController : MonoBehaviour
 
     public void OnBuildTerrainButtonClicked()
     {
-
         _previewSpriteRenderer.sprite = SpriteManager.GetTerrainSpriteByName("Concrete");
         buildingController.SetState(
             BuildingController.State.BuildTerrain
@@ -47,7 +63,10 @@ public class BuildingUIController : MonoBehaviour
     }
     public void OnBuildFurnitureButtonClicked()
     {
+        
         string furnitureName = FurnitureSelection.options[FurnitureSelection.value].text;
+
+        furnitureName = Regex.Replace(furnitureName, @"[0-9 \/]", "");
         UpdateFurnitureSprite(furnitureName, "N");
         buildingController.CurrentObjectName = furnitureName;
         buildingController.SetState(

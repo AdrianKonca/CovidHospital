@@ -6,7 +6,6 @@ using static UnityEngine.Random;
 
 namespace Entity
 {
-    //nonserializable representation of data, contains sprites and other nonserializable stuff constructed based on PawnData
     public class PatientController : Pawn
     {
         public TimeController timeController;
@@ -24,6 +23,7 @@ namespace Entity
         public bool requestForPepeSend = false;
 
         private AIDestinationSetter _aiDestinationSetter;
+        public PatientSpawnerManager PatientSpawnerManager;
 
         public PatientController(PawnData data) : base()
         {
@@ -61,17 +61,15 @@ namespace Entity
             patientData.AddCovidProgress(ProgressToAdd * covidProgressMultiplier);
         }
 
-        public void Initialize(Role role, TimeController timeController, NurseManager nurseManager)
+        public void Initialize(Role role, TimeController timeController, NurseManager nurseManager,
+            PatientSpawnerManager patientSpawnerManager)
         {
-            PawnData = ScriptableObject.CreateInstance<PawnData>();
-            PawnData.Initialize(role);
-            CreateBodyParts();
+            Initialize(role);
             patientData = ScriptableObject.CreateInstance<PatientData>();
-
             this.nurseManager = nurseManager;
             this.timeController = timeController;
-            timeController.OnDayIncrease += TimeControllerOnOnDayIncrease;
-            timeController.OnHourIncrease += TimeControllerOnOnHourIncrease;
+            timeController.OnDayIncrease += OnDayIncrease;
+            timeController.OnHourIncrease += OnHourIncrease;
 
             covidRegressMultiplier = 1;
             covidProgressMultiplier = 1;
@@ -81,20 +79,84 @@ namespace Entity
             patientData.OnLowHunger += PatientDataOnLowHunger;
             patientData.OnLowHygiene += PatientDataOnLowHygiene;
             patientData.OnLowToilet += PatientDataOnLowToilet;
+
             MapController.Instance().OnFurnitureBuilt += OnFurnitureBuilt;
-            TimeController.Instance().OnHourIncrease += OnHourIncrease;
 
             _aiDestinationSetter = GetComponent<AIDestinationSetter>();
+            this.PatientSpawnerManager = patientSpawnerManager;
         }
 
         private void OnHourIncrease(int h)
         {
+            ChangeCovid();
+
+            ChangeNeeds();
+
+            UpdateFurniture();
+        }
+
+        private void UpdateFurniture()
+        {
             if (bed == null)
                 SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Bed", transform.position));
+
             //if (toilet == null && bed != null)
             //    SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Toilet", bed.transform.position));
+
             //if (shower == null && bed != null)
             //    SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Shower", bed.transform.position));
+        }
+
+        private void ChangeNeeds()
+        {
+            if (timeController.isDay)
+            {
+                patientData.AddHunger(Range(-3f, -1f));
+                patientData.AddToilet(Range(-5f, -1f));
+                patientData.AddHygiene(Range(-5f, -1f));
+            }
+            else
+            {
+                patientData.AddToilet(Range(-2f, -1f));
+                patientData.AddHygiene(Range(-2f, -1f));
+                patientData.AddHunger(Range(-2f, -1f));
+            }
+        }
+
+        private void ChangeCovid()
+        {
+            CovidRegress(-0.7f);
+            CovidProgress(0.7f);
+            
+            if (patientData.covidProgress >= 100)
+            {
+                PatientSpawnerManager.deadPatients++;
+                KILL();
+            }
+
+            if (patientData.covidProgress <= 0)
+            {
+                PatientSpawnerManager.curedPatients++;
+                KILL();
+            }
+        }
+
+        private void KILL()
+        {
+            PawnData.alive = false;
+
+            if (bed != null)
+                bed.GetComponent<FurnitureController>().owner = null;
+
+            timeController.OnDayIncrease -= OnDayIncrease;
+            timeController.OnHourIncrease -= OnHourIncrease;
+
+            patientData.OnLowComfort -= PatientDataOnLowComfort;
+            patientData.OnLowHunger -= PatientDataOnLowHunger;
+            patientData.OnLowHygiene -= PatientDataOnLowHygiene;
+            patientData.OnLowToilet -= PatientDataOnLowToilet;
+
+            Destroy(gameObject);
         }
 
         private void OnFurnitureBuilt(GameObject furniture)
@@ -162,26 +224,7 @@ namespace Entity
             throw new NotImplementedException();
         }
 
-
-        private void TimeControllerOnOnHourIncrease(int h)
-        {
-            CovidRegress(-0.7f);
-            CovidProgress(0.7f);
-            if (timeController.isDay)
-            {
-                patientData.AddHunger(Range(-3f, -1f));
-                patientData.AddToilet(Range(-5f, -1f));
-                patientData.AddHygiene(Range(-5f, -1f));
-            }
-            else
-            {
-                patientData.AddToilet(Range(-2f, -1f));
-                patientData.AddHygiene(Range(-2f, -1f));
-                patientData.AddHunger(Range(-2f, -1f));
-            }
-        }
-
-        private void TimeControllerOnOnDayIncrease(long d)
+        private void OnDayIncrease(long d)
         {
             covidRegressMultiplier += 0.025f;
         }

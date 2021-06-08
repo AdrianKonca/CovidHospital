@@ -6,6 +6,14 @@ namespace Entity
     {
         public PawnData PawnData;
 
+        internal void Initialize(Role role)
+        {
+            PawnData = ScriptableObject.CreateInstance<PawnData>();
+            PawnData.Initialize(role);
+            transform.name = PawnData.Name;
+            CreateBodyParts();
+        }
+        
         private GameObject GenerateBodyPart(Sprite sprite, BodyPart bodyPart)
         {
             GameObject obj = new GameObject();
@@ -38,5 +46,6 @@ namespace Entity
             transform.Find(BodyPart.Body.ToString()).GetComponent<SpriteRenderer>().sprite = 
                 SpriteManager.GetPawnSprite(PawnData.BodyId, BodyPart.Body, direction);
         }
+
     }
 }
