@@ -32,6 +32,7 @@ public class PawnFactory : MonoBehaviour
     public MapController MapController;
     public TimeController TimeController;
     public NurseManager NurseManager;
+    public PatientSpawnerManager PatientSpawnerManager;
 
     private GameObject _pawns;
     private GameObject _patients;
@@ -49,12 +50,13 @@ public class PawnFactory : MonoBehaviour
         _doctors.transform.parent = _pawns.transform;
         _nurses.transform.parent = _pawns.transform;
     }
+
     public void Patient(Vector3 coordinates)
     {
         var patient = Instantiate(PatientPrefab);
         var pc = patient.GetComponent<PatientController>();
 
-        pc.Initialize(Role.Patient, TimeController, NurseManager);
+        pc.Initialize(Role.Patient, TimeController, NurseManager,PatientSpawnerManager);
         patient.transform.position = coordinates;
 
         patient.transform.parent = _patients.transform;
