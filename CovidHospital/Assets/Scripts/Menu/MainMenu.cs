@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour
 
     public void NewGame()
     {
-        //SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("MainScene");
         Debug.Log("New Game");
     }
 
@@ -38,7 +38,7 @@ public class MainMenu : MonoBehaviour
 
     public void Credits()
     {
-        //SceneManager.LoadScene("Credits");
+        SceneManager.LoadScene("Credits");
         Debug.Log("Credits");
     }
 
