@@ -20,6 +20,7 @@ namespace Entity
         public int HairId;
         public int HeadId;
         public int BodyId;
+        
         public void Initialize(Role role)
         {
             HeadId = SpriteManager.GetRandomBodyPartId(BodyPart.Head);
