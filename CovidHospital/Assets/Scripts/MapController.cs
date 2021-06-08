@@ -122,8 +122,16 @@ public class MapController : MonoBehaviour
 
             yield return null;
         }
-
+        terrain_tiles[2].name = "Concrete";
+        for (int x = -10; x <= 10; x++)
+        {
+            for (int y = -10; y <= 10; y++)
+            {
+                Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[2]);
+            }
+        }
         AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
+        
     }
 
     private void InitializeMap()
@@ -131,36 +139,36 @@ public class MapController : MonoBehaviour
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
         Walls.ClearAllEditorPreviewTiles();
-        for (int x = 0; x < ROOM_LIMIT; x++)
-        {
-            TileWall wallTop = ScriptableObject.CreateInstance<TileWall>();
-            TileWall wallBottom = ScriptableObject.CreateInstance<TileWall>();
+        //for (int x = 0; x < ROOM_LIMIT; x++)
+        //{
+        //    TileWall wallTop = ScriptableObject.CreateInstance<TileWall>();
+        //    TileWall wallBottom = ScriptableObject.CreateInstance<TileWall>();
 
-            wallTop.wallName = WALL_NAME;
-            wallBottom.wallName = WALL_NAME;
+        //    wallTop.wallName = WALL_NAME;
+        //    wallBottom.wallName = WALL_NAME;
 
-            Walls.SetTile(new Vector3Int(x, 0, DEFAULT_HEIGHT_Z), wallTop);
-            Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, DEFAULT_HEIGHT_Z), wallBottom);
-        }
+        //    Walls.SetTile(new Vector3Int(x, 0, DEFAULT_HEIGHT_Z), wallTop);
+        //    Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, DEFAULT_HEIGHT_Z), wallBottom);
+        //}
 
-        for (int y = 0; y < ROOM_LIMIT; y++)
-        {
-            TileWall wallLeft = ScriptableObject.CreateInstance<TileWall>();
-            TileWall wallRight = ScriptableObject.CreateInstance<TileWall>();
+        //for (int y = 0; y < ROOM_LIMIT; y++)
+        //{
+        //    TileWall wallLeft = ScriptableObject.CreateInstance<TileWall>();
+        //    TileWall wallRight = ScriptableObject.CreateInstance<TileWall>();
 
-            wallLeft.wallName = WALL_NAME;
-            wallRight.wallName = WALL_NAME;
+        //    wallLeft.wallName = WALL_NAME;
+        //    wallRight.wallName = WALL_NAME;
 
-            Walls.SetTile(new Vector3Int(0, y, DEFAULT_HEIGHT_Z), wallLeft);
-            Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, DEFAULT_HEIGHT_Z), wallRight);
-        }
-        for (int x = 30; x < ROOM_LIMIT + 30; x++)
-            for (int y = 0; y < ROOM_LIMIT; y++)
-            {
-                TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-                wall.wallName = WALL_NAME;
-                Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
-            }
+        //    Walls.SetTile(new Vector3Int(0, y, DEFAULT_HEIGHT_Z), wallLeft);
+        //    Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, DEFAULT_HEIGHT_Z), wallRight);
+        //}
+        //for (int x = 30; x < ROOM_LIMIT + 30; x++)
+        //    for (int y = 0; y < ROOM_LIMIT; y++)
+        //    {
+        //        TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+        //        wall.wallName = WALL_NAME;
+        //        Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
+        //    }
         StartCoroutine("LoadTerrain");
 
         //move to other function
@@ -225,6 +233,7 @@ public class MapController : MonoBehaviour
             return false;
         Tile wall = ScriptableObject.CreateInstance<Tile>();
         wall.sprite = SpriteManager.TerrainSprites[name];
+        wall.name = name;
         Terrain.SetTile(coordinates, wall);
         return true;
     }
@@ -283,6 +292,11 @@ public class MapController : MonoBehaviour
             {
                 Destroy(furniture);
                 return (false, "There is another furniture here.");
+            }
+            if (Terrain.HasTile(point) && Terrain.GetTile(point).name != "Concrete")
+            {
+                Destroy(furniture);
+                return (false, "The floor must be made of concrete!");
             }
         }
         foreach (var point in points)

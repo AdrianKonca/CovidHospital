@@ -20,7 +20,7 @@ public class SpriteSorting : MonoBehaviour
     }
     private void LateUpdate()
     {
-        if (BodyPart == BodyPart.Head)
+        if (BodyPart == BodyPart.Hair)
         {
             SpriteRenderer.sortingOrder = Mathf.RoundToInt((transform.position.y + yOffset) * yMult) + 2;
         }

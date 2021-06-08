@@ -5546,7 +5546,7 @@ PrefabInstance:
     - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
       propertyPath: FurnituresPrefabs.Array.size
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
@@ -5558,13 +5558,43 @@ PrefabInstance:
         type: 3}
       propertyPath: FurnituresPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 6225188165680564899, guid: 9a3691be1d5104c45b54c2240f02d4af,
+      objectReference: {fileID: 6225188165680564899, guid: 1be0ff474801ab84583362f15c2f12f7,
         type: 3}
     - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
       propertyPath: FurnituresPrefabs.Array.data[2]
       value: 
+      objectReference: {fileID: 6225188165680564899, guid: d84274833b57cc0469224ba4e8f4f920,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 9a3691be1d5104c45b54c2240f02d4af,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 9833f0275b71a254b98760fbd6c86366,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 60a6346c44bd0df4da46ee8985e58090,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[6]
+      value: 
       objectReference: {fileID: 6225188165680564899, guid: 9a2205668f7f9064bba1cd2836e2fdd7,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[7]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: 761819fbe86ff554db546c2e7a77d933,
         type: 3}
     - target: {fileID: 2455220904322201059, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
