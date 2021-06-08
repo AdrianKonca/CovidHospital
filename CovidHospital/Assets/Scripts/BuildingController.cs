@@ -48,7 +48,7 @@ public class BuildingController : MonoBehaviour
     {
         if (!_actionStarted)
             return;
-        (bool, string) reponse;
+        (bool, string) response;
         var position = _mapController.GetMousePosition(_mousePosition);
 
         switch (_state)
@@ -59,11 +59,11 @@ public class BuildingController : MonoBehaviour
                 _mapController.BuildTerrain(position, "Concrete");
                 break;
             case State.BuildWall:
-                reponse = _mapController.BuildWall(position);
-                if (!reponse.Item1 && !_recentErrors.ContainsKey(position))
+                response = _mapController.BuildWall(position);
+                if (!response.Item1 && !_recentErrors.ContainsKey(position))
                 {
                     _recentErrors[position] = Time.time + 5f;
-                    FloatingTextManager.I().DisplayText(reponse.Item2, position, Color.red);
+                    FloatingTextManager.I().DisplayText(response.Item2, position, Color.red);
                 }
                 else
                     _recentErrors[position] = Time.time + 2f;
@@ -72,14 +72,21 @@ public class BuildingController : MonoBehaviour
                 _mapController.DestroyWall(position);
                 break;
             case State.BuildFurniture:
-                reponse = _mapController.BuildFurniture(position, CurrentObjectName, rotations[_rotation]);
-                if (!reponse.Item1 && !_recentErrors.ContainsKey(position))
+                response = _mapController.BuildFurniture(position, CurrentObjectName, rotations[_rotation]);
+                if (!response.Item1 && !_recentErrors.ContainsKey(position))
                 {
                     _recentErrors[position] = Time.time + 5f;
-                    FloatingTextManager.I().DisplayText(reponse.Item2, position, Color.red);
+                    FloatingTextManager.I().DisplayText(response.Item2, position, Color.red);
+
                 }
                 else
+                {
                     _recentErrors[position] = Time.time + 2f;
+                }
+                if (response.Item1)
+                {
+                    _uiController.UpdateSelectionName(CurrentObjectName);
+                }
                 _actionStarted = false;
                 break;
             case State.DestroyFurniture:
@@ -93,6 +100,10 @@ public class BuildingController : MonoBehaviour
     {
         _state = state;
         _rotation = 0;
+    }
+    public State GetState()
+    {
+        return _state;
     }
     private void onActionTrigered(InputAction.CallbackContext action)
     {

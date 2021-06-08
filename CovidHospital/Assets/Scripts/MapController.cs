@@ -276,8 +276,6 @@ public class MapController : MonoBehaviour
             { "W", -270 },
         };
 
-        Debug.Log(string.Format("Building furniture: {0} with rotation {1}", name, rotation));
-
         var furniture = Instantiate(NameToFurniture[name]);
         var furnitureController = furniture.GetComponent<FurnitureController>();
 
@@ -301,6 +299,16 @@ public class MapController : MonoBehaviour
                 return (false, "The floor must be made of concrete!");
             }
         }
+        if (FurnituresLimit.ContainsKey(name))
+        {
+            if (FurnituresLimit[name].Item1 == FurnituresLimit[name].Item2)
+            {
+                Destroy(furniture);
+                return (false, $"You can't build more {name}!");
+            }
+            FurnituresLimit[name] = (FurnituresLimit[name].Item1 + 1, FurnituresLimit[name].Item2);
+        }
+
         foreach (var point in points)
         {
             FurnituresMap[point] = furniture;

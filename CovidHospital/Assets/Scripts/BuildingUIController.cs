@@ -16,28 +16,43 @@ public class BuildingUIController : MonoBehaviour
     public Sprite deconstructionSprite;
     public Dropdown FurnitureSelection;
     private SpriteRenderer _previewSpriteRenderer;
+    private MapController _mapController;
+    private string FormatControlName(string name)
+    {
+        if (_mapController.FurnituresLimit.ContainsKey(name))
+        {
+            var limit = _mapController.FurnituresLimit[name];
+            return $"{name} {limit.Item1}/{limit.Item2}";
+        }
+        else
+            return name;
+
+    }
     void Start()
     {
+        _mapController = MapController.Instance();
         _previewSpriteRenderer = buildingController.preview.GetComponent<SpriteRenderer>();
         buildingController.SetBuildingUIController(this);
         var options = new List<Dropdown.OptionData>();
-        var mc = MapController.Instance();
-        foreach (var name in mc.FurnituresNames)
+        foreach (var name in _mapController.FurnituresNames)
         {
             var option = new Dropdown.OptionData();
-            string optionName;
-            if (mc.FurnituresLimit.ContainsKey(name))
-            {
-                var limit = mc.FurnituresLimit[name];
-                optionName = $"{name} {limit.Item1}/{limit.Item2}";
-            }
-            else
-                optionName = name;
-            option.text = optionName;
+            option.text = FormatControlName(name);
             options.Add(option);
         }
         FurnitureSelection.options = options;
+        FurnitureSelection.onValueChanged.AddListener(delegate {
+            DropdownValueChanged();
+        });
     }
+    void DropdownValueChanged()
+    {
+        if (buildingController.GetState() == BuildingController.State.BuildFurniture)
+        {
+            OnBuildFurnitureButtonClicked();
+        }
+    }
+
     public void OnBuildWallButtonClicked()
     {
         _previewSpriteRenderer.sprite = SpriteManager.GetWallSpriteByName("ConcreteWall");
@@ -85,6 +100,21 @@ public class BuildingUIController : MonoBehaviour
         _previewSpriteRenderer.sprite = SpriteManager.GetFurnitureSpriteByName(name);
         _previewSpriteRenderer.transform.rotation = Quaternion.Euler(0, 0, rotations[rotation]);
     }
+
+    internal void UpdateSelectionName(string currentObjectName)
+    {
+        FormatControlName(currentObjectName);
+        foreach (var option in FurnitureSelection.options)
+        {
+            if (Regex.IsMatch(option.text, $"^{currentObjectName}[ 0-9]*"))
+            {
+
+                FurnitureSelection.captionText.text = FormatControlName(currentObjectName);
+                option.text = FormatControlName(currentObjectName);
+            }
+        }
+    }
+
     public void OnDestroyFurnitureButtonClicked()
     {
 
@@ -95,8 +125,6 @@ public class BuildingUIController : MonoBehaviour
 
     }
 
-
-    
     public void SetSelectionSprite(SelectionType type)
     {
         switch (type)
