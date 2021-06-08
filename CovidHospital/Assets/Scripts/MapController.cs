@@ -210,6 +210,8 @@ public class MapController : MonoBehaviour
     {
         if (Walls.HasTile(coordinates))
             return (false, "Wall is already built here!");
+        if (FurnituresMap.ContainsKey(coordinates))
+            return (false, "You can't build walls over furnitures!");
         AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;

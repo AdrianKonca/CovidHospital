@@ -111,7 +111,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616708310018980065}
-  m_Text: The floor must be made of concrete!
+  m_Text: You can't build walls over furnitures!
   m_OffsetZ: 0
   m_CharacterSize: 0.2
   m_LineSpacing: 1

@@ -21,6 +21,8 @@ public class FloatingTextManager : MonoBehaviour
         var mesh = textPrefabParent.GetComponentInChildren<TextMesh>();
         mesh.text = text;
         mesh.color = color;
+        var mr = textPrefabParent.GetComponentInChildren<MeshRenderer>();
+        mr.sortingOrder = 32001;
         Destroy(prefab, timeToDestroy);
 
     }
