@@ -34,17 +34,29 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 4f18a120c7385864ea0c4d16e8b4d162, type: 3}
     - {fileID: 2800000, guid: 037117184879c2741a592ec3955e1793, type: 3}
     - {fileID: 2800000, guid: 76efdc85993c7094e823262562614cd3, type: 3}
+    - {fileID: 2800000, guid: 409cdb8d648f27840a28ee15f50d9823, type: 3}
+    - {fileID: 2800000, guid: f8154133890581e48b0e551152fb198b, type: 3}
+    - {fileID: 2800000, guid: 286c52ae6d7c63c4e8c0b2c80a99070c, type: 3}
+    - {fileID: 2800000, guid: 05928c4a17e74324bb0ac89b15eac561, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 4f18a120c7385864ea0c4d16e8b4d162, type: 3}
+  - {fileID: 21300000, guid: f8154133890581e48b0e551152fb198b, type: 3}
   - {fileID: 21300000, guid: 76efdc85993c7094e823262562614cd3, type: 3}
   - {fileID: 21300000, guid: a8fc12c5a243210489c6ca0735bfd456, type: 3}
   - {fileID: 21300000, guid: 037117184879c2741a592ec3955e1793, type: 3}
+  - {fileID: 21300000, guid: 05928c4a17e74324bb0ac89b15eac561, type: 3}
+  - {fileID: 21300000, guid: 409cdb8d648f27840a28ee15f50d9823, type: 3}
+  - {fileID: 21300000, guid: 286c52ae6d7c63c4e8c0b2c80a99070c, type: 3}
   m_PackedSpriteNamesToIndex:
   - 1_body_front
+  - nurse_body_front
   - 1_body_right
   - 1_body_back
   - 1_body_left
+  - nurse_body_right
+  - nurse_body_back
+  - nurse_body_left
   m_Tag: Body
   m_IsVariant: 0

@@ -63,11 +63,8 @@ namespace Entity
 
         public void Initialize(Role role, TimeController timeController, NurseManager nurseManager)
         {
-            PawnData = ScriptableObject.CreateInstance<PawnData>();
-            PawnData.Initialize(role);
-            CreateBodyParts();
+            Initialize(role);
             patientData = ScriptableObject.CreateInstance<PatientData>();
-
             this.nurseManager = nurseManager;
             this.timeController = timeController;
             timeController.OnDayIncrease += TimeControllerOnOnDayIncrease;

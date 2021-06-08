@@ -22,20 +22,26 @@ namespace Entity
         public int BodyId;
         public void Initialize(Role role)
         {
-            HeadId = SpriteManager.GetRandomBodyPartId(BodyPart.Head);
-            HairId = SpriteManager.GetRandomBodyPartId(BodyPart.Hair);
-            BodyId = SpriteManager.GetRandomBodyPartId(BodyPart.Body);
             sex = (Sex)Random.Range(0, 1);
             this.role = role;
             switch (role)
             {
                 case Role.Doctor:
                     age = Random.Range(30, 70);
+                    HeadId = SpriteManager.GetRandomBodyPartId(BodyPart.Head);
+                    HairId = SpriteManager.GetRandomBodyPartId(BodyPart.Hair);
+                    BodyId = SpriteManager.GetRandomBodyPartId(BodyPart.Body);
                     break;
                 case Role.Nurse:
+                    HeadId = 0;
+                    HairId = 0;
+                    BodyId = 0;
                     age = Random.Range(24, 70);
                     break;
                 case Role.Patient:
+                    HeadId = SpriteManager.GetRandomBodyPartId(BodyPart.Head);
+                    HairId = SpriteManager.GetRandomBodyPartId(BodyPart.Hair);
+                    BodyId = SpriteManager.GetRandomBodyPartId(BodyPart.Body);
                     age = Random.Range(35, 70);
                     break;
             }

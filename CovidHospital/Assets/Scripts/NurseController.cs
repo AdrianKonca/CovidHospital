@@ -3,7 +3,7 @@ using Entity;
 using Pathfinding;
 using UnityEngine;
 
-public class NurseController : MonoBehaviour
+public class NurseController : Pawn
 {
     private NurseManager nurseManager;
     private GameObject restRoom;
@@ -13,6 +13,7 @@ public class NurseController : MonoBehaviour
 
     public void Initialize(NurseManager nurseManager, GameObject restRoom)
     {
+        Initialize(Role.Nurse);
         this.nurseManager = nurseManager;
         this.restRoom = restRoom;
         nurseManager.OnEnqueue += NurseManagerOnEnqueue;

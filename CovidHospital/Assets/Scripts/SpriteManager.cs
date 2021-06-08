@@ -49,11 +49,20 @@ public class SpriteManager : MonoBehaviour
         {
             sprite.name = sprite.name.Replace("(Clone)", "");
             fileParts = sprite.name.Split("_".ToCharArray());
-
-            var bodyPartId = int.Parse(fileParts[0]);
             var bodyPart = _bodyPartMap[fileParts[1]];
 
-            BodyPartToId[bodyPart].Add(bodyPartId);
+            int bodyPartId;
+            //quick hack for adding nurses
+            if (fileParts[0] == "nurse")
+            {
+                bodyPartId = 0;
+            }
+            else
+            { 
+                bodyPartId = int.Parse(fileParts[0]);
+                BodyPartToId[bodyPart].Add(bodyPartId);
+            }
+
             PawnBodyPartSprites.Add((
                 bodyPartId,
                 bodyPart,
