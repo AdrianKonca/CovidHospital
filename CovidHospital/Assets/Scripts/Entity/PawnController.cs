@@ -18,16 +18,19 @@ namespace Entity
 
         public NurseManager nurseManager;
 
-        public GameObject toilet;
+        public GameObject toilet { get; set; }
         public GameObject bed { get; set; }
-        public GameObject canteen;
-        public GameObject shower;
+        public GameObject canteen { get; set; }
+        public GameObject shower { get; set; }
 
         public bool requestForPepeSend = false;
 
         private AIDestinationSetter _aiDestinationSetter;
 
-        public PawnController(PawnData data) : base() { }
+        public PawnController(PawnData data) : base()
+        {
+        }
+
         private void CovidRegress(float delta)
         {
             float AgeOffSet = 50f;
@@ -80,9 +83,7 @@ namespace Entity
             patientData.OnLowHunger += PatientDataOnLowHunger;
             patientData.OnLowHygiene += PatientDataOnLowHygiene;
             patientData.OnLowToilet += PatientDataOnLowToilet;
-
-            //_aiDestinationSetter = GetComponent<AIDestinationSetter>();
-            //_aiDestinationSetter.target = bed.transform;
+            _aiDestinationSetter = GetComponent<AIDestinationSetter>();
         }
 
         public void ReturnToBed()
@@ -127,7 +128,7 @@ namespace Entity
         {
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
-            if(timeController.isDay)
+            if (timeController.isDay)
             {
                 patientData.AddHunger(Range(-3f, -1f));
                 patientData.AddToilet(Range(-5f, -1f));
@@ -139,7 +140,6 @@ namespace Entity
                 patientData.AddHygiene(Range(-2f, -1f));
                 patientData.AddHunger(Range(-2f, -1f));
             }
-            
         }
 
         private void TimeControllerOnOnDayIncrease(long d)

@@ -82,7 +82,6 @@ public class MapController : MonoBehaviour
     private string TERRAIN_AFTER_WALL_DECON = "Concrete";
     private int DEFAULT_HEIGHT_Z = -2;
     private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
-
     private IEnumerator LoadTerrain()
     {
         int MAP_LIMIT = 100;
@@ -278,6 +277,14 @@ public class MapController : MonoBehaviour
     {
         return Furnitures[name]
             .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
-            .SingleOrDefault();
+            .FirstOrDefault();
+    }
+
+    public GameObject GetClosestFreeFurniture(string name, Vector3 coordinates)
+    {
+        return Furnitures[name]
+            .Where(f=>f.GetComponent<FurnitureController>().owner==null)
+            .OrderBy(f => Vector3.Distance(f.transform.position, coordinates))
+            .FirstOrDefault();
     }
 }
