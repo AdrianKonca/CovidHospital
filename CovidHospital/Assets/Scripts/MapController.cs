@@ -288,7 +288,24 @@ public class MapController : MonoBehaviour
         furniture.transform.rotation = Quaternion.Euler(0, 0, rotations[rotation]);
         furniture.transform.position = coordinates + FURNITURE_OFFSET;
         furniture.transform.parent = _furnitures.transform;
+        furnitureController.pointsTaken = points;
         OnFurnitureBuilt?.Invoke(furniture);
+        return (true, string.Empty);
+    }
+    public (bool, string) DestroyFurniture(Vector3Int coordinates)
+    {
+        if (!FurnituresMap.ContainsKey(coordinates))
+            return (false, "No objects to destroy!");
+        var furniture = FurnituresMap[coordinates];
+        var furnitureController = furniture.GetComponent<FurnitureController>();
+
+        foreach (var point in furnitureController.pointsTaken)
+            FurnituresMap.Remove(point);
+        FurnituresUnique.Remove(coordinates);
+        Furnitures[furniture.name].Remove(furniture);
+        Destroy(furniture);
+
+        //TOOD: Add handling for furniture owners.
         return (true, string.Empty);
     }
     public List<GameObject> GetFurnitures(string name)

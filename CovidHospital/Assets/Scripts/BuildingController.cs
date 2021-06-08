@@ -64,7 +64,8 @@ public class BuildingController : MonoBehaviour
                 _actionStarted = false;
                 break;
             case State.DestroyFurniture:
-                Debug.Log("Destroying furniture ...");
+                var values = _mapController.DestroyFurniture(_mapController.GetMousePosition(_mousePosition));
+                _actionStarted = false;
                 break;
         }
     }
