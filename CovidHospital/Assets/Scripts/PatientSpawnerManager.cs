@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Newtonsoft.Json;
 using System.Linq;
-using Random = UnityEngine.Random;
+using Newtonsoft.Json;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class Wave
@@ -14,21 +13,23 @@ public class Wave
     {
         Admissions,
         Cases
-    };
+    }
 
     //[JsonProperty("eighty_min_score")]
     public WaveType Type;
     [JsonProperty("country_name")] public string CountryName;
     [JsonProperty("country_iso")] public string CountryIso;
-    [JsonProperty("wave_start")] public DateTime Start;
-    [JsonProperty("wave_end")] public DateTime Stop;
-    [JsonProperty("cases")] public Dictionary<DateTime, double> Data;
     [JsonProperty("wave_number")] public int WaveNumber;
     [JsonProperty("average")] public float Average;
+    [JsonProperty("cases")] public Dictionary<DateTime, double> Data;
+    [JsonProperty("wave_start")] public DateTime Start;
+    [JsonProperty("wave_end")] public DateTime Stop;
 }
 
 public class PatientSpawnerManager : MonoBehaviour
 {
+    public delegate void OnPandemicEndDelegate();
+
     public TimeController TimeController;
     public PawnFactory PawnFactory;
     public TextAsset HospitalAdmissionsByCountry;
@@ -39,23 +40,20 @@ public class PatientSpawnerManager : MonoBehaviour
     public int WaveNumber;
     public Wave.WaveType WaveType;
     public Vector3 PatientSpawnPoint;
-    private Wave _currentWave;
 
     public int CasesDenominator = 50;
     public int AdmissionsDenominator = 5;
-    public event OnPandemicEndDelegate OnPandemicEnd;
-
-    public delegate void OnPandemicEndDelegate();
 
     public float spawnedPatients;
     public float deadPatients;
     public float curedPatients;
     public GameObject StartWaveButton;
 
-    private long _startDay;
-    private bool _wasWaveStarted = false;
-
     public GameObject PatientSpawner;
+    private Wave _currentWave;
+
+    private long _startDay;
+    private bool _wasWaveStarted;
 
     public void Awake()
     {
@@ -70,6 +68,8 @@ public class PatientSpawnerManager : MonoBehaviour
         PatientSpawner.transform.position = PatientSpawnPoint;
     }
 
+    public event OnPandemicEndDelegate OnPandemicEnd;
+
     public void DailySpawnPatients(long d)
     {
         if (!_wasWaveStarted)
@@ -79,17 +79,12 @@ public class PatientSpawnerManager : MonoBehaviour
         }
 
         var currentPandemicDay = _currentWave.Start + new TimeSpan((int) (d - _startDay), 0, 0, 0);
-        if (currentPandemicDay > _currentWave.Stop)
-        {
-            OnPandemicEnd?.Invoke();
-        }
+        if (currentPandemicDay > _currentWave.Stop) OnPandemicEnd?.Invoke();
 
         var cases = _currentWave.Data[currentPandemicDay];
         var patientsToSpawn = (int) cases / CasesDenominator;
-        for (int i = 0; i < patientsToSpawn; i++)
-        {
+        for (var i = 0; i < patientsToSpawn; i++)
             PawnFactory.Patient(PatientSpawnPoint + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f));
-        }
 
         spawnedPatients += patientsToSpawn;
 
@@ -98,15 +93,9 @@ public class PatientSpawnerManager : MonoBehaviour
 
     private void CheckStatistics()
     {
-        if (spawnedPatients < 100)
-        {
-            return;
-        }
+        if (spawnedPatients < 100) return;
 
-        if (deadPatients / spawnedPatients >= 0.8)
-        {
-            SceneManager.LoadScene("EndScene");
-        }
+        if (deadPatients / spawnedPatients >= 0.8) SceneManager.LoadScene("EndScene");
     }
 
     public Wave GetWave(string countryIso, int waveNumber, Wave.WaveType waveType)

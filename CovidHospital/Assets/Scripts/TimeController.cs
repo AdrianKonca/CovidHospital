@@ -4,21 +4,13 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class TimeController : MonoBehaviour
 {
-    public event OnHourIncreaseDelegate OnHourIncrease;
-
-    public event OnMinuteIncreaseDelegate OnMinuteIncrease;
-
-    public event OnDayIncreaseDelegate OnDayIncrease;
-
-    public event EventHandler OnDayEnter;
-
-    public event EventHandler OnNightEnter;
+    public delegate void OnDayIncreaseDelegate(long d);
 
     public delegate void OnHourIncreaseDelegate(int h);
 
     public delegate void OnMinuteIncreaseDelegate(int m);
 
-    public delegate void OnDayIncreaseDelegate(long d);
+    private static TimeController _instance;
 
     public long dayCount;
     public bool isDay;
@@ -26,22 +18,14 @@ public class TimeController : MonoBehaviour
     public int minutes;
 
     public float dayLength = 15f;
-    private float _currentTime;
 
     public GameObject Light;
+    private float _currentTime;
     private Light2D _light2D;
 
-    static private TimeController _instance;
-    static public TimeController Instance()
-    {
-        return _instance;
-    }
     private void Awake()
     {
-        if (_instance != null)
-        {
-            Debug.LogError("One time controller already exists.");
-        }
+        if (_instance != null) Debug.LogError("One time controller already exists.");
         _instance = this;
         _light2D = Light.GetComponent<Light2D>();
     }
@@ -52,6 +36,21 @@ public class TimeController : MonoBehaviour
         CheckForNextDay();
         CalculateHour();
         _light2D.intensity = GetLightIntensity();
+    }
+
+    public event OnHourIncreaseDelegate OnHourIncrease;
+
+    public event OnMinuteIncreaseDelegate OnMinuteIncrease;
+
+    public event OnDayIncreaseDelegate OnDayIncrease;
+
+    public event EventHandler OnDayEnter;
+
+    public event EventHandler OnNightEnter;
+
+    public static TimeController Instance()
+    {
+        return _instance;
     }
 
     private void CalculateHour()
@@ -79,13 +78,13 @@ public class TimeController : MonoBehaviour
             OnDayIncrease?.Invoke(dayCount);
         }
 
-        if (dayStart < _currentTime & _currentTime < dayEnd & !isDay)
+        if ((dayStart < _currentTime) & (_currentTime < dayEnd) & !isDay)
         {
             isDay = true;
             OnDayEnter?.Invoke(this, EventArgs.Empty);
         }
 
-        if (dayEnd < _currentTime & isDay)
+        if ((dayEnd < _currentTime) & isDay)
         {
             isDay = false;
             OnNightEnter?.Invoke(this, EventArgs.Empty);
@@ -94,7 +93,7 @@ public class TimeController : MonoBehaviour
 
     private float GetLightIntensity()
     {
-        float Intensity = (float) Math.Pow(Math.Sin((_currentTime - 0.05) * Math.PI), 2) * 1.1f;
+        var Intensity = (float) Math.Pow(Math.Sin((_currentTime - 0.05) * Math.PI), 2) * 1.1f;
         return Mathf.Clamp(Intensity, 0.2f, 1f);
     }
 }

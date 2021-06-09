@@ -1,6 +1,5 @@
-﻿using Entity;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Entity;
 using UnityEngine;
 
 public class FurnitureController : MonoBehaviour

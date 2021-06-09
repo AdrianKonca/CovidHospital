@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.InputSystem;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Tilemaps;
-using UnityEngine.U2D;
 
 public class TileWall : Tile
 {
@@ -19,28 +15,26 @@ public class TileWall : Tile
 
     private void SelectNewSprite(Vector3Int position, ITilemap tilemap, bool continueToNeighbors)
     {
-        string spriteName = wallName + "_";
+        var spriteName = wallName + "_";
         string[] directions = {"N", "E", "S", "W"};
-        Dictionary<string, Vector3Int> neighobrs = new Dictionary<string, Vector3Int>
+        var neighobrs = new Dictionary<string, Vector3Int>
         {
             {"N", new Vector3Int(position.x, position.y + 1, position.z)},
             {"E", new Vector3Int(position.x + 1, position.y, position.z)},
             {"S", new Vector3Int(position.x, position.y - 1, position.z)},
-            {"W", new Vector3Int(position.x - 1, position.y, position.z)},
+            {"W", new Vector3Int(position.x - 1, position.y, position.z)}
         };
         foreach (var direction in directions)
-        {
             if (IsNeighbour(neighobrs[direction], tilemap))
             {
                 spriteName += direction;
                 if (continueToNeighbors)
                     SelectNewSprite(neighobrs[direction], tilemap, false);
             }
-        }
 
         if (!continueToNeighbors)
         {
-            TileWall me = tilemap.GetTile<TileWall>(position);
+            var me = tilemap.GetTile<TileWall>(position);
             me.sprite = SpriteManager.WallSprites[spriteName];
         }
         else
@@ -59,30 +53,18 @@ public class TileWall : Tile
 
     private bool IsNeighbour(Vector3Int position, ITilemap tilemap)
     {
-        TileBase tile = tilemap.GetTile(position);
-        return (tile != null);
+        var tile = tilemap.GetTile(position);
+        return tile != null;
     }
 }
 
 public class MapController : MonoBehaviour
 {
+    public delegate void OnFurnitureBuiltDelegate(GameObject furniture);
+
+    private static MapController _instance;
     public AstarPath AstarPath;
     public List<GameObject> FurnituresPrefabs;
-
-    public Dictionary<string, GameObject> NameToFurniture = new Dictionary<string, GameObject>();
-
-    //used for building colission detection
-    public Dictionary<Vector3Int, GameObject> FurnituresMap = new Dictionary<Vector3Int, GameObject>();
-
-    //used for pathfinding
-    public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
-    public Dictionary<string, List<GameObject>> Furnitures = new Dictionary<string, List<GameObject>>();
-
-    public Dictionary<string, (int, int)> FurnituresLimit = new Dictionary<string, (int, int)>
-    {
-        {"BedOxygen", (0, 10)},
-        {"BedRespirator", (0, 5)},
-    };
 
     public List<string> FurnituresNames = new List<string>
     {
@@ -92,26 +74,56 @@ public class MapController : MonoBehaviour
     public Tilemap Terrain;
     public Tilemap Walls;
 
-    private bool _mapInitialized = false;
-    private string WALL_NAME = "ConcreteWall";
-    private string TERRAIN_AFTER_WALL_DECON = "Concrete";
-    private int DEFAULT_HEIGHT_Z = -2;
-    private Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
+    private GameObject _furnitures;
+
+    private bool _mapInitialized;
+    private readonly int DEFAULT_HEIGHT_Z = -2;
+    private readonly Vector3 FURNITURE_OFFSET = new Vector3(0.5f, 0.5f, 0f);
+    public Dictionary<string, List<GameObject>> Furnitures = new Dictionary<string, List<GameObject>>();
+
+    public Dictionary<string, (int, int)> FurnituresLimit = new Dictionary<string, (int, int)>
+    {
+        {"BedOxygen", (0, 10)},
+        {"BedRespirator", (0, 5)}
+    };
+
+    //used for building colission detection
+    public Dictionary<Vector3Int, GameObject> FurnituresMap = new Dictionary<Vector3Int, GameObject>();
+
+    //used for pathfinding
+    public Dictionary<Vector3Int, GameObject> FurnituresUnique = new Dictionary<Vector3Int, GameObject>();
+
+    public Dictionary<string, GameObject> NameToFurniture = new Dictionary<string, GameObject>();
+    private readonly string TERRAIN_AFTER_WALL_DECON = "Concrete";
+    private readonly string WALL_NAME = "ConcreteWall";
+
+    private void Awake()
+    {
+        if (_instance != null) Debug.LogError("One map controller already exists.");
+
+        _furnitures = new GameObject("Furnitures");
+        _furnitures.transform.parent = transform;
+        _instance = this;
+    }
+
+    private void Update()
+    {
+        if (!SpriteManager.AllSpritesLoaded)
+            return;
+        if (!_mapInitialized)
+            InitializeMap();
+    }
 
     public event OnFurnitureBuiltDelegate OnFurnitureBuilt;
 
-    public delegate void OnFurnitureBuiltDelegate(GameObject furniture);
-
-    static private MapController _instance = null;
-
-    static public MapController Instance()
+    public static MapController Instance()
     {
         return _instance;
     }
 
     private IEnumerator LoadTerrain()
     {
-        int MAP_LIMIT = 100;
+        var MAP_LIMIT = 100;
 
         var terrain_names = new List<string> {"Grass", "Dirt", "Concrete"};
         var terrain_tiles = new List<Tile>();
@@ -122,33 +134,29 @@ public class MapController : MonoBehaviour
             terrain_tiles.Add(terrain);
         }
 
-        for (int x = -MAP_LIMIT; x < MAP_LIMIT; x++)
+        for (var x = -MAP_LIMIT; x < MAP_LIMIT; x++)
         {
-            for (int y = -MAP_LIMIT; y < MAP_LIMIT; y++)
+            for (var y = -MAP_LIMIT; y < MAP_LIMIT; y++)
             {
-                float noise = Mathf.PerlinNoise(x / 10f + MAP_LIMIT, y / 10f + MAP_LIMIT);
-                int index = noise < 0.6f ? 0 : 1;
+                var noise = Mathf.PerlinNoise(x / 10f + MAP_LIMIT, y / 10f + MAP_LIMIT);
+                var index = noise < 0.6f ? 0 : 1;
                 Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[index]);
             }
 
             yield return null;
         }
+
         terrain_tiles[2].name = "Concrete";
-        for (int x = -10; x <= 10; x++)
-        {
-            for (int y = -10; y <= 10; y++)
-            {
-                Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[2]);
-            }
-        }
+        for (var x = -10; x <= 10; x++)
+        for (var y = -10; y <= 10; y++)
+            Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[2]);
         AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
-        
     }
 
     private void InitializeMap()
     {
         _mapInitialized = true;
-        int ROOM_LIMIT = 10;
+        var ROOM_LIMIT = 10;
         Walls.ClearAllEditorPreviewTiles();
 
         //for (int x = 0; x < ROOM_LIMIT; x++)
@@ -193,28 +201,6 @@ public class MapController : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (!SpriteManager.AllSpritesLoaded)
-            return;
-        if (!_mapInitialized)
-            InitializeMap();
-    }
-
-    private GameObject _furnitures;
-
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            Debug.LogError("One map controller already exists.");
-        }
-
-        _furnitures = new GameObject("Furnitures");
-        _furnitures.transform.parent = transform;
-        _instance = this;
-    }
-
     public Vector3Int GetMousePosition(Vector2 mousePosition)
     {
         return Vector3Int.FloorToInt(Camera.main.ScreenToWorldPoint(mousePosition));
@@ -227,7 +213,7 @@ public class MapController : MonoBehaviour
         if (FurnituresMap.ContainsKey(coordinates))
             return (false, "You can't build walls over furnitures!");
         AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
-        TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+        var wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
         return (true, string.Empty);
@@ -247,37 +233,37 @@ public class MapController : MonoBehaviour
     {
         if (Walls.HasTile(coordinates))
             return false;
-        Tile wall = ScriptableObject.CreateInstance<Tile>();
+        var wall = ScriptableObject.CreateInstance<Tile>();
         wall.sprite = SpriteManager.TerrainSprites[name];
         wall.name = name;
         Terrain.SetTile(coordinates, wall);
         return true;
     }
 
-    List<Vector3Int> GetFurnitePositions(FurnitureController furnitureController, Vector3Int coordinates,
+    private List<Vector3Int> GetFurnitePositions(FurnitureController furnitureController, Vector3Int coordinates,
         string rotation)
     {
         var points = new List<Vector3Int>();
         switch (rotation)
         {
             case "N":
-                for (int x = 0; x < furnitureController.size.x; x++)
-                for (int y = 0; y < furnitureController.size.y; y++)
+                for (var x = 0; x < furnitureController.size.x; x++)
+                for (var y = 0; y < furnitureController.size.y; y++)
                     points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
                 break;
             case "S":
-                for (int x = -furnitureController.size.x + 1; x <= 0; x++)
-                for (int y = 0; y < furnitureController.size.y; y++)
+                for (var x = -furnitureController.size.x + 1; x <= 0; x++)
+                for (var y = 0; y < furnitureController.size.y; y++)
                     points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
                 break;
             case "W":
-                for (int x = 0; x < furnitureController.size.y; x++)
-                for (int y = 0; y < furnitureController.size.x; y++)
+                for (var x = 0; x < furnitureController.size.y; x++)
+                for (var y = 0; y < furnitureController.size.x; y++)
                     points.Add(new Vector3Int(coordinates.x + x, coordinates.y + y, DEFAULT_HEIGHT_Z));
                 break;
             case "E":
-                for (int x = -furnitureController.size.y + 1; x <= 0; x++)
-                for (int y = 0; y < furnitureController.size.x; y++)
+                for (var x = -furnitureController.size.y + 1; x <= 0; x++)
+                for (var y = 0; y < furnitureController.size.x; y++)
                     points.Add(new Vector3Int(coordinates.x + x, coordinates.y - y, DEFAULT_HEIGHT_Z));
                 break;
         }
@@ -292,7 +278,7 @@ public class MapController : MonoBehaviour
             {"N", 0},
             {"E", -90},
             {"S", -180},
-            {"W", -270},
+            {"W", -270}
         };
 
         var furniture = Instantiate(NameToFurniture[name]);
@@ -313,6 +299,7 @@ public class MapController : MonoBehaviour
                 Destroy(furniture);
                 return (false, "There is another furniture here.");
             }
+
             if (Terrain.HasTile(point) && Terrain.GetTile(point).name != "Concrete")
             {
                 Destroy(furniture);
@@ -327,13 +314,11 @@ public class MapController : MonoBehaviour
                 Destroy(furniture);
                 return (false, $"You can't build more {name}!");
             }
+
             FurnituresLimit[name] = (FurnituresLimit[name].Item1 + 1, FurnituresLimit[name].Item2);
         }
 
-        foreach (var point in points)
-        {
-            FurnituresMap[point] = furniture;
-        }
+        foreach (var point in points) FurnituresMap[point] = furniture;
 
         FurnituresUnique[coordinates] = furniture;
         Furnitures[name].Add(furniture);
@@ -388,7 +373,8 @@ public class MapController : MonoBehaviour
     {
         var beds = Furnitures["Bed"].Where(f => f.GetComponent<FurnitureController>().owner == null).ToList();
         var oBeds = Furnitures["BedOxygen"].Where(f => f.GetComponent<FurnitureController>().owner == null).ToList();
-        var rBeds = Furnitures["BedRespirator"].Where(f => f.GetComponent<FurnitureController>().owner == null).ToList();
+        var rBeds = Furnitures["BedRespirator"].Where(f => f.GetComponent<FurnitureController>().owner == null)
+            .ToList();
         beds.AddRange(oBeds);
         beds.AddRange(rBeds);
         return beds
