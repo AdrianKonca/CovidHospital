@@ -10,10 +10,10 @@ TextureImporter:
     second: Sofa
   - first:
       213: -5205570905279116615
-    second: Chair
+    second: BedsideLamp
   - first:
       213: -3062193336436783412
-    second: Chair
+    second: BedsideLamp
   - first:
       213: -1818099164645460120
     second: Bed_W
@@ -302,7 +302,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -310,6 +310,27 @@ TextureImporter:
       bones: []
       spriteID: 9bacab987d812c7b0800000000000000
       internalID: -5205570905279116615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BedsideLamp
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1600
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc60e1c7267e085d0800000000000000
+      internalID: -3062193336436783412
       vertices: []
       indices: 
       edges: []
