@@ -69,6 +69,7 @@ public class PawnFactory : MonoBehaviour
         var nurse = Instantiate(NursePrefab);
         var nurseController = nurse.GetComponent<NurseController>();
         nurseController.Initialize(NurseManager, TimeController);
+        nurse.transform.position = NurseManager.nurseSpawnPoint;
         nurse.transform.parent = _nurses.transform;
     }
 }
