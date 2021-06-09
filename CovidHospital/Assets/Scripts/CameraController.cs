@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 // TODO: Refactor
@@ -34,14 +35,17 @@ public class CameraController : MonoBehaviour
     // for future self started -> performed -> canceled
     private void onActionTrigered(InputAction.CallbackContext action)
     {
-        
-        if (action.action.name == _controls.Player.CameraZoom.name && action.performed)
+        var isPointerOverGui = EventSystem.current.IsPointerOverGameObject();
+
+        if (action.action.name == _controls.Player.CameraZoom.name && action.performed && !isPointerOverGui)
         {
             var mouseMovement = action.ReadValue<Vector2>().y * ZoomSensitivity;
             var newCameraZoom = _camera.orthographicSize - mouseMovement;
             _camera.orthographicSize = Mathf.Clamp(newCameraZoom, MinZoom, MaxZoom);
         }
-        else if (action.action.name == _controls.Player.CameraPan.name && (action.performed || action.canceled))
+        else if ( action.action.name == _controls.Player.CameraPan.name 
+            && ((action.performed && !isPointerOverGui) 
+            || action.canceled))
         {
             //Debug.Log(string.Format("{0} {1} {2} {3}", action.action.name, action.started, action.performed, action.canceled));
             //Debug.Log(string.Format("{0} {1} {2} {3}", action.ReadValue<Vector2>(), action.started, action.performed, action.canceled));

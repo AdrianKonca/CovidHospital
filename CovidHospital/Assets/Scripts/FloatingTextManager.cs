@@ -13,15 +13,17 @@ public class FloatingTextManager : MonoBehaviour
     {
         _instance = this;
     }
+
     static public FloatingTextManager I() =>
         _instance;
     public void DisplayText(string text, Vector3 position, Color color)
     {
         var prefab = Instantiate(textPrefabParent, position + new Vector3(0, 0, 10), Quaternion.identity);
-        var mesh = textPrefabParent.GetComponentInChildren<TextMesh>();
+        var mesh = prefab.GetComponentInChildren<TextMesh>();
+        mesh.text = text;
         mesh.text = text;
         mesh.color = color;
-        var mr = textPrefabParent.GetComponentInChildren<MeshRenderer>();
+        var mr = prefab.GetComponentInChildren<MeshRenderer>();
         mr.sortingOrder = 32001;
         Destroy(prefab, timeToDestroy);
 

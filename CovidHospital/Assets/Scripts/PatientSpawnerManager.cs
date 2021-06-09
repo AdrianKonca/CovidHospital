@@ -54,6 +54,7 @@ public class PatientSpawnerManager : MonoBehaviour
     private long _startDay;
     private bool _wasWaveStarted = false;
 
+    public GameObject PatientSpawner;
     public void Awake()
     {
         CasesWaves = JsonConvert.DeserializeObject<List<Wave>>(CasesByCountry.text);
@@ -64,6 +65,7 @@ public class PatientSpawnerManager : MonoBehaviour
         //temp
         _currentWave = GetWave(CountryIso, WaveNumber, Wave.WaveType.Cases);
         TimeController.OnDayIncrease += DailySpawnPatients;
+        PatientSpawner.transform.position = SpawnPoint;
     }
 
     public void DailySpawnPatients(long d)

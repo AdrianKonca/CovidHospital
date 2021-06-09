@@ -77,7 +77,6 @@ public class BuildingController : MonoBehaviour
                 {
                     _recentErrors[position] = Time.time + 5f;
                     FloatingTextManager.I().DisplayText(response.Item2, position, Color.red);
-
                 }
                 else
                 {
