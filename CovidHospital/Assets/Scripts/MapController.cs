@@ -86,7 +86,7 @@ public class MapController : MonoBehaviour
 
     public List<string> FurnituresNames = new List<string>
     {
-        "Bed", "BedOxygen", "BedRespirator", "Chair", "Fotel", "Shower", "Sofa", "Toilet"
+        "Bed", "BedOxygen", "BedRespirator", "BedsideLamp", "Chair", "Fotel", "Shower", "Sofa", "Toilet"
     };
 
     public Tilemap Terrain;

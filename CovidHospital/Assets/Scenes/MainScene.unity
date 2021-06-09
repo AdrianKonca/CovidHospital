@@ -5733,8 +5733,18 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
+      propertyPath: FurnituresNames.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
       propertyPath: FurnituresPrefabs.Array.size
-      value: 8
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresNames.Array.data[8]
+      value: BedsideLamp
       objectReference: {fileID: 0}
     - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
@@ -5783,6 +5793,12 @@ PrefabInstance:
       propertyPath: FurnituresPrefabs.Array.data[7]
       value: 
       objectReference: {fileID: 6225188165680564899, guid: 761819fbe86ff554db546c2e7a77d933,
+        type: 3}
+    - target: {fileID: 2455220904322201058, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
+        type: 3}
+      propertyPath: FurnituresPrefabs.Array.data[8]
+      value: 
+      objectReference: {fileID: 6225188165680564899, guid: ce08a687b82e6c7489be562cb07ea9f5,
         type: 3}
     - target: {fileID: 2455220904322201059, guid: f65bbd549aa77194b8f559f8f9d7ea8d,
         type: 3}
