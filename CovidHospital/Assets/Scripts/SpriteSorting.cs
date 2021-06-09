@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpriteSorting : MonoBehaviour
 {
+    private const int yMult = 10;
+    private const int yOffset = 100;
     private BodyPart BodyPart;
     private SpriteRenderer SpriteRenderer;
-    const int yMult = 10;
-    const int yOffset = 100;
+
     private void Awake()
     {
         if (name == "Body")
@@ -18,17 +17,12 @@ public class SpriteSorting : MonoBehaviour
             BodyPart = BodyPart.Hair;
         SpriteRenderer = GetComponent<SpriteRenderer>();
     }
+
     private void LateUpdate()
     {
-        
         if (BodyPart == BodyPart.Hair)
-        {
             SpriteRenderer.sortingOrder = 29000 - Mathf.RoundToInt((transform.position.y + yOffset) * yMult) + 2;
-        }
         else
-        {
             SpriteRenderer.sortingOrder = 29000 - Mathf.RoundToInt((transform.position.y + yOffset) * yMult) + 1;
-        }
     }
-
 }

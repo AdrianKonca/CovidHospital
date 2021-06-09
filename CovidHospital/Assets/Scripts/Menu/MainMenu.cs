@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +10,7 @@ public class MainMenu : MonoBehaviour
     public GameObject Options_Menu;
     public GameObject Main_Menu;
 
-    void Start()
+    private void Start()
     {
         Options_Menu.GetComponent<Transform>().localScale = new Vector3(0, 0, 0);
         EventSystem.current.SetSelectedGameObject(FirstButton);
