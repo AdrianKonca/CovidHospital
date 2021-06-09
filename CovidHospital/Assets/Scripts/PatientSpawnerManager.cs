@@ -5,6 +5,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System.Linq;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class Wave
@@ -37,7 +38,7 @@ public class PatientSpawnerManager : MonoBehaviour
     public string CountryIso;
     public int WaveNumber;
     public Wave.WaveType WaveType;
-    public Vector3 SpawnPoint;
+    public Vector3 PatientSpawnPoint;
     private Wave _currentWave;
 
     public int CasesDenominator = 50;
@@ -55,6 +56,7 @@ public class PatientSpawnerManager : MonoBehaviour
     private bool _wasWaveStarted = false;
 
     public GameObject PatientSpawner;
+
     public void Awake()
     {
         CasesWaves = JsonConvert.DeserializeObject<List<Wave>>(CasesByCountry.text);
@@ -65,17 +67,17 @@ public class PatientSpawnerManager : MonoBehaviour
         //temp
         _currentWave = GetWave(CountryIso, WaveNumber, Wave.WaveType.Cases);
         TimeController.OnDayIncrease += DailySpawnPatients;
-        PatientSpawner.transform.position = SpawnPoint;
+        PatientSpawner.transform.position = PatientSpawnPoint;
     }
 
     public void DailySpawnPatients(long d)
     {
-        
         if (!_wasWaveStarted)
         {
             _startDay = d;
             return;
         }
+
         var currentPandemicDay = _currentWave.Start + new TimeSpan((int) (d - _startDay), 0, 0, 0);
         if (currentPandemicDay > _currentWave.Stop)
         {
@@ -86,7 +88,7 @@ public class PatientSpawnerManager : MonoBehaviour
         var patientsToSpawn = (int) cases / CasesDenominator;
         for (int i = 0; i < patientsToSpawn; i++)
         {
-            PawnFactory.Patient(SpawnPoint + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f));
+            PawnFactory.Patient(PatientSpawnPoint + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f));
         }
 
         spawnedPatients += patientsToSpawn;
@@ -103,7 +105,7 @@ public class PatientSpawnerManager : MonoBehaviour
 
         if (deadPatients / spawnedPatients >= 0.8)
         {
-            //Lose scene here
+            SceneManager.LoadScene("EndScene");
         }
     }
 
@@ -125,6 +127,7 @@ public class PatientSpawnerManager : MonoBehaviour
 
         return null;
     }
+
     public void StartWave()
     {
         _wasWaveStarted = true;

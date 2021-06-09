@@ -7,16 +7,26 @@ using UnityEngine.UI;
 
 public class OpenStats : MonoBehaviour
 {
+    public GameObject manager;
+    public GameObject deathMarker;
     PatientController ctrl = null ;
+    PatientSpawnerManager ctrlMark = null ;
     Text txt;
     public GameObject stats;
     private void Start()
     {
         if (stats.activeSelf)
             stats.SetActive(false);
+        ctrlMark = manager.GetComponent<PatientSpawnerManager>();
     }
     private void Update()
     {
+        //Death mark set
+        if (ctrlMark.spawnedPatients > 100) 
+        {
+            SetSliderValue(ctrlMark.deadPatients / ctrlMark.spawnedPatients);
+        }
+
         if (ctrl)
         {
             var hunger = ctrl.patientData.hunger;
@@ -55,12 +65,17 @@ public class OpenStats : MonoBehaviour
 
         string name = hit.transform.name;
         ctrl = hit.transform.gameObject.GetComponent<PatientController>();
-        
-        if (ctrl.PawnData.role == Role.Patient)
-        {
-            var age = ctrl.PawnData.age;
-            txt.text = name + " (" + age + ")"; 
-        }
+        var age = ctrl.PawnData.age;
+        txt.text = name + " (" + age + ")";
+    }
+
+    private void SetSliderValue(float val)
+    {
+        deathMarker.GetComponent<Slider>().value = val;
+        deathMarker.GetComponent<Slider>().maxValue = 0.8f;
+        deathMarker.GetComponent<Slider>().minValue = 0.0f;
+        val = val * 100;
+        deathMarker.gameObject.GetComponentInChildren<Text>().text = val.ToString() + " %";
     }
 
     private void SetValue(int slider, float value, bool sw = false)

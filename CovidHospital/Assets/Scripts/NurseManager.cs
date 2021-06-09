@@ -7,10 +7,13 @@ public class NurseManager : MonoBehaviour
 {
     public Queue<Pawn> patientQueue;
     public event EventHandler OnEnqueue;
+    public Vector3 nurseSpawnPoint;
+    public GameObject nurseSpawner;
 
     public void Awake()
     {
         patientQueue = new Queue<Pawn>();
+        nurseSpawner.transform.position = nurseSpawnPoint;
     }
 
     public void AddPawnToQue(Pawn pawn)
