@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3062193336436783412, guid: 3648a538e3402fb4b9693b0388a08014,
+  m_Sprite: {fileID: -5205570905279116615, guid: 3648a538e3402fb4b9693b0388a08014,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -127,3 +127,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: {x: 1, y: 1}
   owner: {fileID: 0}
+  pointsTaken: []

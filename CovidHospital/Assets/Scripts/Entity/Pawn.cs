@@ -6,6 +6,14 @@ namespace Entity
     {
         public PawnData PawnData;
 
+        internal void Initialize(Role role)
+        {
+            PawnData = ScriptableObject.CreateInstance<PawnData>();
+            PawnData.Initialize(role);
+            transform.name = PawnData.Name;
+            CreateBodyParts();
+        }
+        
         private GameObject GenerateBodyPart(Sprite sprite, BodyPart bodyPart)
         {
             GameObject obj = new GameObject();
@@ -15,8 +23,11 @@ namespace Entity
             obj.AddComponent<SpriteRenderer>();
             var spriteRenderer = obj.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = sprite;
-            if (bodyPart == BodyPart.Hair)
-                spriteRenderer.sortingOrder = 1;
+            obj.AddComponent<SpriteSorting>();
+            obj.GetComponent<SpriteSorting>();
+            //spriteRenderer.sortingOrder = 100;
+            //if (bodyPart == BodyPart.Hair)
+            //    spriteRenderer.sortingOrder = 200;
             return obj;
         }
 
@@ -38,5 +49,6 @@ namespace Entity
             transform.Find(BodyPart.Body.ToString()).GetComponent<SpriteRenderer>().sprite = 
                 SpriteManager.GetPawnSprite(PawnData.BodyId, BodyPart.Body, direction);
         }
+
     }
 }

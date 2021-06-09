@@ -5,13 +5,17 @@ using UnityEngine;
 
 public class NurseManager : MonoBehaviour
 {
+    public Vector3 nurseSpawnPoint;
+    public GameObject nurseSpawner;
     public Queue<Pawn> patientQueue;
-    public event EventHandler OnEnqueue;
 
     public void Awake()
     {
         patientQueue = new Queue<Pawn>();
+        nurseSpawner.transform.position = nurseSpawnPoint;
     }
+
+    public event EventHandler OnEnqueue;
 
     public void AddPawnToQue(Pawn pawn)
     {
@@ -23,7 +27,7 @@ public class NurseManager : MonoBehaviour
     {
         if (patientQueue.Count > 0)
         {
-            Pawn p = patientQueue.Dequeue();
+            var p = patientQueue.Dequeue();
             return p;
         }
 

@@ -10,8 +10,8 @@ public class ToiletScript : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<PawnController>().patientData.ResetToilet();
-            collision.gameObject.GetComponent<PawnController>().ReturnToBed();
+            collision.gameObject.GetComponent<PatientController>().patientData.ResetToilet();
+            collision.gameObject.GetComponent<PatientController>().ReturnToBed();
         }
     }
 }

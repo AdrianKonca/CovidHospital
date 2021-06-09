@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class BuildingController : MonoBehaviour
 {
-    public GameObject preview;
-    public string CurrentObjectName = null;
     public enum State
     {
         Inactive,
@@ -15,20 +12,33 @@ public class BuildingController : MonoBehaviour
         BuildWall,
         DestroyWall,
         BuildFurniture,
-        DestroyFurniture,
+        DestroyFurniture
     }
 
-    Controls _controls;
-    PlayerInput _playerInput;
-    MapController _mapController;
-    BuildingUIController _uiController;
+    public GameObject preview;
+    public string CurrentObjectName;
+    private bool _actionStarted;
 
-    int _rotation = 0;
-    Vector2 _mousePosition = new Vector2();
-    bool _actionStarted = false;
-    State _state = State.Inactive;
+    private Controls _controls;
+    private MapController _mapController;
+    private Vector2 _mousePosition;
+    private PlayerInput _playerInput;
 
-    void Start()
+    private readonly Dictionary<Vector3Int, float> _recentErrors = new Dictionary<Vector3Int, float>();
+
+    private int _rotation;
+    private State _state = State.Inactive;
+    private BuildingUIController _uiController;
+
+    private readonly Dictionary<int, string> rotations = new Dictionary<int, string>
+    {
+        {0, "N"},
+        {1, "E"},
+        {2, "S"},
+        {3, "W"}
+    };
+
+    private void Start()
     {
         _playerInput = FindObjectOfType<PlayerInput>();
         _mapController = FindObjectOfType<MapController>();
@@ -36,35 +46,68 @@ public class BuildingController : MonoBehaviour
         _playerInput.onActionTriggered += onActionTrigered;
     }
 
-    Dictionary<int, string> rotations = new Dictionary<int, string>() {
-        { 0, "N" },
-        { 1, "E" },
-        { 2, "S" },
-        { 3, "W" },
-    };
+    private void Update()
+    {
+        var pos = _mapController.GetMousePosition(_mousePosition);
+
+        preview.transform.position = pos + new Vector3(0.5f, 0.5f);
+
+        Build();
+        var keysToRemove = new List<Vector3Int>();
+        foreach (var key in _recentErrors.Keys)
+            if (_recentErrors[key] < Time.time)
+                keysToRemove.Add(key);
+        foreach (var key in keysToRemove) _recentErrors.Remove(key);
+    }
+
     private void Build()
     {
         if (!_actionStarted)
             return;
+        (bool, string) response;
+        var position = _mapController.GetMousePosition(_mousePosition);
+
         switch (_state)
         {
             case State.Inactive:
                 return;
             case State.BuildTerrain:
-                _mapController.BuildTerrain(_mapController.GetMousePosition(_mousePosition), "Concrete");
+                _mapController.BuildTerrain(position, "Concrete");
                 break;
             case State.BuildWall:
-                _mapController.BuildWall(_mapController.GetMousePosition(_mousePosition));
+                response = _mapController.BuildWall(position);
+                if (!response.Item1 && !_recentErrors.ContainsKey(position))
+                {
+                    _recentErrors[position] = Time.time + 5f;
+                    FloatingTextManager.I().DisplayText(response.Item2, position, Color.red);
+                }
+                else
+                {
+                    _recentErrors[position] = Time.time + 2f;
+                }
+
                 break;
             case State.DestroyWall:
-                _mapController.DestroyWall(_mapController.GetMousePosition(_mousePosition));
+                _mapController.DestroyWall(position);
                 break;
             case State.BuildFurniture:
-                _mapController.BuildFurniture(_mapController.GetMousePosition(_mousePosition), CurrentObjectName, rotations[_rotation]);
+                response = _mapController.BuildFurniture(position, CurrentObjectName, rotations[_rotation]);
+                if (!response.Item1 && !_recentErrors.ContainsKey(position))
+                {
+                    _recentErrors[position] = Time.time + 5f;
+                    FloatingTextManager.I().DisplayText(response.Item2, position, Color.red);
+                }
+                else
+                {
+                    _recentErrors[position] = Time.time + 2f;
+                }
+
+                if (response.Item1) _uiController.UpdateSelectionName(CurrentObjectName);
                 _actionStarted = false;
                 break;
             case State.DestroyFurniture:
-                Debug.Log("Destroying furniture ...");
+                var values = _mapController.DestroyFurniture(position);
+                _actionStarted = false;
                 break;
         }
     }
@@ -74,9 +117,14 @@ public class BuildingController : MonoBehaviour
         _state = state;
         _rotation = 0;
     }
+
+    public State GetState()
+    {
+        return _state;
+    }
+
     private void onActionTrigered(InputAction.CallbackContext action)
     {
-        
         if (action.action.name == _controls.Player.MoveMouse.name && action.performed)
         {
             _mousePosition = action.ReadValue<Vector2>();
@@ -86,7 +134,7 @@ public class BuildingController : MonoBehaviour
         else if (action.action.name == _controls.Player.Action.name)
         {
             //don't ask why...
-            bool isPointerOverUIElement = EventSystem.current.IsPointerOverGameObject();
+            var isPointerOverUIElement = EventSystem.current.IsPointerOverGameObject();
             if (action.started && !isPointerOverUIElement)
                 _actionStarted = true;
             else if (action.canceled)
@@ -104,14 +152,6 @@ public class BuildingController : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        var pos = _mapController.GetMousePosition(_mousePosition);
-
-        preview.transform.position = pos + new Vector3(0.5f, 0.5f);
-
-        Build();
-    }
     public void SetBuildingUIController(BuildingUIController controller)
     {
         _uiController = controller;

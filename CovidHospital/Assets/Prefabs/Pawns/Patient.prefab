@@ -46,24 +46,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 9047849789450404118}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53ba591c1ae44e8408bcfa5bb2bb970c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7e7694a5282dc429d1e04c926b5667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PawnData: {fileID: 0}
-  Hair: {fileID: 0}
-  Head: {fileID: 0}
-  Body: {fileID: 0}
   timeController: {fileID: 0}
-  slider: {fileID: 0}
   patientData: {fileID: 0}
-  covidRegressMultiplier: 1
-  covidProgressMultiplier: 1
-  covidUnableToMoveAfter: 50
+  covidRegressMultiplier: 0
+  covidProgressMultiplier: 0
+  covidUnableToMoveAfter: 0
   nurseManager: {fileID: 0}
-  toilet: {fileID: 0}
-  bed: {fileID: 0}
-  canteen: {fileID: 0}
-  shower: {fileID: 0}
+  requestForPepeSend: 0
 --- !u!114 &9047849789450404333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +188,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.00000039736432, y: 0}

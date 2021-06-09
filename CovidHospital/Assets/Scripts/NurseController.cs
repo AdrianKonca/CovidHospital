@@ -3,42 +3,28 @@ using Entity;
 using Pathfinding;
 using UnityEngine;
 
-public class NurseController : MonoBehaviour
+public class NurseController : Pawn
 {
-    private NurseManager nurseManager;
-    private GameObject restRoom;
+    public bool bussy;
+
+    public PatientController patient;
     private AIDestinationSetter _aiDestinationSetter;
-    private bool bussy = false;
-    private Pawn p;
+    private Pawn _pawn;
+    private TimeController _timeController;
+    private NurseManager nurseManager;
+    private GameObject sofa;
 
-    public void Initialize(NurseManager nurseManager, GameObject restRoom)
+    private void Update()
     {
-        this.nurseManager = nurseManager;
-        this.restRoom = restRoom;
-        nurseManager.OnEnqueue += NurseManagerOnEnqueue;
-        _aiDestinationSetter = GetComponent<AIDestinationSetter>();
-        _aiDestinationSetter.target = restRoom.transform;
-    }
-
-    private void NurseManagerOnEnqueue(object sender, EventArgs e)
-    {
-        if (bussy)
-            return;
-
-        p = nurseManager.RemovePawnFromQue();
-        if (p)
-        {
-            _aiDestinationSetter.target = p.transform;
-            bussy = true;
-        }
+        if (transform == _aiDestinationSetter.target) Debug.Log("XD");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            var patient = collision.gameObject.GetComponent<PawnController>();
-            if (patient != p || patient == null)
+            patient = collision.gameObject.GetComponent<PatientController>();
+            if (patient != _pawn || patient == null)
                 return;
 
             patient.patientData.ResetToilet();
@@ -47,17 +33,80 @@ public class NurseController : MonoBehaviour
             patient.requestForPepeSend = false;
             bussy = false;
 
-            p = nurseManager.RemovePawnFromQue();
-            if (p)
-            {
-                _aiDestinationSetter.target = p.transform;
-                bussy = true;
-            }
-            else
-            {
-                _aiDestinationSetter.target = restRoom.transform;
-                bussy = false;
-            }
+            if (sofa)
+                _aiDestinationSetter.target = sofa.transform;
+        }
+    }
+
+    public void Initialize(NurseManager nurseManager, TimeController timeController)
+    {
+        Initialize(Role.Nurse);
+        this.nurseManager = nurseManager;
+        nurseManager.OnEnqueue += NurseManagerOnEnqueue;
+        _timeController = timeController;
+
+        _timeController.OnHourIncrease += OnHourIncrease;
+        _timeController.OnMinuteIncrease += OnMinuteIncrease;
+        MapController.Instance().OnFurnitureBuilt += OnFurnitureBuilt;
+        _aiDestinationSetter = GetComponent<AIDestinationSetter>();
+    }
+
+    private void OnMinuteIncrease(int m)
+    {
+        if (bussy)
+            return;
+
+        _pawn = nurseManager.RemovePawnFromQue();
+        if (_pawn)
+        {
+            _aiDestinationSetter.target = _pawn.transform;
+            bussy = true;
+        }
+    }
+
+    private void OnFurnitureBuilt(GameObject furniture)
+    {
+        if (furniture == null)
+            return;
+
+        if (sofa == null)
+            SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Sofa", transform.position));
+    }
+
+    private void OnHourIncrease(int h)
+    {
+        if (sofa == null)
+            SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Sofa", transform.position));
+
+        if (bussy)
+            return;
+
+        _pawn = nurseManager.RemovePawnFromQue();
+        if (_pawn)
+        {
+            _aiDestinationSetter.target = _pawn.transform;
+            bussy = true;
+        }
+    }
+
+    private void SelectFurniture(GameObject furniture)
+    {
+        if (furniture == null)
+            return;
+
+        if (furniture.name == "Sofa" && sofa == null) sofa = furniture;
+    }
+
+    private void NurseManagerOnEnqueue(object sender, EventArgs e)
+    {
+        if (bussy)
+            return;
+
+        _pawn = nurseManager.RemovePawnFromQue();
+        if (_pawn)
+        {
+            _aiDestinationSetter.target = _pawn.transform;
+            bussy = true;
         }
     }
 }
