@@ -26,13 +26,13 @@ public class MainMenu : MonoBehaviour
 
     public void NewGame()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("MessageScene");
         Debug.Log("New Game");
     }
 
     public void Continue()
     {
-        //SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("MainScene");
         Debug.Log("Continue");
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System.Linq;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class Wave
@@ -91,7 +92,7 @@ public class PatientSpawnerManager : MonoBehaviour
 
         if (deadPatients / spawnedPatients >= 0.8)
         {
-            //Lose scene here
+            SceneManager.LoadScene("EndScene");
         }
     }
 
