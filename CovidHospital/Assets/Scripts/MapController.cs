@@ -86,7 +86,7 @@ public class MapController : MonoBehaviour
 
     public List<string> FurnituresNames = new List<string>
     {
-        "Bed", "BedOxygen", "BedRespirator", "Chair", "Fotel", "Shower", "Sofa", "Toilet"
+        "Bed", "BedOxygen", "BedRespirator", "BedsideLamp", "Chair", "Fotel", "Shower", "Sofa", "Toilet"
     };
 
     public Tilemap Terrain;
@@ -133,8 +133,16 @@ public class MapController : MonoBehaviour
 
             yield return null;
         }
-
+        terrain_tiles[2].name = "Concrete";
+        for (int x = -10; x <= 10; x++)
+        {
+            for (int y = -10; y <= 10; y++)
+            {
+                Terrain.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), terrain_tiles[2]);
+            }
+        }
         AstarPath.UpdateGraphs(new Bounds(new Vector3(0, 0, 0), new Vector3(MAP_LIMIT, MAP_LIMIT, MAP_LIMIT)));
+        
     }
 
     private void InitializeMap()
@@ -142,37 +150,37 @@ public class MapController : MonoBehaviour
         _mapInitialized = true;
         int ROOM_LIMIT = 10;
         Walls.ClearAllEditorPreviewTiles();
-        for (int x = 0; x < ROOM_LIMIT; x++)
-        {
-            TileWall wallTop = ScriptableObject.CreateInstance<TileWall>();
-            TileWall wallBottom = ScriptableObject.CreateInstance<TileWall>();
 
-            wallTop.wallName = WALL_NAME;
-            wallBottom.wallName = WALL_NAME;
+        //for (int x = 0; x < ROOM_LIMIT; x++)
+        //{
+        //    TileWall wallTop = ScriptableObject.CreateInstance<TileWall>();
+        //    TileWall wallBottom = ScriptableObject.CreateInstance<TileWall>();
 
-            Walls.SetTile(new Vector3Int(x, 0, DEFAULT_HEIGHT_Z), wallTop);
-            Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, DEFAULT_HEIGHT_Z), wallBottom);
-        }
+        //    wallTop.wallName = WALL_NAME;
+        //    wallBottom.wallName = WALL_NAME;
 
-        for (int y = 0; y < ROOM_LIMIT; y++)
-        {
-            TileWall wallLeft = ScriptableObject.CreateInstance<TileWall>();
-            TileWall wallRight = ScriptableObject.CreateInstance<TileWall>();
+        //    Walls.SetTile(new Vector3Int(x, 0, DEFAULT_HEIGHT_Z), wallTop);
+        //    Walls.SetTile(new Vector3Int(x, ROOM_LIMIT, DEFAULT_HEIGHT_Z), wallBottom);
+        //}
 
-            wallLeft.wallName = WALL_NAME;
-            wallRight.wallName = WALL_NAME;
+        //for (int y = 0; y < ROOM_LIMIT; y++)
+        //{
+        //    TileWall wallLeft = ScriptableObject.CreateInstance<TileWall>();
+        //    TileWall wallRight = ScriptableObject.CreateInstance<TileWall>();
 
-            Walls.SetTile(new Vector3Int(0, y, DEFAULT_HEIGHT_Z), wallLeft);
-            Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, DEFAULT_HEIGHT_Z), wallRight);
-        }
+        //    wallLeft.wallName = WALL_NAME;
+        //    wallRight.wallName = WALL_NAME;
 
-        for (int x = 30; x < ROOM_LIMIT + 30; x++)
-        for (int y = 0; y < ROOM_LIMIT; y++)
-        {
-            TileWall wall = ScriptableObject.CreateInstance<TileWall>();
-            wall.wallName = WALL_NAME;
-            Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
-        }
+        //    Walls.SetTile(new Vector3Int(0, y, DEFAULT_HEIGHT_Z), wallLeft);
+        //    Walls.SetTile(new Vector3Int(ROOM_LIMIT, y, DEFAULT_HEIGHT_Z), wallRight);
+        //}
+        //for (int x = 30; x < ROOM_LIMIT + 30; x++)
+        //    for (int y = 0; y < ROOM_LIMIT; y++)
+        //    {
+        //        TileWall wall = ScriptableObject.CreateInstance<TileWall>();
+        //        wall.wallName = WALL_NAME;
+        //        Walls.SetTile(new Vector3Int(x, y, DEFAULT_HEIGHT_Z), wall);
+        //    }
 
         StartCoroutine("LoadTerrain");
 
@@ -212,15 +220,17 @@ public class MapController : MonoBehaviour
         return Vector3Int.FloorToInt(Camera.main.ScreenToWorldPoint(mousePosition));
     }
 
-    public bool BuildWall(Vector3Int coordinates)
+    public (bool, string) BuildWall(Vector3Int coordinates)
     {
         if (Walls.HasTile(coordinates))
-            return false;
+            return (false, "Wall is already built here!");
+        if (FurnituresMap.ContainsKey(coordinates))
+            return (false, "You can't build walls over furnitures!");
         AstarPath.UpdateGraphs(new Bounds(coordinates, new Vector3(2, 2, 2)));
         TileWall wall = ScriptableObject.CreateInstance<TileWall>();
         wall.wallName = WALL_NAME;
         Walls.SetTile(coordinates, wall);
-        return true;
+        return (true, string.Empty);
     }
 
     public bool DestroyWall(Vector3Int coordinates)
@@ -239,6 +249,7 @@ public class MapController : MonoBehaviour
             return false;
         Tile wall = ScriptableObject.CreateInstance<Tile>();
         wall.sprite = SpriteManager.TerrainSprites[name];
+        wall.name = name;
         Terrain.SetTile(coordinates, wall);
         return true;
     }
@@ -284,8 +295,6 @@ public class MapController : MonoBehaviour
             {"W", -270},
         };
 
-        Debug.Log(string.Format("Building furniture: {0} with rotation {1}", name, rotation));
-
         var furniture = Instantiate(NameToFurniture[name]);
         var furnitureController = furniture.GetComponent<FurnitureController>();
 
@@ -304,6 +313,21 @@ public class MapController : MonoBehaviour
                 Destroy(furniture);
                 return (false, "There is another furniture here.");
             }
+            if (Terrain.HasTile(point) && Terrain.GetTile(point).name != "Concrete")
+            {
+                Destroy(furniture);
+                return (false, "The floor must be made of concrete!");
+            }
+        }
+
+        if (FurnituresLimit.ContainsKey(name))
+        {
+            if (FurnituresLimit[name].Item1 == FurnituresLimit[name].Item2)
+            {
+                Destroy(furniture);
+                return (false, $"You can't build more {name}!");
+            }
+            FurnituresLimit[name] = (FurnituresLimit[name].Item1 + 1, FurnituresLimit[name].Item2);
         }
 
         foreach (var point in points)
