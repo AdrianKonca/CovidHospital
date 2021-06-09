@@ -60,7 +60,7 @@ public class OpenStats : MonoBehaviour
     {
         if (!stats.activeSelf)
             stats.SetActive(true);
-
+        
         txt = stats.transform.GetChild(1).GetComponent<Text>();
 
         string name = hit.transform.name;

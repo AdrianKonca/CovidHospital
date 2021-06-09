@@ -73,7 +73,7 @@ namespace Entity
 
             covidRegressMultiplier = 1;
             covidProgressMultiplier = 1;
-            covidUnableToMoveAfter = 50;
+            covidUnableToMoveAfter = 0;
 
             patientData.OnLowComfort += PatientDataOnLowComfort;
             patientData.OnLowHunger += PatientDataOnLowHunger;
@@ -98,7 +98,7 @@ namespace Entity
         private void UpdateFurniture()
         {
             if (bed == null)
-                SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Bed", transform.position));
+                SelectFurniture(MapController.Instance().GetClosestFreeBed(transform.position));
 
             //if (toilet == null && bed != null)
             //    SelectFurniture(MapController.Instance().GetClosestFreeFurniture("Toilet", bed.transform.position));
@@ -127,7 +127,7 @@ namespace Entity
         {
             CovidRegress(-0.7f);
             CovidProgress(0.7f);
-            
+
             if (patientData.covidProgress >= 100)
             {
                 PatientSpawnerManager.deadPatients++;
@@ -169,7 +169,8 @@ namespace Entity
             if (furniture == null)
                 return;
             var furnitureOwner = furniture.GetComponent<FurnitureController>().owner;
-            if (furniture.name == "Bed" && bed == null && furnitureOwner == null)
+            if ((furniture.name == "Bed" || furniture.name == "BedOxygen" ||
+                 furniture.name == "BedRespirator") && bed == null && furnitureOwner == null)
             {
                 bed = furniture;
                 bed.GetComponent<FurnitureController>().owner = this;
