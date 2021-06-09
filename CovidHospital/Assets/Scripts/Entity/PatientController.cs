@@ -1,6 +1,7 @@
 ﻿using System;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.Random;
 
 namespace Entity
@@ -14,27 +15,26 @@ namespace Entity
         public float covidUnableToMoveAfter;
 
         public NurseManager nurseManager;
-
-        public bool requestForPepeSend;
-        public PatientSpawnerManager PatientSpawnerManager;
-
-        private AIDestinationSetter _aiDestinationSetter;
-
-        public PatientController(PawnData data)
-        {
-        }
-
         public GameObject toilet { get; set; }
         public GameObject bed { get; set; }
         public GameObject canteen { get; set; }
         public GameObject shower { get; set; }
 
+        public bool requestForPepeSend = false;
+
+        private AIDestinationSetter _aiDestinationSetter;
+        public PatientSpawnerManager PatientSpawnerManager;
+
+        public PatientController(PawnData data) : base()
+        {
+        }
+
         private void CovidRegress(float delta)
         {
-            var AgeOffSet = 50f;
+            float AgeOffSet = 50f;
 
-            var AgeMultiplier = (float) Math.Tanh((PawnData.age - AgeOffSet) / 80) * -1 + 1; //<0.4,1.4>
-            var NeedsMultiplier = (float) Math.Max(patientData.GetNormalizedAverageNeeds(), 0.2);
+            float AgeMultiplier = (float) Math.Tanh((PawnData.age - AgeOffSet) / 80) * -1 + 1; //<0.4,1.4>
+            float NeedsMultiplier = (float) Math.Max(patientData.GetNormalizedAverageNeeds(), 0.2);
 
             var ProgressToSubtract = delta * AgeMultiplier * NeedsMultiplier;
 
@@ -43,15 +43,18 @@ namespace Entity
 
         private void CovidProgress(float delta)
         {
-            var ImmunityDecrease = patientData.GetSumOfImmunityDecrease();
-            var AgeOffSet = 40f;
+            float ImmunityDecrease = patientData.GetSumOfImmunityDecrease();
+            float AgeOffSet = 40f;
 
-            var AgeMultiplier = (float) Math.Tanh((PawnData.age - AgeOffSet) / 50) + 1f; //<0.6,1.8>
+            float AgeMultiplier = (float) Math.Tanh((PawnData.age - AgeOffSet) / 50) + 1f; //<0.6,1.8>
 
-            var ImmunityMultiplier = (float) Math.Tanh(ImmunityDecrease / 30) + 1f; //<1,1.8>
-            if (ImmunityDecrease > 100) ImmunityMultiplier *= 2;
+            float ImmunityMultiplier = (float) Math.Tanh(ImmunityDecrease / 30) + 1f; //<1,1.8>
+            if (ImmunityDecrease > 100)
+            {
+                ImmunityMultiplier *= 2;
+            }
 
-            var NeedsMultiplier = Math.Min(1 / patientData.GetNormalizedAverageNeeds() / 2 + 0.5f, 2f); //<1,2>
+            float NeedsMultiplier = Math.Min(1 / patientData.GetNormalizedAverageNeeds() / 2 + 0.5f, 2f); //<1,2>
 
             var ProgressToAdd = delta * AgeMultiplier * ImmunityMultiplier * NeedsMultiplier;
 
@@ -80,7 +83,7 @@ namespace Entity
             MapController.Instance().OnFurnitureBuilt += OnFurnitureBuilt;
 
             _aiDestinationSetter = GetComponent<AIDestinationSetter>();
-            PatientSpawnerManager = patientSpawnerManager;
+            this.PatientSpawnerManager = patientSpawnerManager;
         }
 
         private void OnHourIncrease(int h)
@@ -209,9 +212,7 @@ namespace Entity
         private void PatientDataOnLowToilet(object sender, EventArgs e)
         {
             if (patientData.covidProgress < covidUnableToMoveAfter)
-            {
                 _aiDestinationSetter.target = toilet.transform;
-            }
             else if (!requestForPepeSend)
             {
                 nurseManager.AddPawnToQue(this);

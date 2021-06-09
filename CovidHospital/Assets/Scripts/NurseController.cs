@@ -2,41 +2,18 @@
 using Entity;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class NurseController : Pawn
 {
-    public bool bussy;
-
-    public PatientController patient;
-    private AIDestinationSetter _aiDestinationSetter;
-    private Pawn _pawn;
-    private TimeController _timeController;
     private NurseManager nurseManager;
     private GameObject sofa;
+    private AIDestinationSetter _aiDestinationSetter;
+    public bool bussy = false;
+    private Pawn _pawn;
+    private TimeController _timeController;
 
-    private void Update()
-    {
-        if (transform == _aiDestinationSetter.target) Debug.Log("XD");
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            patient = collision.gameObject.GetComponent<PatientController>();
-            if (patient != _pawn || patient == null)
-                return;
-
-            patient.patientData.ResetToilet();
-            patient.patientData.ResetHygiene();
-            patient.patientData.ResetHunger();
-            patient.requestForPepeSend = false;
-            bussy = false;
-
-            if (sofa)
-                _aiDestinationSetter.target = sofa.transform;
-        }
-    }
+    public PatientController patient;
 
     public void Initialize(NurseManager nurseManager, TimeController timeController)
     {
@@ -94,7 +71,10 @@ public class NurseController : Pawn
         if (furniture == null)
             return;
 
-        if (furniture.name == "Sofa" && sofa == null) sofa = furniture;
+        if (furniture.name == "Sofa" && sofa == null)
+        {
+            sofa = furniture;
+        }
     }
 
     private void NurseManagerOnEnqueue(object sender, EventArgs e)
@@ -107,6 +87,33 @@ public class NurseController : Pawn
         {
             _aiDestinationSetter.target = _pawn.transform;
             bussy = true;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            patient = collision.gameObject.GetComponent<PatientController>();
+            if (patient != _pawn || patient == null)
+                return;
+
+            patient.patientData.ResetToilet();
+            patient.patientData.ResetHygiene();
+            patient.patientData.ResetHunger();
+            patient.requestForPepeSend = false;
+            bussy = false;
+
+            if (sofa)
+                _aiDestinationSetter.target = sofa.transform;
+        }
+    }
+
+    private void Update()
+    {
+        if (transform == _aiDestinationSetter.target)
+        {
+            Debug.Log("XD");
         }
     }
 }

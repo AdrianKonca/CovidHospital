@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class Message : MonoBehaviour
 {
     public GameObject FirstButton;
-
-    private void Start()
+    void Start()
     {
         EventSystem.current.SetSelectedGameObject(FirstButton);
     }
@@ -15,7 +16,6 @@ public class Message : MonoBehaviour
     {
         SceneManager.LoadScene("MainScene");
     }
-
     public void GoToMenu()
     {
         SceneManager.LoadScene("MainMenu");

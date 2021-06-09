@@ -1,5 +1,12 @@
 ﻿using Entity;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.U2D;
 
 public enum BodyPart
 {
@@ -26,11 +33,11 @@ public class PawnFactory : MonoBehaviour
     public TimeController TimeController;
     public NurseManager NurseManager;
     public PatientSpawnerManager PatientSpawnerManager;
-    private GameObject _doctors;
-    private GameObject _nurses;
-    private GameObject _patients;
 
     private GameObject _pawns;
+    private GameObject _patients;
+    private GameObject _doctors;
+    private GameObject _nurses;
 
     public void Awake()
     {
@@ -54,10 +61,8 @@ public class PawnFactory : MonoBehaviour
         patient.transform.parent = _patients.transform;
     }
 
-    public void Patient()
-    {
+    public void Patient() =>
         Patient(Vector3.zero);
-    }
 
     public void Nurse()
     {

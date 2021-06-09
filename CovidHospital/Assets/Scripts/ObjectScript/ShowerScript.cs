@@ -1,4 +1,7 @@
-﻿using Entity;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Entity;
 using UnityEngine;
 
 public class ShowerScript : MonoBehaviour

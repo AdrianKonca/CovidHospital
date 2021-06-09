@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class BuildingController : MonoBehaviour
 {
+    public GameObject preview;
+    public string CurrentObjectName = null;
     public enum State
     {
         Inactive,
@@ -12,33 +15,20 @@ public class BuildingController : MonoBehaviour
         BuildWall,
         DestroyWall,
         BuildFurniture,
-        DestroyFurniture
+        DestroyFurniture,
     }
 
-    public GameObject preview;
-    public string CurrentObjectName;
-    private bool _actionStarted;
+    Controls _controls;
+    PlayerInput _playerInput;
+    MapController _mapController;
+    BuildingUIController _uiController;
 
-    private Controls _controls;
-    private MapController _mapController;
-    private Vector2 _mousePosition;
-    private PlayerInput _playerInput;
+    int _rotation = 0;
+    Vector2 _mousePosition = new Vector2();
+    bool _actionStarted = false;
+    State _state = State.Inactive;
 
-    private readonly Dictionary<Vector3Int, float> _recentErrors = new Dictionary<Vector3Int, float>();
-
-    private int _rotation;
-    private State _state = State.Inactive;
-    private BuildingUIController _uiController;
-
-    private readonly Dictionary<int, string> rotations = new Dictionary<int, string>
-    {
-        {0, "N"},
-        {1, "E"},
-        {2, "S"},
-        {3, "W"}
-    };
-
-    private void Start()
+    void Start()
     {
         _playerInput = FindObjectOfType<PlayerInput>();
         _mapController = FindObjectOfType<MapController>();
@@ -46,20 +36,14 @@ public class BuildingController : MonoBehaviour
         _playerInput.onActionTriggered += onActionTrigered;
     }
 
-    private void Update()
-    {
-        var pos = _mapController.GetMousePosition(_mousePosition);
+    Dictionary<int, string> rotations = new Dictionary<int, string>() {
+        { 0, "N" },
+        { 1, "E" },
+        { 2, "S" },
+        { 3, "W" },
+    };
 
-        preview.transform.position = pos + new Vector3(0.5f, 0.5f);
-
-        Build();
-        var keysToRemove = new List<Vector3Int>();
-        foreach (var key in _recentErrors.Keys)
-            if (_recentErrors[key] < Time.time)
-                keysToRemove.Add(key);
-        foreach (var key in keysToRemove) _recentErrors.Remove(key);
-    }
-
+    private Dictionary<Vector3Int, float> _recentErrors = new Dictionary<Vector3Int, float>();
     private void Build()
     {
         if (!_actionStarted)
@@ -82,10 +66,7 @@ public class BuildingController : MonoBehaviour
                     FloatingTextManager.I().DisplayText(response.Item2, position, Color.red);
                 }
                 else
-                {
                     _recentErrors[position] = Time.time + 2f;
-                }
-
                 break;
             case State.DestroyWall:
                 _mapController.DestroyWall(position);
@@ -101,8 +82,10 @@ public class BuildingController : MonoBehaviour
                 {
                     _recentErrors[position] = Time.time + 2f;
                 }
-
-                if (response.Item1) _uiController.UpdateSelectionName(CurrentObjectName);
+                if (response.Item1)
+                {
+                    _uiController.UpdateSelectionName(CurrentObjectName);
+                }
                 _actionStarted = false;
                 break;
             case State.DestroyFurniture:
@@ -117,14 +100,13 @@ public class BuildingController : MonoBehaviour
         _state = state;
         _rotation = 0;
     }
-
     public State GetState()
     {
         return _state;
     }
-
     private void onActionTrigered(InputAction.CallbackContext action)
     {
+        
         if (action.action.name == _controls.Player.MoveMouse.name && action.performed)
         {
             _mousePosition = action.ReadValue<Vector2>();
@@ -134,7 +116,7 @@ public class BuildingController : MonoBehaviour
         else if (action.action.name == _controls.Player.Action.name)
         {
             //don't ask why...
-            var isPointerOverUIElement = EventSystem.current.IsPointerOverGameObject();
+            bool isPointerOverUIElement = EventSystem.current.IsPointerOverGameObject();
             if (action.started && !isPointerOverUIElement)
                 _actionStarted = true;
             else if (action.canceled)
@@ -152,6 +134,24 @@ public class BuildingController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        var pos = _mapController.GetMousePosition(_mousePosition);
+
+        preview.transform.position = pos + new Vector3(0.5f, 0.5f);
+
+        Build();
+        var keysToRemove = new List<Vector3Int>();
+        foreach (var key in _recentErrors.Keys)
+        {
+            if (_recentErrors[key] < Time.time)
+                keysToRemove.Add(key);
+        }
+        foreach (var key in keysToRemove)
+        {
+            _recentErrors.Remove(key);
+        }
+    }
     public void SetBuildingUIController(BuildingUIController controller)
     {
         _uiController = controller;

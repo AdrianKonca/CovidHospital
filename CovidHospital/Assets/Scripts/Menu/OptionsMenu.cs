@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
@@ -11,25 +13,27 @@ public class OptionsMenu : MonoBehaviour
     public Sprite MinSound;
     public Sprite NoSound;
     public AudioMixer Mixer;
+    Resolution[] resolutions;
     public Dropdown resolutionDropdown;
-    private Resolution[] resolutions;
 
     private void Start()
     {
         resolutions = Screen.resolutions;
-        var currentResolution = 0;
+        int currentResolution = 0;
         resolutionDropdown.ClearOptions();
 
-        var reso = new List<string>();
+        List<string> reso = new List<string>();
         string tmp;
 
-        for (var i = 0; i < resolutions.Length; i++)
+        for (int i=0; i < resolutions.Length; i++)
         {
             tmp = resolutions[i].width + " x " + resolutions[i].height;
             reso.Add(tmp);
 
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height) currentResolution = i;
+            if(resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentResolution = i;
+            }
         }
 
         resolutionDropdown.AddOptions(reso);
@@ -67,6 +71,7 @@ public class OptionsMenu : MonoBehaviour
 
     public void SetResolution(int index)
     {
-        Screen.SetResolution(resolutions[index].width, resolutions[index].height, Screen.fullScreen);
+        Screen.SetResolution(resolutions[index].width,resolutions[index].height, Screen.fullScreen);
     }
+
 }

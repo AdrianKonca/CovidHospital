@@ -1,11 +1,12 @@
 ﻿using Entity;
+using UnityEngine;
 using UnityEditor;
-
+ 
 public class ConditionDataAsset
 {
     [MenuItem("Assets/Create/DiseaseData")]
-    public static void CreateAsset()
+    public static void CreateAsset ()
     {
-        ScriptableObjectUtility.CreateAsset<ConditionData>();
+        ScriptableObjectUtility.CreateAsset<ConditionData> ();
     }
 }

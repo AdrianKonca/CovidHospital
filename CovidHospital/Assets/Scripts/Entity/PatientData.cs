@@ -13,13 +13,18 @@ namespace Entity
 
         public float covidProgress;
 
+        //<0,1> 
+        private float MaxNeedsValue = 100;
+
         public float comfort;
         public float hunger;
         public float hygiene;
         public float toilet;
 
-        //<0,1> 
-        private float MaxNeedsValue = 100;
+        public event EventHandler OnLowComfort;
+        public event EventHandler OnLowHunger;
+        public event EventHandler OnLowHygiene;
+        public event EventHandler OnLowToilet;
 
         public PatientData()
         {
@@ -93,11 +98,6 @@ namespace Entity
             }
         }
 
-        public event EventHandler OnLowComfort;
-        public event EventHandler OnLowHunger;
-        public event EventHandler OnLowHygiene;
-        public event EventHandler OnLowToilet;
-
         public float GetSumOfImmunityDecrease()
         {
             return conditionsValue;
@@ -118,7 +118,10 @@ namespace Entity
             var NewComfort = comfort + delta;
             comfort = Mathf.Clamp(NewComfort, 0, MaxNeedsValue);
 
-            if (comfort < MaxNeedsValue / 2f) OnLowComfort?.Invoke(this, EventArgs.Empty);
+            if (comfort < MaxNeedsValue / 2f)
+            {
+                OnLowComfort?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void AddHunger(float delta)
@@ -126,7 +129,10 @@ namespace Entity
             var NewHunger = hunger + delta;
             hunger = Mathf.Clamp(NewHunger, 0, MaxNeedsValue);
 
-            if (hunger < MaxNeedsValue / 2f) OnLowHunger?.Invoke(this, EventArgs.Empty);
+            if (hunger < MaxNeedsValue / 2f)
+            {
+                OnLowHunger?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void AddHygiene(float delta)
@@ -134,7 +140,10 @@ namespace Entity
             var NewHygiene = hygiene + delta;
             hygiene = Mathf.Clamp(NewHygiene, 0, MaxNeedsValue);
 
-            if (hygiene < MaxNeedsValue / 2f) OnLowHygiene?.Invoke(this, EventArgs.Empty);
+            if (hygiene < MaxNeedsValue / 2f)
+            {
+                OnLowHygiene?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void AddToilet(float delta)
@@ -142,7 +151,10 @@ namespace Entity
             var NewToilet = toilet + delta;
             toilet = Mathf.Clamp(NewToilet, 0, MaxNeedsValue);
 
-            if (toilet < MaxNeedsValue / 2f) OnLowToilet?.Invoke(this, EventArgs.Empty);
+            if (toilet < MaxNeedsValue / 2f)
+            {
+                OnLowToilet?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void ResetToilet()
